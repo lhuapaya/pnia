@@ -9,7 +9,7 @@ use yii\web\JsExpression;
 $this->title ="Login";
 ?>
 <style>
-@import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");*/
+@import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
 
 body{
     background: url(https://unsplash.imgix.net/photo-1415226581130-91cb7f52f078?q=75&fm=jpg&s=859a0a6f863f8eb93a489c98402e687b);
@@ -83,7 +83,7 @@ body{
             <div class="col-md-12">
                <?= $form->field($model, 'password',['template' => '<div class="col-md-12"><div class="input-group col-md-12">
                                                     <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>{input}</div></div><div class="col-md-12">{error}</div>',])
-                        ->passwordInput(['placeholder'=>'Ingresa tu contraseña'])
+                        ->passwordInput(['placeholder'=>'Ingresa tu contraseÃ±a'])
                         ->label(false)->error(['class' => 'help-block']) ?>
             </div>
             <div class="clearfix"></div>
