@@ -7,13 +7,6 @@
 <<<<<<< HEAD
 namespace app\assets;
 use yii\web\AssetBundle;
-=======
-
-namespace app\assets;
-
-use yii\web\AssetBundle;
-
->>>>>>> 6fefde17b5af12e5e9a8fcdb5ee9fd9ca9884a1f
 /**
  * @author Qiang Xue <qiang.xue@gmail.com>
  * @since 2.0
@@ -37,19 +30,11 @@ class PrincipalAsset extends AssetBundle
                    //'plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css',
                    ];
     public $js = [
-<<<<<<< HEAD
         'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js',
                     'https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js',
                     
                   'https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js',
                   'https://oss.maxcdn.com/respond/1.4.2/respond.min.js',
-                    
-=======
-                  'https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js',
-                  'https://oss.maxcdn.com/respond/1.4.2/respond.min.js',
-                  
-
->>>>>>> 6fefde17b5af12e5e9a8fcdb5ee9fd9ca9884a1f
                    //'plugins/jQuery/jQuery-2.1.4.min.js',
                    'https://code.jquery.com/ui/1.11.4/jquery-ui.min.js',
                    'bootstrap/js/bootstrap.min.js',
@@ -74,8 +59,3 @@ class PrincipalAsset extends AssetBundle
         'yii\bootstrap\BootstrapAsset',
         'yii\bootstrap\BootstrapPluginAsset',
     ];
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 6fefde17b5af12e5e9a8fcdb5ee9fd9ca9884a1f
