@@ -1,8 +1,23 @@
+<?php
+
+use yii\helpers\Html;
+use yii\widgets\ActiveForm;
+use kartik\date\DatePicker;
+use yii\web\JsExpression;
+use yii\widgets\Pjax;
+//use kartik\select2\Select2;
+/* @var $this yii\web\View */
+/* @var $nuevo app\models\TblPersonaSearch */
+/* @var $form yii\widgets\ActiveForm */
+?>
 
 
 
 
-<form class="contact_form" action="#" id="contact_form" runat="server">
+
+<!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
+<?php Pjax::begin(); ?>
+    <?php $form = ActiveForm::begin(['action'=>'nuevo', 'method'=>'post', 'options' => ['class' => 'contact_form', 'data-pjax' => true ]]); ?>
     <div>
         <ul>
             <li>
@@ -12,12 +27,14 @@
             
             <li>
                 <h4>1.1 Titulo del Proyecto</h4>
-                <label for="name">Nombre del Proyecto:</label>
-                <input type="text" placeholder="..." required />
+                <?= $form->field($nuevo, 'id')->hiddenInput(['class'=>''])->label(false) ?>
+
+                <?= $form->field($nuevo, 'titulo')->textInput(['class'=>'form-control texto','disabled'=>false])->label('Nombre del Proyecto')->error(false) ?>
                 
             </li>
             <li>
                 <h4>1.2 Dependencia del INIA que Ejecutara el Proyecto</h4>
+                <?= $form->field($nuevo, 'direccion_linea')->textInput(['class'=>'form-control texto','disabled'=>false])->label('Señale Dirección en Linea:')->error(false) ?>
                 <label for="direccionL">Señale Dirección en Linea:</label>
                 <input type="text" placeholder="..." required /> 
                 
@@ -208,8 +225,9 @@
 
             </li>
             <li>
-               
-                
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Guardar
+              </button>  
             </li>
             <li>
                 
@@ -218,8 +236,10 @@
         
         </ul>
     </div>
-    
-</form>
+
+ <?php ActiveForm::end(); ?>
+    <?php Pjax::end(); ?>    
+<!--</form>-->
 
 
 <script type="text/javascript">

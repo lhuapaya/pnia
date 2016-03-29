@@ -26,6 +26,7 @@ use Yii;
  * @property string $ind_prop
  * @property string $med_prop
  * @property string $sup_prop
+ * @property integer $user_propietario
  * @property integer $estado
  *
  * @property AccionTransversal $accionTransversal
@@ -37,11 +38,14 @@ use Yii;
  * @property Dependencia $dependencia
  * @property LugarInvestigacion[] $lugarInvestigacions
  * @property ObjetivoEspecifico[] $objetivoEspecificos
+ * @property Usuarios $userPropietario
  * @property Recursos[] $recursos
  * @property Responsable $responsable
  */
 class Proyecto extends \yii\db\ActiveRecord
 {
+    
+    public $direccion_linea;
     /**
      * @inheritdoc
      */
@@ -56,7 +60,7 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_proyecto', 'estado'], 'integer'],
+            [['id_tipo_proyecto', 'user_propietario', 'estado'], 'integer'],
             [['presupuesto'], 'number'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['desc_tipo_proy'], 'string', 'max' => 200],
@@ -93,6 +97,7 @@ class Proyecto extends \yii\db\ActiveRecord
             'ind_prop' => 'Ind Prop',
             'med_prop' => 'Med Prop',
             'sup_prop' => 'Sup Prop',
+            'user_propietario' => 'User Propietario',
             'estado' => 'Estado',
         ];
     }
@@ -167,6 +172,14 @@ class Proyecto extends \yii\db\ActiveRecord
     public function getObjetivoEspecificos()
     {
         return $this->hasMany(ObjetivoEspecifico::className(), ['id_proyecto' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserPropietario()
+    {
+        return $this->hasOne(Usuarios::className(), ['id' => 'user_propietario']);
     }
 
     /**

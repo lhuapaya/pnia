@@ -36,7 +36,7 @@ $baseUrl = $Asset->baseUrl;
 
 
 <div id="header">
-<h1>City Gallery</h1>
+<h1>PNIA</h1>
 </div>
 
 <div id="nav">

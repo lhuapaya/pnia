@@ -50,7 +50,28 @@ class ProyectoController extends Controller
     {
         $this->layout='principal';
         
-        //$model = new Proyecto();
+        $nuevo = new Proyecto();
+        
+        $Usuario = new Usuarios();
+
+        $existe = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                        ->count();
+        
+        //var_dump($existe);
+                        
+        if($existe > 0)
+        {
+           $nuevo = Proyecto::find('id, titulo')
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                        ->one();
+         
+        }
+        
+        
+        return $this->render('nuevo',['nuevo'=>$nuevo]);
+        //$nuevo = new Proyecto();
+        
         
       /*  $model=Proyecto::find()
                     ->select('proyecto.id, proyecto.titulo, proyecto.presupuesto')
@@ -58,7 +79,24 @@ class ProyectoController extends Controller
                     ->all();*/
                     
             //var_dump($countIntituciones);
-        return $this->render('nuevo');
+        
+    }
+    
+    public function actionGuardar()
+    {
+        $Usuario = new Usuario();
+
+        $existe = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>$Usuario->id])
+                        ->count();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
     }
 
 }
