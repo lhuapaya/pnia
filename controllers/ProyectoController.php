@@ -70,33 +70,30 @@ class ProyectoController extends Controller
         
         
         return $this->render('nuevo',['nuevo'=>$nuevo]);
-        //$nuevo = new Proyecto();
-        
-        
-      /*  $model=Proyecto::find()
-                    ->select('proyecto.id, proyecto.titulo, proyecto.presupuesto')
-                    ->where('estado=1')
-                    ->all();*/
-                    
-            //var_dump($countIntituciones);
-        
+      
     }
     
     public function actionGuardar()
     {
-        $Usuario = new Usuario();
+        
 
         $existe = Proyecto::find()
-                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>$Usuario->id])
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->count();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+                        
+        $model = new Proyecto();
+        
+        if ($model->load(Yii::$app->request->post()) && ($existe == 0)) {
+            
+            $model->titulo = $model->titulo;
+            $model->user_propietario = Yii::$app->user->identity->id;
+            $model->estado = 1;
+            $model->save();
         }
+        
+        return $this->redirect('nuevo', [
+                'nuevo' => $model,
+            ]);
     }
 
 }

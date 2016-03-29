@@ -17,7 +17,7 @@ use yii\widgets\Pjax;
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
 <?php Pjax::begin(); ?>
-    <?php $form = ActiveForm::begin(['action'=>'nuevo', 'method'=>'post', 'options' => ['class' => 'contact_form', 'data-pjax' => true ]]); ?>
+    <?php $form = ActiveForm::begin(['action'=>'guardar', 'method'=>'post', 'options' => ['class' => 'contact_form', 'data-pjax' => true ]]); ?>
     <div>
         <ul>
             <li>
@@ -35,44 +35,43 @@ use yii\widgets\Pjax;
             <li>
                 <h4>1.2 Dependencia del INIA que Ejecutara el Proyecto</h4>
                 <?= $form->field($nuevo, 'direccion_linea')->textInput(['class'=>'form-control texto','disabled'=>false])->label('Señale Dirección en Linea:')->error(false) ?>
-                <label for="direccionL">Señale Dirección en Linea:</label>
-                <input type="text" placeholder="..." required /> 
+
                 
             </li>
             <li>
                 <label for="estacionExp">Señale Estación Experimental Agraria:</label>
-                <input type="text" placeholder="..." required /> 
+                <input type="text" placeholder="..."  /> <!-- required-->
                 
             </li>
             <li>
                 <label for="subExtacionExp">Señale Sub Estación Experimental Agraria:</label>
-                <input type="text" placeholder="..." required /> 
+                <input type="text" placeholder="..."  /> 
                 
             </li>
             <li>
                 <h4>1.3 Nombres y Apellidos del Responsable Técnico del Proyecto</h4>
                 <label for="nombreRT">Nombres:</label>
-                <input type="text" placeholder="..." required /> 
+                <input type="text" placeholder="..."  /> 
                 
             </li>
             <li>
                 <label for="apellidosRT">Apellidos:</label>
-                <input type="text" placeholder="..." required /> 
+                <input type="text" placeholder="..."  /> 
                 
             </li>
             <li>
                 <label for="telefonoRT">Teléfono Fijo:</label>
-                <input type="text" placeholder="..." required /> 
+                <input type="text" placeholder="..."  /> 
                 
             </li>
             <li>
                 <label for="celularRT">Celular:</label>
-                <input type="text" placeholder="..." required /> 
+                <input type="text" placeholder="..."  /> 
                 
             </li>
             <li>
                 <label for="correoRT">Correo Electrónico:</label>
-                <input type="text" placeholder="..." required />
+                <input type="text" placeholder="..."  />
                 <span class="form_hint">Formato correcto: "name@something.com"</span>
                 
             </li>
@@ -112,7 +111,7 @@ use yii\widgets\Pjax;
             </li>
             <li id="especifiqueCC">
                 <label for="especifiqueCC">Especifique:</label>
-                <input type="text" placeholder="..." required />
+                <input type="text" placeholder="..."  />
                 
             </li>
             <li>
@@ -132,7 +131,7 @@ use yii\widgets\Pjax;
             </li>
             <li id="especifiqueAT">
                 <label for="especifiqueAT">Especifique:</label>
-                <input type="text" placeholder="..." required />
+                <input type="text" placeholder="..."  />
                 
             </li>
             <li>
@@ -151,7 +150,7 @@ use yii\widgets\Pjax;
             </li>
             <li id="especifiqueAT">
                 <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 100px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 100px;"></textarea>
                 
                 
             </li>
@@ -165,19 +164,19 @@ use yii\widgets\Pjax;
             <li>
                 <h4>1.8 Resumen Ejcutivo del Proyecto</h4>
                 <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;"></textarea>
 
             </li>
             <li>
                 <h4>1.9 Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4>
                 <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;"></textarea>
 
             </li>
             <li>
                 <h4>1.10 Objeto General</h4>
                 <label for="especifiqueAT">Señale Objeto General:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;"></textarea>
                 <h5>Señale los Objetos Especificos:<h5>
                 <a href="#" >
                  Lista Objetos Especificos
@@ -186,7 +185,7 @@ use yii\widgets\Pjax;
             <li>
                 <h4>1.11 Plan de Trabajo</h4>
                 <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 300px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 300px;"></textarea>
                 <h5>Señale las Actividades para cada Objetivo Específico referidos en el punto 1.10.:<h5>
                 <a href="#" >
                  Lista de Actividades
@@ -195,7 +194,7 @@ use yii\widgets\Pjax;
             <li>
                 <h4>1.12 Resultados Esperados en Innovación Agraria o Transferencia de Tecnología</h4>
                 <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;"></textarea>
 
             </li>
             <li>
@@ -215,19 +214,17 @@ use yii\widgets\Pjax;
             <li>
                 <h4>1.15 Presupuesto del Proyecto</h4>
                 <label for="name">Monto Total:</label>
-                <input type="text" placeholder="..." required />
+                <input type="text" placeholder="..."  />
                 
             </li>
             <li>
                 <h4>1.16 Lista de Referencias Bibliográficas</h4>
                 <label for="especifiqueAT">Señale las Referencias:</label>
-                <textarea type="text" placeholder="..." required rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;"></textarea>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;"></textarea>
 
             </li>
             <li>
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Guardar
-              </button>  
+            <?= Html::submitButton('Guardar', ['id'=>'btnnuevo','class' => 'btn btn-primary','disabled'=>false]) ?> 
             </li>
             <li>
                 
