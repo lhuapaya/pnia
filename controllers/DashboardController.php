@@ -33,7 +33,7 @@ class DashboardController extends Controller
     
     public function actionIndex()
     {
-        
+        $this->layout='principal';
             
         return $this->render('index');
     }
