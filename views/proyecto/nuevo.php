@@ -152,9 +152,9 @@ use yii\widgets\Pjax;
                 
                 
             </li>
-            <li id="especifiqueAT">
-                <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 100px;"></textarea>
+            <li>
+                <label for="proyecto-desc_tipo_proy">Descripción:</label>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 100px;" id="proyecto-desc_tipo_proy" name="Proyecto[desc_tipo_proy]"  required><?= $proyecto->desc_tipo_proy?></textarea>
                 
                 
             </li>
@@ -166,21 +166,21 @@ use yii\widgets\Pjax;
                 
             </li>
             <li>
-                <h4>1.8 Resumen Ejcutivo del Proyecto</h4>
-                <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;"></textarea>
+                <h4>1.8 Resumen Ejecutivo del Proyecto</h4>
+                <label for="proyecto-resumen_ejecutivo">Descripción:</label>
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-resumen_ejecutivo" name="Proyecto[resumen_ejecutivo]"  required><?= $proyecto->resumen_ejecutivo?></textarea>
 
             </li>
             <li>
                 <h4>1.9 Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4>
-                <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;"></textarea>
+                <label for="proyecto-relevancia">Descripción:</label>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
 
             </li>
             <li>
                 <h4>1.10 Objeto General</h4>
-                <label for="especifiqueAT">Señale Objeto General:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;"></textarea>
+                <label for="proyecto-objetivo_general">Señale Objeto General:</label>
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
                 <h5>Señale los Objetos Especificos:<h5>
                 <a href="#" >
                  Lista Objetos Especificos
@@ -188,8 +188,8 @@ use yii\widgets\Pjax;
             </li>
             <li>
                 <h4>1.11 Plan de Trabajo</h4>
-                <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 300px;"></textarea>
+                <label for="proyecto-plan_trabajo">Descripción:</label>
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 300px;" id="proyecto-plan_trabajo" name="Proyecto[plan_trabajo]"  required><?= $proyecto->plan_trabajo?></textarea>
                 <h5>Señale las Actividades para cada Objetivo Específico referidos en el punto 1.10.:<h5>
                 <a href="#" >
                  Lista de Actividades
@@ -197,8 +197,8 @@ use yii\widgets\Pjax;
             </li>
             <li>
                 <h4>1.12 Resultados Esperados en Innovación Agraria o Transferencia de Tecnología</h4>
-                <label for="especifiqueAT">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;"></textarea>
+                <label for="proyecto-resultados_esperados">Descripción:</label>
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;" id="proyecto-resultados_esperados" name="Proyecto[resultados_esperados]"  required><?= $proyecto->resultados_esperados?></textarea>
 
             </li>
             <li>
@@ -217,14 +217,14 @@ use yii\widgets\Pjax;
             </li>
             <li>
                 <h4>1.15 Presupuesto del Proyecto</h4>
-                <label for="name">Monto Total:</label>
-                <input type="text" placeholder="..."  />
+                <label for="proyecto-presupuesto">Monto Total:</label>
+                <input type="text" value="<?= $proyecto->presupuesto?>" placeholder="Presupuesto"  id="proyecto-presupuesto" name="Proyecto[presupuesto]"  required/>
                 
             </li>
             <li>
                 <h4>1.16 Lista de Referencias Bibliográficas</h4>
-                <label for="especifiqueAT">Señale las Referencias:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;"></textarea>
+                <label for="proyecto-referencias_bibliograficas">Señale las Referencias:</label>
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;" id="proyecto-referencias_bibliograficas" name="Proyecto[referencias_bibliograficas]"  required><?= $proyecto->referencias_bibliograficas?></textarea>
 
             </li>
             <li>
