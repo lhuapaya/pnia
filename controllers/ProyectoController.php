@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\Usuarios;
 use app\models\Proyecto;
+use app\models\Responsable;
 
 class ProyectoController extends Controller
 {
@@ -49,27 +50,92 @@ class ProyectoController extends Controller
     public function actionNuevo()
     {
         $this->layout='principal';
+        $flatUpdate = 0;        
+        $proyecto = new Proyecto();
+        $responsable = new Responsable();
         
-        $nuevo = new Proyecto();
-        
-        $Usuario = new Usuarios();
 
         $existe = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->count();
         
-        //var_dump($existe);
-                        
-        if($existe > 0)
+        if($proyecto->load(Yii::$app->request->post()) )
         {
-           $nuevo = Proyecto::find('id, titulo')
+           if($existe == 0)
+            {
+                $proyecto->user_propietario = Yii::$app->user->identity->id;
+                $proyecto->estado = 1;
+                $proyecto->save();
+                
+                
+                
+              /*  
+                $idproyecto = Proyecto::find('id')
+                            ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                            ->one();
+                */
+                $responsable->id_proyecto = $idproyecto->id;
+                $responsable->nombres = 'asdfsdf';//$proyecto->nombres;
+                /*$responsable->apellidos = $proyecto->apellidos;
+                $responsable->telefono = $proyecto->telefono;
+                $responsable->celular = $proyecto->celular;
+                $responsable->correo = $proyecto->correo;*/
+                
+              //  $responsable->save();
+                
+            }
+            
+            
+        }
+        
+                        
+        /*if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {
+           $proyecto = Proyecto::find('id, titulo')
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->one();
          
+           $responsable = Responsable::find('nombres,apellidos,telefono,celular,correo')
+                            ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                            ->one();
+        }*/
+        
+       /* if($proyecto->load(Yii::$app->request->post()) && ($existe == 0))
+        {
+            
+            $proyecto->user_propietario = Yii::$app->user->identity->id;
+            $proyecto->estado = 1;
+            $proyecto->save();
+            
+            
+            
+            
+            $idproyecto = Proyecto::find('id')
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                        ->one();
+            
+            $responsable->id_proyecto = $idproyecto->id;
+            $responsable->nombres = $proyecto->nombres;
+            $responsable->apellidos = $proyecto->apellidos;
+            $responsable->telefono = $proyecto->telefono;
+            $responsable->celular = $proyecto->celular;
+            $responsable->correo = $proyecto->correo;
+            
+            $responsable->save();
+            
+            //var_dump($proyecto->nombres);
         }
         
+        if($proyecto->load(Yii::$app->request->post()) && ($existe > 0))
+        {
+            $proyecto->titulo = $proyecto->proyecto-titulo;
+            $proyecto->user_propietario = Yii::$app->user->identity->id;
+            $proyecto->estado = 1;
+            $proyecto->save();
+        }*/
         
-        return $this->render('nuevo',['nuevo'=>$nuevo]);
+        
+        return $this->render('nuevo',['proyecto'=>$proyecto,'responsable'=>$responsable]);
       
     }
     
@@ -85,15 +151,21 @@ class ProyectoController extends Controller
         
         if ($model->load(Yii::$app->request->post()) && ($existe == 0)) {
             
-            $model->titulo = $model->titulo;
+            $model->titulo = $model->proyecto-titulo;
             $model->user_propietario = Yii::$app->user->identity->id;
             $model->estado = 1;
             $model->save();
+        }
+        else
+        {
+            $model = $this->findModel($id);
+            
         }
         
         return $this->redirect('nuevo', [
                 'nuevo' => $model,
             ]);
     }
+    
 
 }

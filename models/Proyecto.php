@@ -9,6 +9,9 @@ use Yii;
  *
  * @property integer $id
  * @property string $titulo
+ * @property string $direccion_linea
+ * @property string $estacion_exp
+ * @property string $sub_estacion_exp
  * @property integer $id_tipo_proyecto
  * @property string $desc_tipo_proy
  * @property string $resumen_ejecutivo
@@ -30,12 +33,9 @@ use Yii;
  * @property integer $estado
  *
  * @property AccionTransversal $accionTransversal
- * @property Actividad[] $actividads
  * @property AlianzaEstrategica[] $alianzaEstrategicas
  * @property Colaborador $colaborador
- * @property Cronograma[] $cronogramas
  * @property CultivoCrianza $cultivoCrianza
- * @property Dependencia $dependencia
  * @property LugarInvestigacion[] $lugarInvestigacions
  * @property ObjetivoEspecifico[] $objetivoEspecificos
  * @property Usuarios $userPropietario
@@ -44,8 +44,11 @@ use Yii;
  */
 class Proyecto extends \yii\db\ActiveRecord
 {
-    
-    public $direccion_linea;
+            public $nombres;
+            public $apellidos;
+            public $telefono;
+            public $celular;
+            public $correo;
     /**
      * @inheritdoc
      */
@@ -61,9 +64,11 @@ class Proyecto extends \yii\db\ActiveRecord
     {
         return [
             [['id_tipo_proyecto', 'user_propietario', 'estado'], 'integer'],
-            [['presupuesto'], 'number'],
+            [['presupuesto'], 'number','telefono'],
+            //[['nombres','apellidos','telefono','celular','correo'], 'safe'],
+            [['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
-            [['desc_tipo_proy'], 'string', 'max' => 200],
+            [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],
             [['resumen_ejecutivo', 'relevancia'], 'string', 'max' => 9000],
             [['objetivo_general'], 'string', 'max' => 4000],
             [['plan_trabajo', 'resultados_esperados'], 'string', 'max' => 8000],
@@ -80,6 +85,9 @@ class Proyecto extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'titulo' => 'Titulo',
+            'direccion_linea' => 'Direccion Linea',
+            'estacion_exp' => 'Estacion Exp',
+            'sub_estacion_exp' => 'Sub Estacion Exp',
             'id_tipo_proyecto' => 'Id Tipo Proyecto',
             'desc_tipo_proy' => 'Desc Tipo Proy',
             'resumen_ejecutivo' => 'Resumen Ejecutivo',
@@ -113,14 +121,6 @@ class Proyecto extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getActividads()
-    {
-        return $this->hasMany(Actividad::className(), ['id_proyecto' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getAlianzaEstrategicas()
     {
         return $this->hasMany(AlianzaEstrategica::className(), ['id_proyecto' => 'id']);
@@ -137,25 +137,9 @@ class Proyecto extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getCronogramas()
-    {
-        return $this->hasMany(Cronograma::className(), ['id_proyecto' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getCultivoCrianza()
     {
         return $this->hasOne(CultivoCrianza::className(), ['id_proyecto' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getDependencia()
-    {
-        return $this->hasOne(Dependencia::className(), ['id_proyecto' => 'id']);
     }
 
     /**

@@ -16,8 +16,8 @@ use yii\widgets\Pjax;
 
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
-<?php Pjax::begin(); ?>
-    <?php $form = ActiveForm::begin(['action'=>'guardar', 'method'=>'post', 'options' => ['class' => 'contact_form', 'data-pjax' => true ]]); ?>
+
+    <?php $form = ActiveForm::begin(['options' => ['class' => 'contact_form', ]]); ?>
     <div>
         <ul>
             <li>
@@ -27,52 +27,56 @@ use yii\widgets\Pjax;
             
             <li>
                 <h4>1.1 Titulo del Proyecto</h4>
-                <?= $form->field($nuevo, 'id')->hiddenInput(['class'=>''])->label(false) ?>
-
-                <?= $form->field($nuevo, 'titulo')->textInput(['class'=>'form-control texto','disabled'=>false])->label('Nombre del Proyecto')->error(false) ?>
+                <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
+                <label for="proyecto-titulo">Nombre del Proyecto:</label>
+                <input type="text" value="<?= $proyecto->titulo?>" placeholder="Nombre del Proyecto" id="proyecto-titulo" name="Proyecto[titulo]"  required/> <!-- required-->
+                
+             
                 
             </li>
             <li>
                 <h4>1.2 Dependencia del INIA que Ejecutara el Proyecto</h4>
-                <?= $form->field($nuevo, 'direccion_linea')->textInput(['class'=>'form-control texto','disabled'=>false])->label('Señale Dirección en Linea:')->error(false) ?>
-
+                <label for="proyecto-direccion_linea">Señale Dirección en Linea:</label>
+                <input type="text" value="<?= $proyecto->direccion_linea?>" placeholder="Señale Dirección en Linea" id="proyecto-direccion_linea" name="Proyecto[direccion_linea]"  required/> <!-- required-->
+                
+             
                 
             </li>
             <li>
-                <label for="estacionExp">Señale Estación Experimental Agraria:</label>
-                <input type="text" placeholder="..."  /> <!-- required-->
+                <label for="proyecto-estacion_exp">Señale Estación Experimental Agraria:</label>
+                <input type="text" value="<?= $proyecto->estacion_exp?>" placeholder="Señale Estación Experimental Agraria" id="proyecto-estacion_exp" name="Proyecto[estacion_exp]"  required/> <!-- required-->
                 
             </li>
             <li>
-                <label for="subExtacionExp">Señale Sub Estación Experimental Agraria:</label>
-                <input type="text" placeholder="..."  /> 
+                <label for="proyecto-sub_estacion_exp">Señale Sub Estación Experimental Agraria:</label>
+                <input type="text" value="<?= $proyecto->sub_estacion_exp?>" placeholder="Señale Sub Estación Experimental Agraria" id="proyecto-sub_estacion_exp" name="Proyecto[sub_estacion_exp]"  required/> <!-- required-->
                 
             </li>
             <li>
                 <h4>1.3 Nombres y Apellidos del Responsable Técnico del Proyecto</h4>
-                <label for="nombreRT">Nombres:</label>
-                <input type="text" placeholder="..."  /> 
+                <label for="proyecto-nombres">Nombres:</label>
+                <input type="text" value="<?= $responsable->nombres?>" placeholder="Nombres" id="proyecto-nombres" name="Proyecto[nombres]"  required/> <!-- required-->
                 
             </li>
             <li>
-                <label for="apellidosRT">Apellidos:</label>
-                <input type="text" placeholder="..."  /> 
+                <label for="proyecto-apellidos">Apellidos:</label>
+                <input type="text" value="<?= $responsable->apellidos?>" placeholder="Apellidos" id="proyecto-apellidos" name="Proyecto[apellidos]"  required/> <!-- required-->
                 
             </li>
             <li>
-                <label for="telefonoRT">Teléfono Fijo:</label>
-                <input type="text" placeholder="..."  /> 
+                <label for="proyecto-telefono">Teléfono Fijo:</label>
+                <input type="text" value="<?= $responsable->telefono?>" placeholder="Teléfono Fijo" id="proyecto-telefono" name="Proyecto[telefono]"  required/> <!-- required-->
                 
             </li>
             <li>
-                <label for="celularRT">Celular:</label>
-                <input type="text" placeholder="..."  /> 
+                <label for="proyecto-celular">Celular:</label>
+                <input type="text" value="<?= $responsable->celular?>" placeholder="Celular" id="proyecto-celular" name="Proyecto[celular]"  required/> <!-- required-->
                 
             </li>
             <li>
-                <label for="correoRT">Correo Electrónico:</label>
-                <input type="text" placeholder="..."  />
-                <span class="form_hint">Formato correcto: "name@something.com"</span>
+                <label for="proyecto-correo">Correo Electrónico:</label>
+                <input type="text" value="<?= $responsable->correo?>" placeholder="Correo Electrónico" id="proyecto-correo" name="Proyecto[correo]"  required/> <!-- required-->
+                <span class="form_hint">Formato correcto: "nombre@dominio.com"</span>
                 
             </li>
             
@@ -224,7 +228,7 @@ use yii\widgets\Pjax;
 
             </li>
             <li>
-            <?= Html::submitButton('Guardar', ['id'=>'btnnuevo','class' => 'btn btn-primary','disabled'=>false]) ?> 
+            <button type="submit" id="btnproyecto" class="btn btn-primary">Guardar</button>
             </li>
             <li>
                 
@@ -235,8 +239,15 @@ use yii\widgets\Pjax;
     </div>
 
  <?php ActiveForm::end(); ?>
-    <?php Pjax::end(); ?>    
-<!--</form>-->
+
+
+<?php
+
+    $urlproyecto= Yii::$app->getUrlManager()->createUrl('proyecto/guardar');
+    $urlresponsable= Yii::$app->getUrlManager()->createUrl('responsable/guardar');
+    /*$validarintegrante2= Yii::$app->getUrlManager()->createUrl('equipo/validarintegrante2');
+    $existeequipo=Yii::$app->getUrlManager()->createUrl('equipo/existeequipo');*/
+?>
 
 
 <script type="text/javascript">
@@ -268,7 +279,61 @@ $('#selecAT').change(function(){
      {
       $("#especifiqueAT").hide();  
      }
-     saludo(valor2); 
+    // saludo(valor2); 
+});
+
+$("#btnproyecto").click(function( ) {
+    
+    var error='';
+    if($.trim($('#proyecto-titulo').val())=='')
+        {
+            error=error+'Ingrese Nombre del Proyecto<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+        
+    if(error!='')
+        {
+            $.notify({
+                message: error 
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+            return false;
+        }
+        
+        var id = $('#proyecto-id').val();
+        var titulo = $('#proyecto-id').val();
+        var direccion_linea = $('#proyecto-direccion_linea').val();
+        var estacion_exp = $('#proyecto-estacion_exp').val();
+        var sub_estacion_exp = $('#proyecto-sub_estacion_exp').val();
+        var nombres = $('#responsable-nombres').val();
+        var apellidos = $('#responsable-apellidos').val();
+        var telefono = $('#responsable-telefono').val();
+        var celular = $('#responsable-celular').val();
+        var correo = $('#responsable-correo').val();
+        
+    var validarproyecto=$.ajax({
+                url: '<?= $urlproyecto ?>',
+                type: 'POST',
+                async: false,
+                data: {'Proyecto[id]':id,'Proyecto[titulo]':titulo,'Proyecto[direccion_linea]':direccion_linea,'Proyecto[estacion_exp]':estacion_exp,'Proyecto[sub_estacion_exp]':sub_estacion_exp},
+                success: function(data){
+                    
+                }
+            });    
+        
+        
+        
+    
+    return true;
 });
 
 
