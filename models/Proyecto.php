@@ -63,10 +63,10 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_proyecto', 'user_propietario', 'estado'], 'integer'],
-            [['presupuesto'], 'number','telefono'],
-            //[['nombres','apellidos','telefono','celular','correo'], 'safe'],
-            [['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
+            [['id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
+            [['presupuesto'], 'number'],
+            [['nombres','apellidos','telefono','celular','correo'], 'safe'],
+            //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],
             [['resumen_ejecutivo', 'relevancia'], 'string', 'max' => 9000],

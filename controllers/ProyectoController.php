@@ -66,22 +66,47 @@ class ProyectoController extends Controller
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
                 $proyecto->estado = 1;
                 $proyecto->save();
+
                 
-                
-                
-              /*  
-                $idproyecto = Proyecto::find('id')
-                            ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
-                            ->one();
-                */
-                $responsable->id_proyecto = $idproyecto->id;
-                $responsable->nombres = 'asdfsdf';//$proyecto->nombres;
-                /*$responsable->apellidos = $proyecto->apellidos;
+                $responsable->id_proyecto = $proyecto->id;
+                $responsable->nombres = $proyecto->nombres;
+                $responsable->apellidos = $proyecto->apellidos;
                 $responsable->telefono = $proyecto->telefono;
                 $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;*/
+                $responsable->correo = $proyecto->correo;
                 
-              //  $responsable->save();
+                $responsable->save();
+                
+            }
+            else
+            {
+                //var_dump($proyecto->id);
+                $data= Proyecto::findOne($proyecto->id);
+                $data->titulo = $proyecto->titulo;
+                $data->direccion_linea = $proyecto->direccion_linea;
+                $data->estacion_exp = $proyecto->estacion_exp;
+                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
+                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
+                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
+                $data->desc_tipo_proy = $proyecto->desc_tipo_proy;
+                $data->resumen_ejecutivo = $proyecto->resumen_ejecutivo;
+                $data->relevancia = $proyecto->relevancia;
+                $data->objetivo_general = $proyecto->objetivo_general;
+                $data->plan_trabajo = $proyecto->plan_trabajo;
+                $data->resultados_esperados = $proyecto->resultados_esperados;
+                $data->presupuesto = $proyecto->presupuesto;
+                $data->referencias_bibliograficas = $proyecto->referencias_bibliograficas;
+                $data->update();
+                
+                
+                $responsable = Responsable::findOne($proyecto->id);
+                $responsable->nombres = $proyecto->nombres;
+                $responsable->apellidos = $proyecto->apellidos;
+                $responsable->telefono = $proyecto->telefono;
+                $responsable->celular = $proyecto->celular;
+                $responsable->correo = $proyecto->correo;
+                
+                $responsable->update();
                 
             }
             
@@ -89,16 +114,16 @@ class ProyectoController extends Controller
         }
         
                         
-        /*if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
         {
-           $proyecto = Proyecto::find('id, titulo')
+           $proyecto = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->one();
          
-           $responsable = Responsable::find('nombres,apellidos,telefono,celular,correo')
+           $responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
-        }*/
+        }
         
        /* if($proyecto->load(Yii::$app->request->post()) && ($existe == 0))
         {
