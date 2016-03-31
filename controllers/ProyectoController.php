@@ -72,7 +72,7 @@ class ProyectoController extends Controller
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
-                
+                /*estee esss*/
                 for($i=0;$i<$countObjetivosEspecificos;$i++)
                 {
                     $objetivosespecificos=new ObjetivoEspecifico;
@@ -110,7 +110,7 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 
                 $responsable->update();
-                
+                /*y este*/
                 for($i=0;$i<$countObjetivosEspecificos;$i++)
                 {
                     if(isset($proyecto->ids[$i]))
