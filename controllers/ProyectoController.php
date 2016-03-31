@@ -213,5 +213,23 @@ class ProyectoController extends Controller
             ]);
     }
     
+    public function actionExisteproyecto()
+    {
+       $existe = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                        ->count();
+                        
+        if($existe == 0)
+        {
+          $error = 'No Exite Proyecto Registrado!';  
+        }
+        else
+        {
+            $error = 1;
+        }
+        
+        echo $error;
+    }
+    
 
 }
