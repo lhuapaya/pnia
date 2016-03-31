@@ -10,6 +10,7 @@ use app\models\LoginForm;
 use app\models\Usuarios;
 use app\models\Proyecto;
 use app\models\Responsable;
+use app\models\ObjetivoEspecifico;
 
 class ProyectoController extends Controller
 {
@@ -53,30 +54,32 @@ class ProyectoController extends Controller
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
         $responsable = new Responsable();
-        
-
         $existe = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->count();
-        
         if($proyecto->load(Yii::$app->request->post()) )
         {
-           if($existe == 0)
+            $countObjetivosEspecificos=count($proyecto->descripciones);
+            if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
                 $proyecto->estado = 1;
                 $proyecto->save();
-
-                
                 $responsable->id_proyecto = $proyecto->id;
                 $responsable->nombres = $proyecto->nombres;
                 $responsable->apellidos = $proyecto->apellidos;
                 $responsable->telefono = $proyecto->telefono;
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
-                
                 $responsable->save();
                 
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+                {
+                    $objetivosespecificos=new ObjetivoEspecifico;
+                    $objetivosespecificos->id_proyecto=$proyecto->id;
+                    $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
+                    $objetivosespecificos->save();
+                }
             }
             else
             {
@@ -108,9 +111,27 @@ class ProyectoController extends Controller
                 
                 $responsable->update();
                 
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+                {
+                    if(isset($proyecto->ids[$i]))
+                    {
+                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->ids[$i]);
+                        $objetivosespecificos->id_proyecto=$proyecto->id;
+                        $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
+                        $objetivosespecificos->update(); 
+                    }
+                    else
+                    {
+                        $objetivosespecificos=new ObjetivoEspecifico;
+                        $objetivosespecificos->id_proyecto=$proyecto->id;
+                        $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
+                        $objetivosespecificos->save(); 
+                    }
+                }
+                
             }
             
-            
+            return $this->refresh();
         }
         
                         
@@ -119,7 +140,7 @@ class ProyectoController extends Controller
            $proyecto = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->one();
-         
+            
            $responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
