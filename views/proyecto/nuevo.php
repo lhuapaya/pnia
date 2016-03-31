@@ -182,9 +182,7 @@ use yii\widgets\Pjax;
                 <label for="proyecto-objetivo_general">Señale Objeto General:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
                 <h5>Señale los Objetos Especificos:<h5>
-                <a href="#" >
-                 Lista Objetos Especificos
-                </a> 
+                <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['id'=>$proyecto->id]); ?> 
             </li>
             <li>
                 <h4>1.11 Plan de Trabajo</h4>
@@ -237,15 +235,12 @@ use yii\widgets\Pjax;
         
         </ul>
     </div>
-
+    
+    
+    
+    
  <?php ActiveForm::end(); ?>
 
 
-<?php
 
-    $urlproyecto= Yii::$app->getUrlManager()->createUrl('proyecto/guardar');
-    $urlresponsable= Yii::$app->getUrlManager()->createUrl('responsable/guardar');
-    /*$validarintegrante2= Yii::$app->getUrlManager()->createUrl('equipo/validarintegrante2');
-    $existeequipo=Yii::$app->getUrlManager()->createUrl('equipo/existeequipo');*/
-?>
 
