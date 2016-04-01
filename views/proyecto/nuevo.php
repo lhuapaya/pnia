@@ -82,14 +82,13 @@ use yii\widgets\Pjax;
             
             <li>
                 <h4>1.4 Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4>
-                <a href="#" id="proyecto-colaboradores" name="proyecto-colaboradores">
-                 Lista de Colaboradores   
-                </a>
                 
+                <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?> 
+                                
             </li>
             <li>
                 <h4>1.5 Alianza Estratégica establecidas para el Proyecto</h4>
-                <a href="#">
+                <a href="#" >
                  Lista de Instituciones Asociadas.
                 </a>
                 
@@ -242,7 +241,6 @@ use yii\widgets\Pjax;
  <?php ActiveForm::end(); ?>
 
 
-<<<<<<< HEAD
 <?php
 
     $urlproyectoExiste= Yii::$app->getUrlManager()->createUrl('proyecto/existeproyecto');
@@ -337,8 +335,7 @@ $("#btnproyecto").click(function( ) {
     
     return true;
 });
-=======
->>>>>>> origin/master
+
 
 $("#proyecto-colaboradores").click(function( ) {
     
@@ -372,5 +369,5 @@ $("#proyecto-colaboradores").click(function( ) {
  
 });
 
-
+</script>
 

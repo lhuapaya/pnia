@@ -7,6 +7,7 @@ use Yii;
 /**
  * This is the model class for table "colaborador".
  *
+ * @property integer $id
  * @property integer $id_proyecto
  * @property string $nombres
  * @property string $apellidos
@@ -42,6 +43,7 @@ class Colaborador extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
+            'id' => 'ID',
             'id_proyecto' => 'Id Proyecto',
             'nombres' => 'Nombres',
             'apellidos' => 'Apellidos',

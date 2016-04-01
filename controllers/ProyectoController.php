@@ -59,7 +59,7 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countObjetivosEspecificos=count($proyecto->descripciones);
+            //$countObjetivosEspecificos=count($proyecto->descripciones);
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
@@ -73,13 +73,13 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
                 
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
+               /* for($i=0;$i<$countObjetivosEspecificos;$i++)
                 {
                     $objetivosespecificos=new ObjetivoEspecifico;
                     $objetivosespecificos->id_proyecto=$proyecto->id;
                     $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
                     $objetivosespecificos->save();
-                }
+                }*/
             }
             else
             {
@@ -111,7 +111,7 @@ class ProyectoController extends Controller
                 
                 $responsable->update();
                 
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
+               /* for($i=0;$i<$countObjetivosEspecificos;$i++)
                 {
                     if(isset($proyecto->ids[$i]))
                     {
@@ -127,7 +127,7 @@ class ProyectoController extends Controller
                         $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
                         $objetivosespecificos->save(); 
                     }
-                }
+                }*/
                 
             }
             

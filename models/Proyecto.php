@@ -52,6 +52,9 @@ class Proyecto extends \yii\db\ActiveRecord
             /*objetivos*/
             public $ids;
             public $descripciones;
+            public $nombresc;
+            public $apellidosc;
+            public $funcionesc;
     /**
      * @inheritdoc
      */
@@ -66,7 +69,7 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id','id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
+            [['id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
             [['presupuesto'], 'number'],
             [['nombres','apellidos','telefono','celular','correo','descripciones','ids'], 'safe'],
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
