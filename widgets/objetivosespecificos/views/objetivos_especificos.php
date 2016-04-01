@@ -1,4 +1,4 @@
-<a href="#" data-toggle="modal" data-target="#objetivos_especificos">
+<a href="#" data-toggle="modal" data-target="#objetivos_especificos" id="objetivos-especificos">
     Lista Objetos Especificos
 </a>
 <!--Lista de Objetivos Especificos -->
@@ -26,52 +26,52 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i=0; ?>
+                            <?php $oe=0; ?>
 			    <?php if($objetivosespecificos){ ?>
 				
-				<?php foreach($objetivosespecificos as $objetivoespecifico){?>
+				<?php foreach($objetivosespecificos as $objetivoespecifico){ ?>
 				    <?php //if($objetivo->id==$proyecto->objetivo_especifico_1_id){ ?>
-				    <tr id='addr_1_<?= $i ?>'>
+				    <tr id='objetivo_addr_1_<?= $oe ?>'>
 					<td>
-					<?= ($i+1) ?>
+					<?= ($oe+1) ?>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-descripciones_<?= $i ?> required">
+					    <div class="form-group field-proyecto-objetivos_descripciones_<?= $oe ?> required">
 						
-						<input type="text" id="proyecto-descripciones_<?= $i ?>" class="form-control" name="Proyecto[descripciones][]" placeholder="Descripción #<?= $i ?>" value="<?= $objetivoespecifico->descripcion ?>" />
+						<input type="text" id="proyecto-objetivos_descripciones_<?= $oe ?>" class="form-control" name="Proyecto[objetivos_descripciones][]" placeholder="Descripción #<?= $oe ?>" value="<?= $objetivoespecifico->descripcion ?>" />
 					    </div>
 					</td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
-						<input type="hidden" name="Proyecto[ids][]" value="<?= $objetivoespecifico->id ?>" />
+						<input type="hidden" name="Proyecto[objetivos_ids][]" value="<?= $objetivoespecifico->id ?>" />
 					    </span>
 					</td>
 				    </tr>
-				    <?php $i++; ?>
+				    <?php $oe++; ?>
 				    <?php //}?>
 				<?php } ?>
 			    <?php }else{ ?>
-				<tr id='addr_1_0'>
+				<tr id='objetivo_addr_1_0'>
 				    <td>
-				    <?= ($i+1) ?>
+				    <?= ($oe+1) ?>
 				    </td>
 				    <td>
-					<div class="form-group field-proyecto-descripciones_0 required">
-					    <input type="text" id="proyecto-descripciones_0" class="form-control" name="Proyecto[descripciones][]" placeholder="Descripción #0"  />
+					<div class="form-group field-proyecto-objetivos_descripciones_0 required">
+					    <input type="text" id="proyecto-objetivos_descripciones_0" class="form-control" name="Proyecto[objetivos_descripciones][]" placeholder="Descripción #0"  />
 					</div>
 				    </td>
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">
-					    <input type="hidden" name="Proyecto[ids][]"  />
+					    <input type="hidden" name="Proyecto[objetivos_ids][]"  />
 					</span>
 				    </td>
 				</tr>
-				<?php $i=1; ?>
+				<?php $oe=1; ?>
 			    <?php } ?>
-                            <tr id='addr_1_<?= $i ?>'></tr>
+                            <tr id='objetivo_addr_1_<?= $oe ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="add_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
+                    <div id="objetivo_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
                     <br>
                 </div>
                 <div class="clearfix"></div>
@@ -85,10 +85,11 @@
 </div>
 
 <?php
-    $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminaractividad');
+    $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarobjetivoespecifico');
 ?>
 <script>
-    var i=<?= $i ?>;
+    var oe=<?= $oe ?>;
+    
     $("#objetivos_especificos_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
         if (r == true) {
@@ -113,32 +114,12 @@
     });
     
     
-    $("#add_row_1").click(function(){
-        
-        
-        var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
-        /*if (objetivo==5 && $('#proyecto-actividad_objetivo1_'+(i-1)).val()!='')
+    $("#objetivo_row_1").click(function(){
+       console.log(oe);
+        if($('#proyecto-objetivos_descripciones_'+(oe-1)).val()=='')
         {
-            $.notify({
-                message: 'No se puede agregar mas de 5' 
-            },{
-                type: 'danger',
-                z_index: 1000000,
-                placement: {
-                    from: 'bottom',
-                    align: 'right'
-                },
-            });
-            $('.field-proyecto-actividad_objetivo1_'+(i-1)).addClass('has-success');
-            $('.field-proyecto-actividad_objetivo1_'+(i-1)).removeClass('has-error');
-            return false;
-        }*/
-        
-        
-        if($('#proyecto-descripciones_'+(i-1)).val()=='')
-        {
-            var error='ingrese el objetivo #'+i+' <br>';
-            $('.field-proyecto-descripciones_'+(i-1)).addClass('has-error');
+            var error='ingrese el objetivo #'+oe+' <br>';
+            $('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
             $.notify({
                 message: error 
             },{
@@ -151,15 +132,13 @@
             });
             return false;
         }
-        else
-        {
-            $('.field-proyecto-descripciones_'+(i-1)).addClass('has-success');
-            $('.field-proyecto-descripciones_'+(i-1)).removeClass('has-error');
-            
-            $('#addr_1_'+i).html("<td>"+ (i+1) +"</td><td><div class='form-group field-proyecto-descripciones_"+i+" required'><input id='proyecto-descripciones_"+i+"' name='Proyecto[descripciones][]' type='text' placeholder='Descripción #"+i+"' class='form-control'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
-            $('#objetivos_especificos_tabla').append('<tr id="addr_1_'+(i+1)+'"></tr>');
-            i++;
-        }
+        
+            $('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-success');
+            $('.field-proyecto-objetivos_descripciones_'+(oe-1)).removeClass('has-error');
+            $('#objetivo_addr_1_'+oe).html("<td>"+ (oe+1) +"</td><td><div class='form-group field-proyecto-objetivos_descripciones_"+oe+" required'><input id='proyecto-objetivos_descripciones_"+oe+"' name='Proyecto[objetivos_descripciones][]' type='text' placeholder='Descripción #"+(oe+1)+"' class='form-control'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
+            $('#objetivos_especificos_tabla').append('<tr id="objetivo_addr_1_'+(oe+1)+'"></tr>');
+            oe++;
+        
         
         
         return true;
@@ -167,17 +146,17 @@
     
     $("#btn_objetivos_especificos").click(function(event){
 	var error='';
-        var objetivo1=$('input[name=\'Proyecto[descripciones][]\']').length;
+        var objetivo1=$('input[name=\'Proyecto[objetivos_descripciones][]\']').length;
         for (var i=0; i<objetivo1; i++) {
-            if($('#proyecto-descripciones_'+i).val()=='')
+            if($('#proyecto-objetivos_descripciones_'+i).val()=='')
             {
                 error=error+'ingrese el objetivo especifico #'+i+'  <br>';
-                $('.field-proyecto-descripciones_'+i).addClass('has-error');
+                $('.field-proyecto-objetivos_descripciones_'+i).addClass('has-error');
             }
             else
             {
-                $('.field-proyecto-descripciones_'+i).addClass('has-success');
-                $('.field-proyecto-descripciones_'+i).removeClass('has-error');
+                $('.field-proyecto-objetivos_descripciones_'+i).addClass('has-success');
+                $('.field-proyecto-objetivos_descripciones_'+i).removeClass('has-error');
             }
         }
 	
@@ -196,7 +175,30 @@
         }
         else
         {
+	    $( "#w0" ).submit();
             return true;
         }
     });
+    
+    $("#objetivos-especificos").click(function( ) {
+	var id='<?= $proyecto_id ?>';
+	console.log(id);
+	if (id=='') {
+	    $.notify({
+                message: 'No existe proyecto registrado'
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+            return false;
+	}
+	return true;
+    });
+    
 </script>

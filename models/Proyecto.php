@@ -50,6 +50,18 @@ class Proyecto extends \yii\db\ActiveRecord
             public $celular;
             public $correo;
             /*objetivos*/
+            public $objetivos_ids;
+            public $objetivos_descripciones;
+            /*actividades*/
+            public $actividades_ids;
+            public $actividades_oe_ids;
+            public $actividades_descripciones;
+            /*cronogrmas*/
+            public $cronogramas_ids;
+            public $cronogramas_actividad_ids;
+            public $cronogramas_meses;
+            
+            
             public $ids;
             public $descripciones;
             public $nombresc;
@@ -71,7 +83,9 @@ class Proyecto extends \yii\db\ActiveRecord
         return [
             [['id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
             [['presupuesto'], 'number'],
-            [['nombres','apellidos','telefono','celular','correo','descripciones','ids'], 'safe'],
+            [['nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
+              'objetivos_descripciones','actividades_ids','actividades_oe_ids','actividades_descripciones',
+              'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids'], 'safe'],
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],

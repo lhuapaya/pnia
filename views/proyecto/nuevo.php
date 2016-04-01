@@ -82,8 +82,8 @@ use yii\widgets\Pjax;
             
             <li>
                 <h4>1.4 Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4>
-                
-                <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?> 
+                Lista de colaboradores
+                <?php //= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?> 
                                 
             </li>
             <li>
@@ -181,16 +181,15 @@ use yii\widgets\Pjax;
                 <label for="proyecto-objetivo_general">Señale Objeto General:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
                 <h5>Señale los Objetos Especificos:<h5>
-                <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['id'=>$proyecto->id]); ?> 
+                <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
             </li>
             <li>
                 <h4>1.11 Plan de Trabajo</h4>
                 <label for="proyecto-plan_trabajo">Descripción:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 300px;" id="proyecto-plan_trabajo" name="Proyecto[plan_trabajo]"  required><?= $proyecto->plan_trabajo?></textarea>
                 <h5>Señale las Actividades para cada Objetivo Específico referidos en el punto 1.10.:<h5>
-                <a href="#" >
-                 Lista de Actividades
-                </a> 
+                <?= \app\widgets\actividades\ActividadesWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
+                
             </li>
             <li>
                 <h4>1.12 Resultados Esperados en Innovación Agraria o Transferencia de Tecnología</h4>
@@ -207,9 +206,7 @@ use yii\widgets\Pjax;
             </li>
             <li>
                 <h4>1.14 Cronograma del Proyecto</h4>
-                <a href="#">
-                 Listar Actividades para Cronograma 
-                </a>
+                <?php //= \app\widgets\cronogramas\CronogramasWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
                 
             </li>
             <li>
@@ -338,7 +335,6 @@ $("#btnproyecto").click(function( ) {
 
 
 $("#proyecto-colaboradores").click(function( ) {
-    
     var existe=$.ajax({
                 url: '<?= $urlproyectoExiste ?>',
                 type: 'POST',
@@ -348,7 +344,6 @@ $("#proyecto-colaboradores").click(function( ) {
                     
                 }
             });
-    
     if(existe.responseText!=1)
         {
             $.notify({
@@ -365,8 +360,6 @@ $("#proyecto-colaboradores").click(function( ) {
             });
             return false;
         }
-
- 
 });
 
 </script>
