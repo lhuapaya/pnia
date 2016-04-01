@@ -75,14 +75,24 @@ class ProyectoController extends Controller
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
+<<<<<<< HEAD
                 /*estee esss*/
                 /*for($i=0;$i<$countObjetivosEspecificos;$i++)
+=======
+
+                
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+
+                /*estee esss*/
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+
+>>>>>>> 53a927f98bce64c40b99954713529ced59f78def
                 {
                     $objetivosespecificos=new ObjetivoEspecifico;
                     $objetivosespecificos->id_proyecto=$proyecto->id;
                     $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
                     $objetivosespecificos->save();
-                }*/
+                }
             }
             else
             {
@@ -113,8 +123,18 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 
                 $responsable->update();
+<<<<<<< HEAD
                 /*objetivos*/
                 for($i=0;$i<$countObjetivosEspecificos;$i++)
+=======
+
+                
+               /* for($i=0;$i<$countObjetivosEspecificos;$i++)
+
+                /*y este*/
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+
+>>>>>>> 53a927f98bce64c40b99954713529ced59f78def
                 {
                     if(isset($proyecto->objetivos_ids[$i]))
                     {
@@ -131,6 +151,7 @@ class ProyectoController extends Controller
                         $objetivosespecificos->save(); 
                     }
                 }
+<<<<<<< HEAD
                 
                 /*actividades*/
                 for($i=0;$i<$countActividades;$i++)
@@ -171,6 +192,8 @@ class ProyectoController extends Controller
                         $cronograma->save(); 
                     }
                 }*/
+=======
+>>>>>>> 53a927f98bce64c40b99954713529ced59f78def
                 
             }
             
