@@ -29,9 +29,11 @@ class ObjetivosEspecificosWidget extends Widget
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->id])
                                 ->all();
         //var_dump($objetivosespecificos);die;
-        //if ($actividad->load(\Yii::$app->request->post())) {
+        //if ($objetivosespecificos->load(\Yii::$app->request->post())) {// este post igual al create
             
-            //1return \Yii::$app->getResponse()->refresh();
+            
+            
+           // return \Yii::$app->getResponse()->refresh();
         //}
         
         return $this->render('objetivos_especificos',['objetivosespecificos'=>$objetivosespecificos]);
