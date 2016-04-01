@@ -62,7 +62,7 @@ class ProyectoController extends Controller
         {
             $countObjetivosEspecificos=count($proyecto->objetivos_descripciones);
             $countActividades=count($proyecto->actividades_descripciones);
-            //$countCronogramas=count($proyecto->cronogramas_meses);
+            $countCronogramas=count($proyecto->cronogramas_meses);
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
@@ -153,12 +153,12 @@ class ProyectoController extends Controller
                 }
                 
                 /*cronogramas*/
-                /*for($i=0;$i<$countCronogramas;$i++)
+                for($i=0;$i<$countCronogramas;$i++)
                 {
-                    //var_dump($proyecto->actividades_ids);die;
+                    //var_dump($proyecto->cronogramas_meses);die;
                     if(isset($proyecto->cronogramas_ids[$i]))
                     {
-                        $cronograma=Cronograma::find()->where('id_actividad=:id_actividad',[':id_actividad'=>$proyecto->cronogramas_actividad_ids[$i]])->one();
+                        $cronograma=Cronograma::findOne($proyecto->cronogramas_ids[$i]);
                         $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
                         $cronograma->mes=$proyecto->cronogramas_meses[$i];
                         $cronograma->update(); 
@@ -170,7 +170,7 @@ class ProyectoController extends Controller
                         $cronograma->mes=$proyecto->cronogramas_meses[$i];
                         $cronograma->save(); 
                     }
-                }*/
+                }
                 
             }
             
@@ -283,6 +283,11 @@ class ProyectoController extends Controller
     public function actionEliminaractividad($id)
     {
         Actividad::findOne($id)->delete();
+    }
+    
+    public function actionEliminarcronograma($id)
+    {
+        Cronograma::findOne($id)->delete();
     }
     
 

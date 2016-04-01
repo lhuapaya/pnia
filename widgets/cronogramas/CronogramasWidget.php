@@ -40,7 +40,7 @@ class CronogramasWidget extends Widget
                                 ->all();
         
         $cronogramas=Cronograma::find()
-                                ->select('cronograma.mes,cronograma.id_actividad')
+                                ->select('cronograma.id,cronograma.mes,cronograma.id_actividad')
                                 ->innerJoin('actividad','actividad.id=cronograma.id_actividad')
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=actividad.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')

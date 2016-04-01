@@ -206,7 +206,7 @@ use yii\widgets\Pjax;
             </li>
             <li>
                 <h4>1.14 Cronograma del Proyecto</h4>
-                <?php //= \app\widgets\cronogramas\CronogramasWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
+                <?= \app\widgets\cronogramas\CronogramasWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
                 
             </li>
             <li>

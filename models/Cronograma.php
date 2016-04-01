@@ -30,7 +30,8 @@ class Cronograma extends \yii\db\ActiveRecord
     {
         return [
             //[['id_actividad', 'mes'], 'required'],
-            [['id_actividad', 'mes', 'estado'], 'integer']
+            [['id','id_actividad',  'estado'], 'integer'],
+            [['mes'],'safe']
         ];
     }
 

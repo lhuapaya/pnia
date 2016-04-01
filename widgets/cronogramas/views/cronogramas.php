@@ -65,7 +65,7 @@ foreach($actividades as $actividad)
 					</td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
-						<input type="hidden" name="Proyecto[cronogramas_ids][]" value="<?= $cronograma->id_actividad ?>" />
+						<input type="hidden" name="Proyecto[cronogramas_ids][]" value="<?= $cronograma->id ?>" />
 						
 					    </span>
 					</td>
