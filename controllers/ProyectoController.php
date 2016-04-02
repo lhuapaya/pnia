@@ -75,14 +75,7 @@ class ProyectoController extends Controller
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
-<<<<<<< HEAD
 
-                
-              //  for($i=0;$i<$countObjetivosEspecificos;$i++)
-
-                /*estee esss*/
-              /*  for($i=0;$i<$countObjetivosEspecificos;$i++)
-=======
                 /*for($i=0;$i<$countObjetivosEspecificos;$i++)
 >>>>>>> 696776cfe3f3faee77f470ca24c71f2d65259c77
 
@@ -122,18 +115,10 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 
                 $responsable->update();
-<<<<<<< HEAD
 
-                
-               /* for($i=0;$i<$countObjetivosEspecificos;$i++)
-
-                /*y este*/
-               /* for($i=0;$i<$countObjetivosEspecificos;$i++)
-
-=======
                 /*objetivos*/
                 for($i=0;$i<$countObjetivosEspecificos;$i++)
->>>>>>> 696776cfe3f3faee77f470ca24c71f2d65259c77
+
                 {
                     if(isset($proyecto->objetivos_ids[$i]))
                     {
@@ -148,8 +133,8 @@ class ProyectoController extends Controller
                         $objetivosespecificos->id_proyecto=$proyecto->id;
                         $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
                         $objetivosespecificos->save(); 
-                    }*/
-                
+                    }
+                }
                 
                 /*actividades*/
                 for($i=0;$i<$countActividades;$i++)
