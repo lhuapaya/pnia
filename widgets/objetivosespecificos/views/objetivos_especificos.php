@@ -62,7 +62,6 @@
 				    </td>
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">
-					    <input type="hidden" name="Proyecto[objetivos_ids][]"  />
 					</span>
 				    </td>
 				</tr>
