@@ -74,17 +74,17 @@ class ProyectoController extends Controller
                 $responsable->save();
 
                 
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
+              //  for($i=0;$i<$countObjetivosEspecificos;$i++)
 
                 /*estee esss*/
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
+              /*  for($i=0;$i<$countObjetivosEspecificos;$i++)
 
                 {
                     $objetivosespecificos=new ObjetivoEspecifico;
                     $objetivosespecificos->id_proyecto=$proyecto->id;
                     $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
                     $objetivosespecificos->save();
-                }
+                }*/
             }
             else
             {
@@ -120,7 +120,7 @@ class ProyectoController extends Controller
                /* for($i=0;$i<$countObjetivosEspecificos;$i++)
 
                 /*y este*/
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
+               /* for($i=0;$i<$countObjetivosEspecificos;$i++)
 
                 {
                     if(isset($proyecto->ids[$i]))
@@ -136,8 +136,8 @@ class ProyectoController extends Controller
                         $objetivosespecificos->id_proyecto=$proyecto->id;
                         $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
                         $objetivosespecificos->save(); 
-                    }
-                }
+                    }*/
+                
                 
             }
             
