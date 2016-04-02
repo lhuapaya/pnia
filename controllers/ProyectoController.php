@@ -60,9 +60,9 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countObjetivosEspecificos=count($proyecto->objetivos_descripciones);
-            $countActividades=count($proyecto->actividades_descripciones);
-            $countCronogramas=count($proyecto->cronogramas_meses);
+            $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
+            $countActividades=count(array_filter($proyecto->actividades_descripciones));
+            $countCronogramas=count(array_filter($proyecto->cronogramas_meses));
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
@@ -131,7 +131,7 @@ class ProyectoController extends Controller
                         $objetivosespecificos->save(); 
                     }
                 }
-                
+                //var_dump($countActividades);die;
                 /*actividades*/
                 for($i=0;$i<$countActividades;$i++)
                 {
