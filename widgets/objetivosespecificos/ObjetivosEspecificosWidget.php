@@ -16,7 +16,7 @@ use app\models\Usuario;
 use app\models\Cronograma;
 class ObjetivosEspecificosWidget extends Widget
 {
-    public $id;
+    public $proyecto_id;
     public function init()
     {
         parent::init();
@@ -26,7 +26,7 @@ class ObjetivosEspecificosWidget extends Widget
     {
         //var_dump($this->id);die;
         $objetivosespecificos=ObjetivoEspecifico::find()
-                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->id])
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->proyecto_id])
                                 ->all();
         //var_dump($objetivosespecificos);die;
         //if ($objetivosespecificos->load(\Yii::$app->request->post())) {// este post igual al create
@@ -36,6 +36,6 @@ class ObjetivosEspecificosWidget extends Widget
            // return \Yii::$app->getResponse()->refresh();
         //}
         
-        return $this->render('objetivos_especificos',['objetivosespecificos'=>$objetivosespecificos]);
+        return $this->render('objetivos_especificos',['objetivosespecificos'=>$objetivosespecificos,'proyecto_id'=>$this->proyecto_id]);
     }
 }

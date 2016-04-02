@@ -11,7 +11,8 @@ use app\models\Usuarios;
 use app\models\Proyecto;
 use app\models\Responsable;
 use app\models\ObjetivoEspecifico;
-
+use app\models\Actividad;
+use app\models\Cronograma;
 class ProyectoController extends Controller
 {
     
@@ -59,7 +60,9 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            //$countObjetivosEspecificos=count($proyecto->descripciones);
+            $countObjetivosEspecificos=count($proyecto->objetivos_descripciones);
+            $countActividades=count($proyecto->actividades_descripciones);
+            $countCronogramas=count($proyecto->cronogramas_meses);
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
@@ -72,17 +75,21 @@ class ProyectoController extends Controller
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
+<<<<<<< HEAD
 
                 
               //  for($i=0;$i<$countObjetivosEspecificos;$i++)
 
                 /*estee esss*/
               /*  for($i=0;$i<$countObjetivosEspecificos;$i++)
+=======
+                /*for($i=0;$i<$countObjetivosEspecificos;$i++)
+>>>>>>> 696776cfe3f3faee77f470ca24c71f2d65259c77
 
                 {
                     $objetivosespecificos=new ObjetivoEspecifico;
                     $objetivosespecificos->id_proyecto=$proyecto->id;
-                    $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
+                    $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
                     $objetivosespecificos->save();
                 }*/
             }
@@ -115,6 +122,7 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 
                 $responsable->update();
+<<<<<<< HEAD
 
                 
                /* for($i=0;$i<$countObjetivosEspecificos;$i++)
@@ -122,22 +130,66 @@ class ProyectoController extends Controller
                 /*y este*/
                /* for($i=0;$i<$countObjetivosEspecificos;$i++)
 
+=======
+                /*objetivos*/
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+>>>>>>> 696776cfe3f3faee77f470ca24c71f2d65259c77
                 {
-                    if(isset($proyecto->ids[$i]))
+                    if(isset($proyecto->objetivos_ids[$i]))
                     {
-                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->ids[$i]);
+                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->objetivos_ids[$i]);
                         $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
+                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
                         $objetivosespecificos->update(); 
                     }
                     else
                     {
                         $objetivosespecificos=new ObjetivoEspecifico;
                         $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->descripciones[$i];
+                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
                         $objetivosespecificos->save(); 
                     }*/
                 
+                
+                /*actividades*/
+                for($i=0;$i<$countActividades;$i++)
+                {
+                    //var_dump($proyecto->actividades_ids);die;
+                    if(isset($proyecto->actividades_ids[$i]))
+                    {
+                        $actividad=Actividad::findOne($proyecto->actividades_ids[$i]);
+                        $actividad->id_oe=$proyecto->actividades_oe_ids[$i];
+                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
+                        $actividad->update(); 
+                    }
+                    else
+                    {
+                        $actividad=new Actividad;
+                        $actividad->id_oe=$proyecto->actividades_oe_ids[$i];
+                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
+                        $actividad->save(); 
+                    }
+                }
+                
+                /*cronogramas*/
+                for($i=0;$i<$countCronogramas;$i++)
+                {
+                    //var_dump($proyecto->cronogramas_meses);die;
+                    if(isset($proyecto->cronogramas_ids[$i]))
+                    {
+                        $cronograma=Cronograma::findOne($proyecto->cronogramas_ids[$i]);
+                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
+                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
+                        $cronograma->update(); 
+                    }
+                    else
+                    {
+                        $cronograma=new Cronograma;
+                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
+                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
+                        $cronograma->save(); 
+                    }
+                }
                 
             }
             
@@ -239,6 +291,22 @@ class ProyectoController extends Controller
         }
         
         echo $error;
+    }
+    
+    public function actionEliminarobjetivoespecifico($id)
+    {
+        ObjetivoEspecifico::findOne($id)->delete();
+    }
+    
+    
+    public function actionEliminaractividad($id)
+    {
+        Actividad::findOne($id)->delete();
+    }
+    
+    public function actionEliminarcronograma($id)
+    {
+        Cronograma::findOne($id)->delete();
     }
     
 
