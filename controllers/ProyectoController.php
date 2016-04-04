@@ -13,6 +13,9 @@ use app\models\Responsable;
 use app\models\ObjetivoEspecifico;
 use app\models\Actividad;
 use app\models\Cronograma;
+use app\models\CultivoCrianza;
+use app\models\AccionTransversal;
+
 class ProyectoController extends Controller
 {
     
@@ -55,6 +58,10 @@ class ProyectoController extends Controller
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
         $responsable = new Responsable();
+        $cultivo = new CultivoCrianza();
+        $AccionT = new AccionTransversal();
+        
+        
         $existe = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->count();
@@ -75,6 +82,16 @@ class ProyectoController extends Controller
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
+                
+                $cultivo->id_proyecto = $proyecto->id;
+                $cultivo->tipo = $proyecto->tipocc;
+                $cultivo->descripcion = $proyecto->descripcioncc;
+                $cultivo->save();
+                
+                $AccionT->id_proyecto = $proyecto->id;
+                $AccionT->id_accion_transversal = $proyecto->idat;
+                $AccionT->otros = $proyecto->otrosat;
+                $AccionT->save();
 
                 /*for($i=0;$i<$countObjetivosEspecificos;$i++)
 >>>>>>> 696776cfe3f3faee77f470ca24c71f2d65259c77
@@ -96,6 +113,7 @@ class ProyectoController extends Controller
                 $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
                 $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
                 $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
+                $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
                 $data->desc_tipo_proy = $proyecto->desc_tipo_proy;
                 $data->resumen_ejecutivo = $proyecto->resumen_ejecutivo;
                 $data->relevancia = $proyecto->relevancia;
@@ -115,6 +133,24 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 
                 $responsable->update();
+                
+                $cultivo = CultivoCrianza::findOne($proyecto->idcc);
+                $cultivo->id_proyecto = $proyecto->id;
+                $cultivo->tipo = $proyecto->tipocc;
+                $cultivo->descripcion = $proyecto->descripcioncc;
+                $cultivo->update();
+                
+                $AccionT = AccionTransversal::findOne($proyecto->id);
+                $AccionT->id_accion_transversal = $proyecto->idat;
+                
+                if($proyecto->idat == 15)
+                $AccionT->otros = $proyecto->otrosat;
+                else
+                $AccionT->otros = '';
+                
+                $AccionT->update();
+                
+                
 
                 /*objetivos*/
                 for($i=0;$i<$countObjetivosEspecificos;$i++)
@@ -191,6 +227,19 @@ class ProyectoController extends Controller
            $responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
+            $cultivo =  CultivoCrianza::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
+            
+            $cultivo =  CultivoCrianza::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
+           // var_dump($cultivo); die;
+           
+            $AccionT =  AccionTransversal::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
+                        
         }
         
        /* if($proyecto->load(Yii::$app->request->post()) && ($existe == 0))
@@ -228,7 +277,7 @@ class ProyectoController extends Controller
         }*/
         
         
-        return $this->render('nuevo',['proyecto'=>$proyecto,'responsable'=>$responsable]);
+        return $this->render('nuevo',['proyecto'=>$proyecto,'responsable'=>$responsable,'cultivo'=>$cultivo,'AccionT'=>$AccionT]);
       
     }
     

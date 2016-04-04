@@ -67,6 +67,13 @@ class Proyecto extends \yii\db\ActiveRecord
             public $nombresc;
             public $apellidosc;
             public $funcionesc;
+            public $descripcioncc;
+            public $tipocc;
+            public $idcc;
+            
+            public $otrosat;
+            public $idat;
+    
     /**
      * @inheritdoc
      */
@@ -85,7 +92,7 @@ class Proyecto extends \yii\db\ActiveRecord
             [['presupuesto'], 'number'],
             [['nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
               'objetivos_descripciones','actividades_ids','actividades_oe_ids','actividades_descripciones',
-              'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids'], 'safe'],
+              'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat'], 'safe'],
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],

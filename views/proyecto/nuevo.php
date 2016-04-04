@@ -5,6 +5,8 @@ use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
+use app\models\Maestros;
+
 //use kartik\select2\Select2;
 /* @var $this yii\web\View */
 /* @var $nuevo app\models\TblPersonaSearch */
@@ -82,8 +84,7 @@ use yii\widgets\Pjax;
             
             <li>
                 <h4>1.4 Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4>
-                Lista de colaboradores
-                <?php //= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?> 
+                <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?> 
                                 
             </li>
             <li>
@@ -97,56 +98,123 @@ use yii\widgets\Pjax;
                 <h4>1.6 Áreas Claves del Proyecto</h4>
                 <h4>   1.6.1 Cultivo o Crianza priorizado en su Proyecto</h4>
                 
-                <label for="culcri">Cultivo o Crianza:</label>
-                <select id="selecCC" name="culcri" style="width:200px;">
-                    <option value="0">--Seleccione--</option>
-                    <option value="1">Ganaderia, Vacunos, Camélidos o Cuyes</option>
-                    <option value="2">Forestales</option>
-                    <option value="3">Quinua - Otros Cultivos Andinos</option>
-                    <option value="4">Café o Cacao</option>
-                    <option value="5">Arroz</option>
-                    <option value="6">Papa</option>
-                    <option value="7">Maíz amarillo o blanco amiláceo</option>
-                    <option value="8">Otros</option>
+                <input type="hidden" value="<?= $cultivo->id?>" id="proyecto-idcc" name="Proyecto[idcc]" /> 
+                <label for="proyecto-tipocc">Cultivo o Crianza:</label>
+                <select id="proyecto-tipocc" name="Proyecto[tipocc]" style="width:200px;">
+                 <option value="0">--Seleccione--</option>   
+                 <?php
+                 
+                    $maestro = Maestros::find()
+                                ->where('id_padre = 1 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                    
+                        if(!isset($cultivo))
+                        {
+                           foreach($maestro as $maestros)
+                            {
+                                echo '<option value="'.$maestros->id.'">'.$maestros->descripcion.'</option>';
+                            }
+                        }
+                        else
+                        {
+                            foreach($maestro as $maestros)
+                            {
+                            if($maestros->id == $cultivo->tipo)
+                            {echo '<option value="'.$maestros->id.'" selected>'.$maestros->descripcion.'</option>';}
+                            else{echo '<option value="'.$maestros->id.'">'.$maestros->descripcion.'</option>';}
+                                
+                            } 
+                        }
+                    
+                 ?>
+                    
                 </select>
                 
                 
             </li>
-            <li id="especifiqueCC">
-                <label for="especifiqueCC">Especifique:</label>
-                <input type="text" placeholder="..."  />
+            <li id="descripcioncc">
+                <label for="proyecto-descripcioncc">Especifique:</label>
+                <input type="text" value="<?= $cultivo->descripcion; ?>" placeholder="..." id="proyecto-descripcioncc" name="Proyecto[descripcioncc]" />
                 
             </li>
             <li>
                 <h4>1.6.2 Señale una Acción Transversal de Áreas Temáticas Específicas</h4>
                 
-                <label for="culcri">Acción Transversal:</label>
-                <select id="selecAT" name="acttrans" style="width:200px;">
+                <label for="proyecto-idat">Acción Transversal:</label>
+                <select id="proyecto-idat" name="Proyecto[idat]" style="width:200px;">
                     <option value="0">--Seleccione--</option>
-                    <option value="1">Biotecnología y Recursos Genéticos</option>
-                    <option value="2">Cambio Climático y Sostenibilidad</option>
-                    <option value="3">Socio ‐ Economía, Mercados y Sistemas de Apoyo a la Transferencia Tecnológica y Extensión en las Regiones</option>
-                    <option value="4">Manejo Post Cosecha</option>
-                    <option value="5">Otros</option>
+                <?php
+                 
+                    $accionTrans = Maestros::find()
+                                ->where('id_padre = 10 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                    
+                        if(!isset($AccionT))
+                        {
+                           foreach($accionTrans as $accionTransv)
+                            {
+                                echo '<option value="'.$accionTransv->id.'">'.$accionTransv->descripcion.'</option>';
+                            }
+                        }
+                        else
+                        {
+                            foreach($accionTrans as $accionTransv)
+                            {
+                            if($accionTransv->id == $AccionT->id_accion_transversal)
+                            {echo '<option value="'.$accionTransv->id.'" selected>'.$accionTransv->descripcion.'</option>';}
+                            else{echo '<option value="'.$accionTransv->id.'">'.$accionTransv->descripcion.'</option>';}
+                                
+                            } 
+                        }
+                    
+                 ?>
                 </select>
                 
                 
             </li>
             <li id="especifiqueAT">
-                <label for="especifiqueAT">Especifique:</label>
-                <input type="text" placeholder="..."  />
+                <label for="proyecto-otrosat">Especifique:</label>
+                <input type="text" value="<?= $AccionT->otros; ?>" placeholder="..." id="proyecto-otrosat" name="Proyecto[otrosat]"/>
                 
             </li>
             <li>
                 <h4>1.6.3 Señale el Tipo de Proyecto</h4>
                 
-                <label for="culcri">Invetigación:</label>
-                <select id="selecInv" name="acttrans" style="width:200px;">
+                <label for="proyecto-id_tipo_proyecto">Invetigación:</label>
+                <select id="proyecto-id_tipo_proyecto" name="Proyecto[id_tipo_proyecto]" style="width:200px;">
                     <option value="0">--Seleccione--</option>
-                    <option value="1">Invetigación Basica</option>
-                    <option value="2">Invetigación Aplicada</option>
-                    <option value="3">Invetigación Adaptativa</option>
-                    <option value="4">Invetigación Estratégica</option>
+                    <?php
+                 
+                    $tipoInv = Maestros::find()
+                                ->where('id_padre = 16 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                    
+                        if(!isset($proyecto->id_tipo_proyecto))
+                        {
+                           foreach($tipoInv as $tipoInvs)
+                            {
+                                echo '<option value="'.$tipoInvs->id.'">'.$tipoInvs->descripcion.'</option>';
+                            }
+                        }
+                        else
+                        {
+                            foreach($tipoInv as $tipoInvs)
+                            {
+                            if($tipoInvs->id == $proyecto->id_tipo_proyecto)
+                            {echo '<option value="'.$tipoInvs->id.'" selected>'.$tipoInvs->descripcion.'</option>';}
+                            else{echo '<option value="'.$tipoInvs->id.'">'.$tipoInvs->descripcion.'</option>';}
+                                
+                            } 
+                        }
+                    
+                 ?>
+
                 </select>
                 
                 
@@ -249,27 +317,35 @@ use yii\widgets\Pjax;
 
 <script type="text/javascript">
 $(document).ready(function(){
-$("#especifiqueCC").hide();
-$("#especifiqueAT").hide();
+ 
+if($.trim($('select[id=proyecto-tipocc]').val())=='0')
+        { $("#descripcioncc").hide();}
+else    {$("#descripcioncc").show();;}
+
+if($.trim($('select[id=proyecto-idat]').val())!='15')
+        { $("#especifiqueAT").hide();}
+else    {$("#especifiqueAT").show();;}
+
+
 });
 
-$('#selecCC').change(function(){ 
-     var valor = $('#selecCC').val(); 
+$('#proyecto-tipocc').change(function(){ 
+     var valor = $('#proyecto-tipocc').val(); 
      
      if (valor != 0) {
-       $("#especifiqueCC").show();;
+       $("#descripcioncc").show();;
      }
      else
      {
-      $("#especifiqueCC").hide();  
+      $("#descripcioncc").hide();  
      }
      //saludo(nombre); 
 });
 
-$('#selecAT').change(function(){ 
-     var valor2 = $('#selecAT').val(); 
+$('#proyecto-idat').change(function(){ 
+     var valor2 = $('#proyecto-idat').val(); 
      
-     if (valor2 == 5) {
+     if (valor2 == 15) {
        $("#especifiqueAT").show();
      }
      else
@@ -289,6 +365,104 @@ $("#btnproyecto").click(function( ) {
             //alert('hola');
         }
         
+    if($.trim($('#proyecto-direccion_linea').val())=='')
+        {
+            error=error+'Señale la Dirección en Linea<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+    if($.trim($('#proyecto-estacion_exp').val())=='')
+        {
+            error=error+'Señale la Estación Experimental<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+    if($.trim($('#proyecto-sub_estacion_exp').val())=='')
+        {
+            error=error+'Señale la Sub Estación Experimental<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+    if($.trim($('#proyecto-nombres').val())=='')
+        {
+            error=error+'Ingrese Nombres del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+     if($.trim($('#proyecto-apellidos').val())=='')
+        {
+            error=error+'Ingrese Apellidos del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+    if($.trim($('#proyecto-telefono').val())=='')
+        {
+            error=error+'Ingrese Nro Teléfonico del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+     if($.trim($('#proyecto-celular').val())=='')
+        {
+            error=error+'Ingrese Nombre Nro Celular del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+    
+     if($.trim($('#proyecto-correo').val())=='')
+        {
+            error=error+'Ingrese Correo Electrónico del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+
+     if($.trim($('select[id=proyecto-tipocc]').val())=='0')
+        {
+            error=error+'Seleccione Cultivo O Crianza<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+     if($.trim($('select[id=proyecto-idat]').val())=='0')
+        {
+            error=error+'Seleccione Acción Transversal<br>';
+            $('#proyecto-idat').addClass('has-error');
+            //alert('hola');
+        }
+    if($.trim($('select[id=proyecto-id_tipo_proyecto]').val())=='0')
+        {
+            error=error+'Seleccione el Tipo de Investigación<br>';
+            $('#proyecto-tipoInvestigacion').addClass('has-error');
+            //alert('hola');
+        }
+    
+    /*if($.trim($('#proyecto-Correo').val())=='')
+        {
+            error=error+'Ingrese Correo Electrónico del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+        
+    if($.trim($('#proyecto-Correo').val())=='')
+        {
+            error=error+'Ingrese Correo Electrónico del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }
+        
+    if($.trim($('#proyecto-Correo').val())=='')
+        {
+            error=error+'Ingrese Correo Electrónico del Responsable<br>';
+            $('#proyecto-titulo').addClass('has-error');
+            //alert('hola');
+        }*/
+        
+                 
+        
     if(error!='')
         {
             $.notify({
@@ -306,7 +480,7 @@ $("#btnproyecto").click(function( ) {
             return false;
         }
         
-        var id = $('#proyecto-id').val();
+       /* var id = $('#proyecto-id').val();
         var titulo = $('#proyecto-id').val();
         var direccion_linea = $('#proyecto-direccion_linea').val();
         var estacion_exp = $('#proyecto-estacion_exp').val();
@@ -315,7 +489,7 @@ $("#btnproyecto").click(function( ) {
         var apellidos = $('#responsable-apellidos').val();
         var telefono = $('#responsable-telefono').val();
         var celular = $('#responsable-celular').val();
-        var correo = $('#responsable-correo').val();
+        var correo = $('#responsable-correo').val();*/
         
   /*  var validarproyecto=$.ajax({
                 url: '<? $urlproyecto ?>',
