@@ -253,9 +253,7 @@ use app\models\Maestros;
             </li>
             <li>
                 <h4>4.1 Lugar de acción donde se ejecutará el trabajo de Investigación</h4>
-                <a href="#">
-                 Locación Geográfica(UBIGEO) 
-                </a>
+                <?= \app\widgets\zonaaccion\ZonaAccionWidget::widget(['proy_zonaaccion_id'=>$proyecto->id]); ?> 
                 
             </li>
             <li>

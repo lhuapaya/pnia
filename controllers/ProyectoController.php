@@ -17,6 +17,7 @@ use app\models\CultivoCrianza;
 use app\models\AccionTransversal;
 use app\models\Indicador;
 use app\models\Colaborador;
+use app\models\Ubigeo;
 
 class ProyectoController extends Controller
 {
@@ -391,5 +392,21 @@ class ProyectoController extends Controller
         Cronograma::findOne($id)->delete();
     }
     
+    public function actionObtenerprovincia($id)
+    {
+        $option = '';
+       $provincia = Ubigeo::find('province_id, province')
+                            ->where('department_id = "01"')
+                            ->groupBy('province_id')
+                            ->orderBy('province_id')
+                            ->all();
+                            
+        foreach($provincia as $provincias)
+        {
+           $option .= '<option value="'.$provincias->province_id.'" >'.$provincias->province.'</option>';
+        }
+        
+        echo $option;
+    }
 
 }
