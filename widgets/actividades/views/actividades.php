@@ -1,8 +1,8 @@
 <?php
-$objetivos_opciones='';
-foreach($objetivos as $objetivo)
+$indicadores_opciones='';
+foreach($indicadores as $indicador)
 {
-    $objetivos_opciones=$objetivos_opciones.'<option value="'.$objetivo->id.'">'.$objetivo->descripcion.'</option>';
+    $indicadores_opciones=$indicadores_opciones.'<option value="'.$indicador->id.'">'.$indicador->descripcion.'</option>';
 }
 
 ?>
@@ -46,12 +46,12 @@ foreach($objetivos as $objetivo)
 					<?= ($act+1) ?>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-actividades_oe_ids_<?= $act ?> required">
-						<select type="text" id="proyecto-actividades_oe_ids_<?= $act ?>" class="form-control" name="Proyecto[actividades_oe_ids][]" >
+					    <div class="form-group field-proyecto-actividades_ind_ids_<?= $act ?> required">
+						<select type="text" id="proyecto-actividades_ind_ids_<?= $act ?>" class="form-control" name="Proyecto[actividades_ind_ids][]" >
 						    <option value>Seleccionar</option>
-						    <?php foreach($objetivos as $objetivo) 
+						    <?php foreach($indicadores as $indicador) 
 						    { ?>
-							<option value="<?= $objetivo->id ?>" <?= ($objetivo->id==$actividad->id_oe)?'selected':'' ?> ><?= $objetivo->descripcion?> </option>;
+							<option value="<?= $indicador->id ?>" <?= ($indicador->id==$actividad->id_ind)?'selected':'' ?> ><?= $indicador->descripcion?> </option>;
 						    <?php
 						    }
 						    ?>
@@ -78,10 +78,10 @@ foreach($objetivos as $objetivo)
 				    </td>
 				    <td>
 					
-					<div class="form-group field-proyecto-actividades_oe_ids_0 required">
-					    <select type="text" id="proyecto-actividades_oe_ids_0" class="form-control" name="Proyecto[actividades_oe_ids][]" >
+					<div class="form-group field-proyecto-actividades_ind_ids_0 required">
+					    <select type="text" id="proyecto-actividades_ind_ids_0" class="form-control" name="Proyecto[actividades_ind_ids][]" >
 						<option value>Seleccionar</option>
-						<?= $objetivos_opciones ?>
+						<?= $indicadores_opciones ?>
 					    </select>
 					</div>
 				    </td>
@@ -117,7 +117,7 @@ foreach($objetivos as $objetivo)
     $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminaractividad');
 ?>
 <script>
-    var objetivos_opciones='<?= $objetivos_opciones ?>';
+    var indicadores_opciones='<?= $indicadores_opciones ?>';
     var act=<?= $act ?>;
     $("#actividades_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
@@ -147,16 +147,16 @@ foreach($objetivos as $objetivo)
         var error='';
         
         var objetivo=$('input[name=\'Proyecto[actividades_descripciones][]\']').length;
-        if($('#proyecto-actividades_oe_ids_'+(act-1)).val()=='')
+        if($('#proyecto-actividades_ind_ids_'+(act-1)).val()=='')
         {
             var error=error+'seleccione un objetivo #'+act+' <br>';
-            $('.field-proyecto-actividades_oe_ids_'+(act-1)).addClass('has-error');
+            $('.field-proyecto-actividades_ind_ids_'+(act-1)).addClass('has-error');
             
         }
 	else
 	{
-	    $('.field-proyecto-actividades_oe_ids_'+(act-1)).addClass('has-success');
-	    $('.field-proyecto-actividades_oe_ids_'+(act-1)).removeClass('has-error');
+	    $('.field-proyecto-actividades_ind_ids_'+(act-1)).addClass('has-success');
+	    $('.field-proyecto-actividades_ind_ids_'+(act-1)).removeClass('has-error');
 	}
 	
 	if($('#proyecto-actividades_descripciones_'+(act-1)).val()=='')
@@ -190,7 +190,7 @@ foreach($objetivos as $objetivo)
         else
         {
             $('#actividad_addr_1_'+act).html("<td>"+ (act+1) +"</td>"+
-				 "<td><div class='form-group field-proyecto-actividades_oe_ids_"+act+" required'><select id='proyecto-actividades_oe_ids_"+act+"' name='Proyecto[actividades_oe_ids][]' class='form-control'><option value>Seleccionar</option>"+objetivos_opciones+"</select></div></td>"+
+				 "<td><div class='form-group field-proyecto-actividades_ind_ids_"+act+" required'><select id='proyecto-actividades_ind_ids_"+act+"' name='Proyecto[actividades_ind_ids][]' class='form-control'><option value>Seleccionar</option>"+indicadores_opciones+"</select></div></td>"+
 				 "<td><div class='form-group field-proyecto-actividades_descripciones_"+act+" required'><input id='proyecto-actividades_descripciones_"+act+"' name='Proyecto[actividades_descripciones][]' type='text' placeholder='Descripción #"+(act+1)+"' class='form-control'  /></div></td>"+
 				 "<td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
             $('#actividades_tabla').append('<tr id="actividad_addr_1_'+(act+1)+'"></tr>');
@@ -203,20 +203,20 @@ foreach($objetivos as $objetivo)
     
     $("#btn_actividades").click(function(event){
 	var error='';
-        var objetivos=$('input[name=\'Proyecto[actividades_oe_ids][]\']').length;
+        var objetivos=$('input[name=\'Proyecto[actividades_ind_ids][]\']').length;
 	var actividades=$('input[name=\'Proyecto[actividades_descripciones][]\']').length;
         
 	
 	for (var i=0; i<actividades; i++) {
-	    if($('#proyecto-actividades_oe_ids_'+i).val()=='')
+	    if($('#proyecto-actividades_ind_ids_'+i).val()=='')
             {
                 error=error+'seleccione un objetivo #'+i+'  <br>';
-                $('.field-proyecto-actividades_oe_ids_'+i).addClass('has-error');
+                $('.field-proyecto-actividades_ind_ids_'+i).addClass('has-error');
             }
             else
             {
-                $('.field-proyecto-actividades_oe_ids_'+i).addClass('has-success');
-                $('.field-proyecto-actividades_oe_ids_'+i).removeClass('has-error');
+                $('.field-proyecto-actividades_ind_ids_'+i).addClass('has-success');
+                $('.field-proyecto-actividades_ind_ids_'+i).removeClass('has-error');
             }
 	    
             if($('#proyecto-actividades_descripciones_'+i).val()=='')
@@ -253,7 +253,7 @@ foreach($objetivos as $objetivo)
     
     $("#actividades").click(function( ) {
 	var proyecto_id='<?= $proyecto_id ?>';
-	var objetivos=<?= $CountObjetivos ?> ;
+	var indicadores=<?= $CountIndicadores ?> ;
 	if (proyecto_id=='') {
 	    $.notify({
                 message: 'No existe proyecto registrado'
@@ -269,9 +269,9 @@ foreach($objetivos as $objetivo)
             });
             return false;
 	}
-	if (objetivos==0) {
+	if (indicadores==0) {
 	    $.notify({
-                message: 'No existe objetivos listados'
+                message: 'No existe indicadores listados'
             },{
                 type: 'danger',
                 offset: 20,

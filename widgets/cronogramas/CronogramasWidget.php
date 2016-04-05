@@ -25,24 +25,28 @@ class CronogramasWidget extends Widget
     public function run()
     {
         $proyecto=Proyecto::findOne($this->proyecto_id);
-        $CountActividades=$actividades=Actividad::find()
-                                ->select('actividad.id,actividad.descripcion,actividad.id_oe')
-                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=actividad.id_oe')
+        $CountActividades=Actividad::find()
+                                ->select('actividad.id,actividad.descripcion,actividad.id_ind')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$this->proyecto_id])
                                 ->count();
         $objetivos=ObjetivoEspecifico::find()->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->proyecto_id])->all();
         $actividades=Actividad::find()
-                                ->select('actividad.id,actividad.descripcion,actividad.id_oe')
-                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=actividad.id_oe')
+                                ->select('actividad.id,actividad.descripcion,actividad.id_ind')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$this->proyecto_id])
                                 ->all();
+                                
         
         $cronogramas=Cronograma::find()
                                 ->select('cronograma.id,cronograma.mes,cronograma.id_actividad')
                                 ->innerJoin('actividad','actividad.id=cronograma.id_actividad')
-                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=actividad.id_oe')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$this->proyecto_id])
                                 ->all();
