@@ -229,7 +229,7 @@ use app\models\Maestros;
             </li>
             <li>
                 <h4>3.2 Indicadores</h4>
-                <a>Lista de Indicadores</a>
+                <?= \app\widgets\indicadores\IndicadoresWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
             </li>
             
             <li>
