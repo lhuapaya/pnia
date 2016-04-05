@@ -144,6 +144,7 @@
     });
     
     $("#btn_objetivos_especificos").click(function(event){
+	console.log("aa");
 	var error='';
         var objetivo1=$('input[name=\'Proyecto[objetivos_descripciones][]\']').length;
         for (var i=0; i<objetivo1; i++) {

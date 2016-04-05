@@ -39,7 +39,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="submit" id="btn_objetivos_especificos" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                <button type="submit"  class="btn btn-primary" data-dismiss="modal">Guardar</button>
             </div>
         </div>
     </div>
@@ -167,7 +167,7 @@
         return true;
     });
     
-    $("#btn_objetivos_especificos").click(function(event){
+    /*$("#btn_objetivos_especificos").click(function(event){
 	var error='';
         var objetivo1=$('input[name=\'Proyecto[objetivos_descripciones][]\']').length;
         for (var i=0; i<objetivo1; i++) {
@@ -202,7 +202,7 @@
             return true;
         }
     });
-    
+    */
     $("#instituciones").click(function( ) {
 	var id='<?= $proyecto_id ?>';
 	console.log(id);
