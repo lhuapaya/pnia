@@ -32,19 +32,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i=0; ?>
+                            <?php $co=0; ?>
 			    <?php if($colaborador){ ?>
 				
 				<?php foreach($colaborador as $colaborador2){?>
 				    <?php //if($objetivo->id==$proyecto->objetivo_especifico_1_id){ ?>
-				    <tr id='addr_1_<?= $i ?>'>
+				    <tr id='colaborador_addr_1_<?= $co ?>'>
 					<td>
-					<?= ($i+1) ?>
+					<?= ($co+1) ?>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-descripciones_<?= $i ?> required">
+					    <div class="form-group field-proyecto-descripciones_<?= $co ?> required">
 						
-						<input type="text" id="proyecto-descripciones_<?= $i ?>" class="form-control" name="Proyecto[descripciones][]" placeholder="Descripción #<?= $i ?>" value="<?= $colaborador2->nombres ?>" />
+						<input type="text" id="proyecto-descripciones_<?= $co ?>" class="form-control" name="Proyecto[descripciones][]" placeholder="Descripción #<?= $co ?>" value="<?= $colaborador2->nombres ?>" />
 					    </div>
 					</td>
 					<td>
@@ -53,27 +53,27 @@
 					    </span>
 					</td>
 				    </tr>
-				    <?php $i++; ?>
+				    <?php $co++; ?>
 				    <?php //}?>
 				<?php } ?>
 			    <?php }else{ ?>
-				<tr id='addr_1_0'>
+				<tr id='colaborador_addr_1_0'>
 				    <td>
-				    <?= ($i+1) ?>
+				    <?= ($co+1) ?>
 				    </td>
 				    <td>
 					<div class="form-group field-proyecto-nombresc_0 required">
-					    <input type="text" id="proyecto-nombresc_0" class="form-control" name="Proyecto[nombresc][]" placeholder="Descripción #0"  />
+					    <input type="text" id="proyecto-nombresc_0" class="form-control" name="Proyecto[nombresc][]" placeholder="Nombres #1"  />
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-proyecto-aapellidosc_0 required">
-					    <input type="text" id="proyecto-aapellidosc_0" class="form-control" name="Proyecto[apellidosc][]" placeholder="Descripción #0"  />
+					    <input type="text" id="proyecto-aapellidosc_0" class="form-control" name="Proyecto[apellidosc][]" placeholder="Apellidos #1"  />
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-proyecto-funcionesc_0 required">
-					    <input type="text" id="proyecto-funcionesc_0" class="form-control" name="Proyecto[funcionesc][]" placeholder="Descripción #0"  />
+					    <input type="text" id="proyecto-funcionesc_0" class="form-control" name="Proyecto[funcionesc][]" placeholder="Función #1"  />
 					</div>
 				    </td>
 				    <td>
@@ -82,12 +82,12 @@
 					</span>
 				    </td>
 				</tr>
-				<?php $i=1; ?>
+				<?php $co=1; ?>
 			    <?php } ?>
-                            <tr id='addr_1_<?= $i ?>'></tr>
+                            <tr id='colaborador_addr_1_<?= $co ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="add_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
+                    <div id="colcaborador_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
                     <br>
                 </div>
                 <div class="clearfix"></div>
@@ -104,7 +104,7 @@
     $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminaractividad');
 ?>
 <script>
-    var i=<?= $i ?>;
+    var co=<?= $co ?>;
     $("#colaboradores_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
         if (r == true) {
@@ -129,39 +129,25 @@
     });
     
     
-    $("#add_row_1").click(function(){
+    $("#colcaborador_row_1").click(function(){
         
         
-        var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
-        /*if (objetivo==5 && $('#proyecto-actividad_objetivo1_'+(i-1)).val()!='')
+       // var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
+     
+        
+        if(($('#proyecto-nombresc_'+(co-1)).val()=='') && ($('#proyecto-apellidosc_'+(co-1)).val()=='') && ($('#proyecto-funcionesc_'+(co-1)).val()==''))
         {
-            $.notify({
-                message: 'No se puede agregar mas de 5' 
-            },{
-                type: 'danger',
-                z_index: 1000000,
-                placement: {
-                    from: 'bottom',
-                    align: 'right'
-                },
-            });
-            $('.field-proyecto-actividad_objetivo1_'+(i-1)).addClass('has-success');
-            $('.field-proyecto-actividad_objetivo1_'+(i-1)).removeClass('has-error');
-            return false;
-        }*/
-        
-        
-        if($('#proyecto-descripciones_'+(i-1)).val()=='')
-        {
-            var error='ingrese el objetivo #'+i+' <br>';
-            $('.field-proyecto-descripciones_'+(i-1)).addClass('has-error');
+            
+            var error='Comllete todos los Campos del COlaborador #'+co+' <br>';
+            //$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
+
             $.notify({
                 message: error 
             },{
                 type: 'danger',
                 z_index: 1000000,
                 placement: {
-                    from: 'bottom',
+                    from: 'top',
                     align: 'right'
                 },
             });
@@ -169,11 +155,11 @@
         }
         else
         {
-            $('.field-proyecto-descripciones_'+(i-1)).addClass('has-success');
-            $('.field-proyecto-descripciones_'+(i-1)).removeClass('has-error');
+           /* $('.field-proyecto-descripciones_'+(i-1)).addClass('has-success');
+            $('.field-proyecto-descripciones_'+(i-1)).removeClass('has-error');*/
             
-            $('#addr_1_'+i).html("<td>"+ (i+1) +"</td><td><div class='form-group field-proyecto-descripciones_"+i+" required'><input id='proyecto-descripciones_"+i+"' name='Proyecto[descripciones][]' type='text' placeholder='Descripción #"+i+"' class='form-control'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
-            $('#objetivos_especificos_tabla').append('<tr id="addr_1_'+(i+1)+'"></tr>');
+            $('#colaborador_addr_1_'+co).html("<td>"+(co+1)+"</td><td><div class='form-group field-proyecto-nombresc_"+co+" required'> <input type='text' id='proyecto-nombresc_"+co+"' class='form-control' name='Proyecto[nombresc][]' placeholder='Nombres #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-aapellidosc_"+co+" required'><input type='text' id='proyecto-aapellidosc_"+co+"' class='form-control' name='Proyecto[apellidosc][]' placeholder='Apellidos #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-funcionesc_"+co+" required'><input type='text' id='proyecto-funcionesc_"+co+"' class='form-control' name='Proyecto[funcionesc][]' placeholder='Función #"+(co+1)+"'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
+            $('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
             i++;
         }
         

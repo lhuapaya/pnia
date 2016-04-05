@@ -7,7 +7,7 @@ foreach($actividades as $actividad)
 
 ?>
 <a href="#" data-toggle="modal" data-target="#cronogramas_" id="cronogramas">
-    Lista de cronogramas
+    Cronograma
 </a>
 <!--Lista de Objetivos Especificos -->
 <div class="modal fade" id="cronogramas_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
