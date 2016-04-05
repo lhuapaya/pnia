@@ -34,7 +34,7 @@ class Actividad extends \yii\db\ActiveRecord
     {
         return [
             //[['id_oe'], 'required'],
-            [['id_oe'], 'integer'],
+            [['id_ind'], 'integer'],
             [['descripcion'], 'string', 'max' => 3000],
             [['indicadores', 'medios', 'supuestos'], 'string', 'max' => 500]
         ];
@@ -47,7 +47,7 @@ class Actividad extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_oe' => 'Id Oe',
+            'id_ind' => 'Id Oe',
             'descripcion' => 'Descripcion',
             'indicadores' => 'Indicadores',
             'medios' => 'Medios',
@@ -58,9 +58,9 @@ class Actividad extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdOe()
+    public function getIndicador()
     {
-        return $this->hasOne(ObjetivoEspecifico::className(), ['id' => 'id_oe']);
+        return $this->hasOne(Indicador::className(), ['id' => 'id_ind']);
     }
 
     /**

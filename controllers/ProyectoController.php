@@ -15,6 +15,7 @@ use app\models\Actividad;
 use app\models\Cronograma;
 use app\models\CultivoCrianza;
 use app\models\AccionTransversal;
+use app\models\Indicador;
 
 class ProyectoController extends Controller
 {
@@ -68,6 +69,7 @@ class ProyectoController extends Controller
         if($proyecto->load(Yii::$app->request->post()) )
         {
             $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
+            $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
             $countActividades=count(array_filter($proyecto->actividades_descripciones));
             $countCronogramas=count(array_filter($proyecto->cronogramas_meses));
             if($existe == 0)
@@ -171,7 +173,28 @@ class ProyectoController extends Controller
                         $objetivosespecificos->save(); 
                     }
                 }
-                //var_dump($countActividades);die;
+                
+                
+                /*indicadores*/
+                for($i=0;$i<$countIndicadores;$i++)
+                {
+                    //var_dump($proyecto->actividades_ids);die;
+                    if(isset($proyecto->indicadores_ids[$i]))
+                    {
+                        $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
+                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
+                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
+                        $indicador->update(); 
+                    }
+                    else
+                    {
+                        $indicador=new Indicador;
+                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
+                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
+                        $indicador->save(); 
+                    }
+                }
+                
                 /*actividades*/
                 for($i=0;$i<$countActividades;$i++)
                 {
@@ -179,14 +202,14 @@ class ProyectoController extends Controller
                     if(isset($proyecto->actividades_ids[$i]))
                     {
                         $actividad=Actividad::findOne($proyecto->actividades_ids[$i]);
-                        $actividad->id_oe=$proyecto->actividades_oe_ids[$i];
+                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
                         $actividad->descripcion=$proyecto->actividades_descripciones[$i];
                         $actividad->update(); 
                     }
                     else
                     {
                         $actividad=new Actividad;
-                        $actividad->id_oe=$proyecto->actividades_oe_ids[$i];
+                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
                         $actividad->descripcion=$proyecto->actividades_descripciones[$i];
                         $actividad->save(); 
                     }
