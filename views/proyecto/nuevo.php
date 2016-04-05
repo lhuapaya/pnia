@@ -219,17 +219,13 @@ use app\models\Maestros;
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
             </li>
             <li>
-<<<<<<< HEAD
-                <h5>3.1.2 Objetos Especificos</h5>
-                <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
-=======
                 <h4>1.10 Objeto General</h4>
                 <label for="proyecto-objetivo_general">Señale Objeto General:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
                 <h5>Señale los Objetos Especificos:<h5>
                 <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> <br>
                 <?= \app\widgets\indicadores\IndicadoresWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
->>>>>>> c5077917ffbaef9c93111da9a50150f7e8032ec5
+
             </li>
             <li>
                 <h4>3.2 Indicadores</h4>
