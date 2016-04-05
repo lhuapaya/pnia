@@ -193,7 +193,7 @@ foreach($objetivos as $objetivo)
 				 "<td><div class='form-group field-proyecto-indicadores_oe_ids_"+ind+" required'><select id='proyecto-indicadores_oe_ids_"+ind+"' name='Proyecto[indicadores_oe_ids][]' class='form-control'><option value>Seleccionar</option>"+objetivos_opciones+"</select></div></td>"+
 				 "<td><div class='form-group field-proyecto-indicadores_descripciones_"+ind+" required'><input id='proyecto-indicadores_descripciones_"+ind+"' name='Proyecto[indicadores_descripciones][]' type='text' placeholder='Descripción #"+(ind+1)+"' class='form-control'  /></div></td>"+
 				 "<td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
-            $('#indicadores_tabla').append('<tr id="actividad_addr_1_'+(ind+1)+'"></tr>');
+            $('#indicadores_tabla').append('<tr id="indicador_addr_1_'+(ind+1)+'"></tr>');
             ind++;
         }
         

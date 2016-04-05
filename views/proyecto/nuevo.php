@@ -221,6 +221,7 @@ use app\models\Maestros;
             <li>
                 <h5>3.1.2 Objetos Especificos</h5>
                 <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
+
             </li>
             <li>
                 <h4>3.2 Indicadores</h4>
