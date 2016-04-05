@@ -319,6 +319,10 @@ if($.trim($('select[id=proyecto-idat]').val())!='15')
         { $("#especifiqueAT").hide();}
 else    {$("#especifiqueAT").show();;}
 
+$('#proyecto-presupuesto').keydown(function (){
+            this.value = (this.value + '').replace(/[^0-9]/g, '');
+          });
+
 
 });
 

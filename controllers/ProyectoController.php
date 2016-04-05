@@ -16,6 +16,7 @@ use app\models\Cronograma;
 use app\models\CultivoCrianza;
 use app\models\AccionTransversal;
 use app\models\Indicador;
+use app\models\Colaborador;
 
 class ProyectoController extends Controller
 {
@@ -72,6 +73,7 @@ class ProyectoController extends Controller
             $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
             $countActividades=count(array_filter($proyecto->actividades_descripciones));
             $countCronogramas=count(array_filter($proyecto->cronogramas_meses));
+            $countColaboradores = count(array_filter($proyecto->nombresc));
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
@@ -235,6 +237,29 @@ class ProyectoController extends Controller
                     }
                 }
                 
+                /*colaboradores*/
+                for($i=0;$i<$countColaboradores;$i++)
+                {
+                    //var_dump($proyecto->cronogramas_meses);die;
+                    if(isset($proyecto->colaboradores_ids[$i]))
+                    {
+                        $Colaborador=Colaborador::findOne($proyecto->colaboradores_ids[$i]);
+                        $Colaborador->id_proyecto=$proyecto->id;
+                        $Colaborador->nombres=$proyecto->nombresc[$i];
+                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
+                        $Colaborador->funcion=$proyecto->funcionesc[$i];
+                        $Colaborador->update(); 
+                    }
+                    else
+                    {
+                        $Colaborador=new Colaborador;
+                        $Colaborador->id_proyecto=$proyecto->id;
+                        $Colaborador->nombres=$proyecto->nombresc[$i];
+                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
+                        $Colaborador->funcion=$proyecto->funcionesc[$i];
+                        $Colaborador->save(); 
+                    }
+                }
             }
             
             return $this->refresh();

@@ -65,12 +65,14 @@ class Proyecto extends \yii\db\ActiveRecord
             public $cronogramas_actividad_ids;
             public $cronogramas_meses;
             
-            
-            public $ids;
-            public $descripciones;
+            /*colaborador*/
+            public $colaboradores_ids;
             public $nombresc;
             public $apellidosc;
             public $funcionesc;
+            
+            public $ids;
+            public $descripciones;
             public $descripcioncc;
             public $tipocc;
             public $idcc;
@@ -97,7 +99,8 @@ class Proyecto extends \yii\db\ActiveRecord
             [['nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
               'objetivos_descripciones','actividades_ids','actividades_ind_ids','actividades_descripciones',
               'indicadores_ids','indicadores_oe_ids','indicadores_descripciones',
-              'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat'], 'safe'],
+              'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat',
+              'colaboradores_ids','nombresc','apellidosc','funcionesc'], 'safe'],
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],
