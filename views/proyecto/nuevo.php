@@ -23,7 +23,7 @@ use app\models\Maestros;
     <div>
         <ul>
             <li>
-                <h2>1. Formulario del Proyecto de Investigacion</h2>
+                <h2>1. Datos Generales</h2>
                 <span class="required_notification">* Datos requeridos</span>
             </li>
             
@@ -94,9 +94,26 @@ use app\models\Maestros;
                 </a>
                 
             </li>
+                        <li>
+                <h4>1.6 Resumen Ejecutivo del Proyecto</h4>
+                <label for="proyecto-resumen_ejecutivo">Descripción:</label>
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-resumen_ejecutivo" name="Proyecto[resumen_ejecutivo]"  required><?= $proyecto->resumen_ejecutivo?></textarea>
+
+            </li>
             <li>
-                <h4>1.6 Áreas Claves del Proyecto</h4>
-                <h4>   1.6.1 Cultivo o Crianza priorizado en su Proyecto</h4>
+                <h4>1.7 Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4>
+                <label for="proyecto-relevancia">Descripción:</label>
+                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
+
+            </li>
+            </br></br></br>
+            <li>
+                <h2>2. Áreas Claves</h2>
+                
+            </li>
+            
+            <li>
+                <h4>   2.1 Cultivo o Crianza priorizado en su Proyecto</h4>
                 
                 <input type="hidden" value="<?= $cultivo->id?>" id="proyecto-idcc" name="Proyecto[idcc]" /> 
                 <label for="proyecto-tipocc">Cultivo o Crianza:</label>
@@ -109,26 +126,15 @@ use app\models\Maestros;
                                 ->orderBy('orden')
                                 ->all();
 
-                    
-                        if(!isset($cultivo))
-                        {
                            foreach($maestro as $maestros)
                             {
-                                echo '<option value="'.$maestros->id.'">'.$maestros->descripcion.'</option>';
-                            }
-                        }
-                        else
-                        {
-                            foreach($maestro as $maestros)
-                            {
-                            if($maestros->id == $cultivo->tipo)
-                            {echo '<option value="'.$maestros->id.'" selected>'.$maestros->descripcion.'</option>';}
-                            else{echo '<option value="'.$maestros->id.'">'.$maestros->descripcion.'</option>';}
-                                
-                            } 
-                        }
+                ?>
+                                <option value="<?= $maestros->id; ?>" <?=($maestros->id == $cultivo->tipo)?'selected':'' ?> > <?= $maestros->descripcion ?></option>;
+                    <?php   } ?>
+                      
+                        
                     
-                 ?>
+                 
                     
                 </select>
                 
@@ -140,7 +146,7 @@ use app\models\Maestros;
                 
             </li>
             <li>
-                <h4>1.6.2 Señale una Acción Transversal de Áreas Temáticas Específicas</h4>
+                <h4>2.2 Señale una Acción Transversal de Áreas Temáticas Específicas</h4>
                 
                 <label for="proyecto-idat">Acción Transversal:</label>
                 <select id="proyecto-idat" name="Proyecto[idat]" style="width:200px;">
@@ -152,26 +158,13 @@ use app\models\Maestros;
                                 ->orderBy('orden')
                                 ->all();
 
-                    
-                        if(!isset($AccionT))
-                        {
                            foreach($accionTrans as $accionTransv)
                             {
-                                echo '<option value="'.$accionTransv->id.'">'.$accionTransv->descripcion.'</option>';
-                            }
-                        }
-                        else
-                        {
-                            foreach($accionTrans as $accionTransv)
-                            {
-                            if($accionTransv->id == $AccionT->id_accion_transversal)
-                            {echo '<option value="'.$accionTransv->id.'" selected>'.$accionTransv->descripcion.'</option>';}
-                            else{echo '<option value="'.$accionTransv->id.'">'.$accionTransv->descripcion.'</option>';}
-                                
-                            } 
-                        }
-                    
-                 ?>
+                ?>
+                                <option value="<?= $accionTransv->id; ?>" <?=($accionTransv->id == $AccionT->id_accion_transversal)?'selected':'' ?> > <?= $accionTransv->descripcion ?></option>;
+                    <?php    } ?>
+
+                 
                 </select>
                 
                 
@@ -182,7 +175,7 @@ use app\models\Maestros;
                 
             </li>
             <li>
-                <h4>1.6.3 Señale el Tipo de Proyecto</h4>
+                <h4>2.3 Señale el Tipo de Proyecto</h4>
                 
                 <label for="proyecto-id_tipo_proyecto">Invetigación:</label>
                 <select id="proyecto-id_tipo_proyecto" name="Proyecto[id_tipo_proyecto]" style="width:200px;">
@@ -195,25 +188,13 @@ use app\models\Maestros;
                                 ->all();
 
                     
-                        if(!isset($proyecto->id_tipo_proyecto))
-                        {
                            foreach($tipoInv as $tipoInvs)
                             {
-                                echo '<option value="'.$tipoInvs->id.'">'.$tipoInvs->descripcion.'</option>';
-                            }
-                        }
-                        else
-                        {
-                            foreach($tipoInv as $tipoInvs)
-                            {
-                            if($tipoInvs->id == $proyecto->id_tipo_proyecto)
-                            {echo '<option value="'.$tipoInvs->id.'" selected>'.$tipoInvs->descripcion.'</option>';}
-                            else{echo '<option value="'.$tipoInvs->id.'">'.$tipoInvs->descripcion.'</option>';}
-                                
-                            } 
-                        }
-                    
-                 ?>
+                    ?>
+                               <option value="<?= $tipoInvs->id; ?>" <?=($tipoInvs->id == $proyecto->id_tipo_proyecto)?'selected':'' ?> > <?= $tipoInvs->descripcion ?></option>;
+                    <?php   } ?>
+
+                 
 
                 </select>
                 
@@ -225,66 +206,79 @@ use app\models\Maestros;
                 
                 
             </li>
+            
+            </br></br></br>
             <li>
-                <h4>1.7 Lugar de acción donde se ejecutará el trabajo de Investigación</h4>
+                <h2>3. Marco Lógico</h2>
+                
+            </li>
+
+            <li>
+                <h4>3.1 Objetos</h4>
+                <h5>3.1.1 Objetos Generales</h5>
+                <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
+                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
+            </li>
+            <li>
+                <h5>3.1.2 Objetos Especificos</h5>
+                <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
+            </li>
+            <li>
+                <h4>3.2 Indicadores</h4>
+                <a>Lista de Indicadores</a>
+            </li>
+            
+            <li>
+                <h4>3.3 Actividades</h4>
+                <h5>3.3.1 Actividades del Proyecto</h5>
+                <?= \app\widgets\actividades\ActividadesWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
+            </li>
+            <li>
+                <h5>3.3.2 Cronograma del Proyecto</h5>
+                <?= \app\widgets\cronogramas\CronogramasWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
+                
+            </li>
+            
+            <li>
+                <h4>1.13 Detallar la Infraestructura, Equipos, y Apoyo Logístico disponibles y solicitados para el desarrollo del proyecto</h4>
+                <a href="#">
+                 Lista de Recursos del Proyecto 
+                </a>
+            </li>
+            
+            </br></br></br>
+            <li>
+                <h2>4. Otros</h2>
+                
+            </li>
+            <li>
+                <h4>4.1 Lugar de acción donde se ejecutará el trabajo de Investigación</h4>
                 <a href="#">
                  Locación Geográfica(UBIGEO) 
                 </a>
                 
             </li>
             <li>
-                <h4>1.8 Resumen Ejecutivo del Proyecto</h4>
-                <label for="proyecto-resumen_ejecutivo">Descripción:</label>
-                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-resumen_ejecutivo" name="Proyecto[resumen_ejecutivo]"  required><?= $proyecto->resumen_ejecutivo?></textarea>
-
-            </li>
-            <li>
-                <h4>1.9 Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4>
-                <label for="proyecto-relevancia">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
-
-            </li>
-            <li>
-                <h4>1.10 Objeto General</h4>
-                <label for="proyecto-objetivo_general">Señale Objeto General:</label>
-                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 80px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general?></textarea>
-                <h5>Señale los Objetos Especificos:<h5>
-                <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
-            </li>
-            <li>
-                <h4>1.11 Plan de Trabajo</h4>
+                <h4>4.2 Plan de Trabajo</h4>
                 <label for="proyecto-plan_trabajo">Descripción:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 300px;" id="proyecto-plan_trabajo" name="Proyecto[plan_trabajo]"  required><?= $proyecto->plan_trabajo?></textarea>
-                <h5>Señale las Actividades para cada Objetivo Específico referidos en el punto 1.10.:<h5>
-                <?= \app\widgets\actividades\ActividadesWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
+
                 
             </li>
             <li>
-                <h4>1.12 Resultados Esperados en Innovación Agraria o Transferencia de Tecnología</h4>
+                <h4>4.3 Resultados Esperados en Innovación Agraria o Transferencia de Tecnología</h4>
                 <label for="proyecto-resultados_esperados">Descripción:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;" id="proyecto-resultados_esperados" name="Proyecto[resultados_esperados]"  required><?= $proyecto->resultados_esperados?></textarea>
 
             </li>
             <li>
-                <h4>1.13 Detallar la Infraestructura, Equipos, y Apoyo Logístico disponibles y solicitados para el desarrollo del proyecto</h4>
-                <a href="#">
-                 Lista de Recursos del Proyecto 
-                </a>
-                
-            </li>
-            <li>
-                <h4>1.14 Cronograma del Proyecto</h4>
-                <?= \app\widgets\cronogramas\CronogramasWidget::widget(['proyecto_id'=>$proyecto->id]); ?>
-                
-            </li>
-            <li>
-                <h4>1.15 Presupuesto del Proyecto</h4>
+                <h4>4.4 Presupuesto del Proyecto</h4>
                 <label for="proyecto-presupuesto">Monto Total:</label>
                 <input type="text" value="<?= $proyecto->presupuesto?>" placeholder="Presupuesto"  id="proyecto-presupuesto" name="Proyecto[presupuesto]"  required/>
                 
             </li>
             <li>
-                <h4>1.16 Lista de Referencias Bibliográficas</h4>
+                <h4>4.5 Lista de Referencias Bibliográficas</h4>
                 <label for="proyecto-referencias_bibliograficas">Señale las Referencias:</label>
                 <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 200px;" id="proyecto-referencias_bibliograficas" name="Proyecto[referencias_bibliograficas]"  required><?= $proyecto->referencias_bibliograficas?></textarea>
 
