@@ -68,7 +68,7 @@
 				    </td>
                                     <td>
 					<div class="form-group field-proyecto-aapellidosc_0 required">
-					    <input type="text" id="proyecto-aapellidosc_0" class="form-control" name="Proyecto[apellidosc][]" placeholder="Apellidos #1"  />
+					    <input type="text" id="proyecto-apellidosc_0" class="form-control" name="Proyecto[apellidosc][]" placeholder="Apellidos #1"  />
 					</div>
 				    </td>
                                     <td>
@@ -104,7 +104,7 @@
     $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminaractividad');
 ?>
 <script>
-    var co=<?= $co ?>;
+    var co = <?= $co ?>;
     $("#colaboradores_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
         if (r == true) {
@@ -130,15 +130,14 @@
     
     
     $("#colcaborador_row_1").click(function(){
-        
+        console.log(co);
         
        // var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
-     
-        
+
         if(($('#proyecto-nombresc_'+(co-1)).val()=='') && ($('#proyecto-apellidosc_'+(co-1)).val()=='') && ($('#proyecto-funcionesc_'+(co-1)).val()==''))
         {
             
-            var error='Comllete todos los Campos del COlaborador #'+co+' <br>';
+            var error='Complete todos los Campos del Colaborador #'+co+' <br>';
             //$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
 
             $.notify({
@@ -160,7 +159,7 @@
             
             $('#colaborador_addr_1_'+co).html("<td>"+(co+1)+"</td><td><div class='form-group field-proyecto-nombresc_"+co+" required'> <input type='text' id='proyecto-nombresc_"+co+"' class='form-control' name='Proyecto[nombresc][]' placeholder='Nombres #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-aapellidosc_"+co+" required'><input type='text' id='proyecto-aapellidosc_"+co+"' class='form-control' name='Proyecto[apellidosc][]' placeholder='Apellidos #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-funcionesc_"+co+" required'><input type='text' id='proyecto-funcionesc_"+co+"' class='form-control' name='Proyecto[funcionesc][]' placeholder='Función #"+(co+1)+"'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
             $('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
-            i++;
+            co++;
         }
         
         

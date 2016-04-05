@@ -144,6 +144,7 @@
     });
     
     $("#btn_objetivos_especificos").click(function(event){
+	alert("hpola");
 	var error='';
         var objetivo1=$('input[name=\'Proyecto[objetivos_descripciones][]\']').length;
         for (var i=0; i<objetivo1; i++) {
