@@ -16,13 +16,9 @@ use app\models\Cronograma;
 use app\models\CultivoCrianza;
 use app\models\AccionTransversal;
 use app\models\Indicador;
-<<<<<<< HEAD
 use app\models\AlianzaEstrategica;
-=======
 use app\models\Colaborador;
 use app\models\Ubigeo;
->>>>>>> 449ea1a1199c377e64f5dc2512b32027f1b4d637
-
 class ProyectoController extends Controller
 {
     
