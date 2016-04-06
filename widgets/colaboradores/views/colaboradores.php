@@ -44,12 +44,22 @@
 					<td>
 					    <div class="form-group field-proyecto-descripciones_<?= $co ?> required">
 						
-						<input type="text" id="proyecto-descripciones_<?= $co ?>" class="form-control" name="Proyecto[descripciones][]" placeholder="Descripción #<?= $co ?>" value="<?= $colaborador2->nombres ?>" />
+						<input type="text" id="proyecto-descripciones_<?= $co ?>" class="form-control" name="Proyecto[nombresc][]" placeholder="Descripción #<?= $co ?>" value="<?= $colaborador2->nombres ?>" />
 					    </div>
 					</td>
+                                        <td>
+					<div class="form-group field-proyecto-aapellidosc_<?= $co ?> required">
+					    <input type="text" id="proyecto-apellidosc_<?= $co ?>" class="form-control" name="Proyecto[apellidosc][]" placeholder="Apellidos #<?= $co ?>" value="<?= $colaborador2->apellidos ?>" />
+					</div>
+				    </td>
+                                    <td>
+					<div class="form-group field-proyecto-funcionesc_<?= $co ?> required">
+					    <input type="text" id="proyecto-funcionesc_<?= $co ?>" class="form-control" name="Proyecto[funcionesc][]" placeholder="Función #<?= $co ?>"  value="<?= $colaborador2->funcion ?>"/>
+					</div>
+				    </td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
-						<input type="hidden" name="Proyecto[ids][]" value="<?= $colaborador2->id ?>" />
+						<input type="hidden" name="Proyecto[colaboradores_ids][]" value="<?= $colaborador2->id ?>" />
 					    </span>
 					</td>
 				    </tr>
@@ -78,7 +88,6 @@
 				    </td>
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">
-					    <input type="hidden" name="Proyecto[ids][]"  />
 					</span>
 				    </td>
 				</tr>
@@ -168,17 +177,17 @@
     
     $("#btn_colaboradores").click(function(event){
 	var error='';
-        var objetivo1=$('input[name=\'Proyecto[descripciones][]\']').length;
+        var objetivo1=$('input[name=\'Proyecto[nombresc][]\']').length;
         for (var i=0; i<objetivo1; i++) {
-            if($('#proyecto-descripciones_'+i).val()=='')
+            if(($('#proyecto-nombresc_'+i).val()=='') && ($('#proyecto-apellidosc_'+i).val()=='') && ($('#proyecto-funcionesc_'+i).val()==''))
             {
-                error=error+'ingrese el objetivo especifico #'+i+'  <br>';
-                $('.field-proyecto-descripciones_'+i).addClass('has-error');
+                error=error+'Complete todos los Campos del Colaborador #'+(i+1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
             else
             {
-                $('.field-proyecto-descripciones_'+i).addClass('has-success');
-                $('.field-proyecto-descripciones_'+i).removeClass('has-error');
+               // $('.field-proyecto-descripciones_'+i).addClass('has-success');
+               // $('.field-proyecto-descripciones_'+i).removeClass('has-error');
             }
         }
 	
@@ -189,7 +198,7 @@
                 type: 'danger',
                 z_index: 1000000,
                 placement: {
-                    from: 'bottom',
+                    from: 'top',
                     align: 'right'
                 },
             });
@@ -197,6 +206,7 @@
         }
         else
         {
+            $( "#w0" ).submit();
             return true;
         }
     });
