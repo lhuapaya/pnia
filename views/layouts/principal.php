@@ -41,7 +41,7 @@ $baseUrl = $Asset->baseUrl;
 
 <div id="nav">
        <?php
-            if(!\Yii::$app->user->can('admin'))
+            if(!\Yii::$app->user->can('1'))
             {
                
                 $modulos=Usuarios::find()
@@ -81,7 +81,45 @@ $baseUrl = $Asset->baseUrl;
                 
                 }
             }
-            
+            else if(\Yii::$app->user->can('1'))
+            {
+                $modulos=Usuarios::find()
+                                    ->select('modulo.id mid,modulo.descripcion')
+                                    ->innerJoin('perfil','perfil.id = usuarios.id_perfil')
+                                    ->innerJoin('accesos','accesos.id_pefil = perfil.id')
+                                    ->innerJoin('menus','menus.id = accesos.id_menu')
+                                    ->innerJoin('modulo','modulo.id = menus.id_modulo')
+                                    ->where('usuarios.id=:user_id and accesos.estado=1 and  modulo.estado=1 and menus.visible=1 and modulo.id=2',[':user_id'=>Yii::$app->user->identity->id])
+                                    ->groupBy('modulo.id,modulo.descripcion')
+                                    ->all();
+                                    
+                foreach($modulos as $modulo)
+                {
+                        echo '
+                  <a href="#">
+                    <span>'.$modulo->descripcion.'</span>
+                  </a>
+                  <ul class="treeview-menu">';
+                    
+                   // var_dump($modulo->descripcion);die;
+                    
+                    $menus= Usuarios::find()
+                                        ->select('menus.descripcion, menus.ruta')
+                                        ->innerJoin('perfil','perfil.id = usuarios.id_perfil')
+                                        ->innerJoin('accesos','accesos.id_pefil = perfil.id')
+                                        ->innerJoin('menus','menus.id = accesos.id_menu')
+                                        ->where('usuarios.id=:user_id and menus.estado=1 and accesos.estado=1 and menus.id_modulo=:id_modulo and menus.visible=1',[':user_id'=>Yii::$app->user->identity->id,':id_modulo'=>$modulo->mid])
+                                        ->all();
+                    
+                    
+                        foreach($menus as $menu)
+                        {
+                            echo Html::a( $menu->descripcion,[$menu->ruta],['class'=>'']).'</br>';
+                            
+                        }
+                    
+                    }
+            }
             
             
             ?>
