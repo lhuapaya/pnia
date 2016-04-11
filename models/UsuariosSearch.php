@@ -8,7 +8,11 @@ use yii\data\ActiveDataProvider;
 use app\models\Usuarios;
 
 /**
+<<<<<<< HEAD
  * UsuariosSearch represents the model behind the search form about `app\models\Usuarios`.
+=======
+ * UbigeoSearch represents the model behind the search form about `app\models\Usuarios`.
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
  */
 class UsuariosSearch extends Usuarios
 {
@@ -18,8 +22,13 @@ class UsuariosSearch extends Usuarios
     public function rules()
     {
         return [
+<<<<<<< HEAD
             [['id', 'id_perfil', 'estado'], 'integer'],
             [['Name', 'username', 'password', 'img'], 'safe'],
+=======
+            [['id', 'estado'], 'integer'],
+            [['Name', 'username', 'password', 'img','id_perfil'], 'safe'],
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
         ];
     }
 
@@ -41,7 +50,11 @@ class UsuariosSearch extends Usuarios
      */
     public function search($params)
     {
+<<<<<<< HEAD
         $query = Usuarios::find();
+=======
+        $query = Usuarios::find()->innerJoin('perfil','perfil.id=usuarios.id_perfil');
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
@@ -56,12 +69,21 @@ class UsuariosSearch extends Usuarios
         }
 
         $query->andFilterWhere([
+<<<<<<< HEAD
             'id' => $this->id,
             'id_perfil' => $this->id_perfil,
             'estado' => $this->estado,
         ]);
 
         $query->andFilterWhere(['like', 'Name', $this->Name])
+=======
+            'usuarios.id' => $this->id,
+            'usuarios.estado' => $this->estado,
+        ]);
+
+        $query->andFilterWhere(['like', 'Name', $this->Name])
+            ->andFilterWhere(['like', 'perfil.descripcion', $this->id_perfil])
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
             ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'password', $this->password])
             ->andFilterWhere(['like', 'img', $this->img]);

@@ -5,6 +5,12 @@ namespace app\controllers;
 use Yii;
 use app\models\Usuarios;
 use app\models\UsuariosSearch;
+<<<<<<< HEAD
+=======
+use app\models\Perfil;
+use app\models\AuthAssignment;
+
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -80,6 +86,7 @@ class UsuariosController extends Controller
      */
     public function actionUpdate($id)
     {
+<<<<<<< HEAD
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -87,6 +94,22 @@ class UsuariosController extends Controller
         } else {
             return $this->render('update', [
                 'model' => $model,
+=======
+        $this->layout='principal';
+        $model = $this->findModel($id);
+        $perfiles=Perfil::find()->all();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $assigment=AuthAssignment::find()->where("user_id='".$model->id."'")->one();
+            $assigment->user_id="$model->id";
+            $assigment->item_name="$model->id_perfil";
+            $assigment->update();
+            
+            return $this->redirect(['index', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+                'perfiles'=>$perfiles
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
             ]);
         }
     }
@@ -100,7 +123,11 @@ class UsuariosController extends Controller
     public function actionDelete($id)
     {
         $this->findModel($id)->delete();
+<<<<<<< HEAD
 
+=======
+        AuthAssignment::find()->where("user_id='".$id."'")->one()->delete();
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
         return $this->redirect(['index']);
     }
 
@@ -119,4 +146,29 @@ class UsuariosController extends Controller
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+<<<<<<< HEAD
+=======
+    
+    public function actionNuevo()
+    {
+        $this->layout='principal';
+        $model = new Usuarios();
+        $perfiles=Perfil::find()->all();
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $model->estado=1;
+            $model->save();
+            
+            $assigment=new AuthAssignment;
+            $assigment->user_id="$model->id";
+            $assigment->item_name="$model->id_perfil";
+            $assigment->save();
+            return $this->redirect(['index', 'id' => $model->id]);
+        } else {
+            return $this->render('nuevo', [
+                'model' => $model,
+                'perfiles'=>$perfiles
+            ]);
+        }
+    }
+>>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
 }

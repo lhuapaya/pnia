@@ -16,9 +16,9 @@ use app\models\Cronograma;
 use app\models\CultivoCrianza;
 use app\models\AccionTransversal;
 use app\models\Indicador;
+use app\models\AlianzaEstrategica;
 use app\models\Colaborador;
 use app\models\Ubigeo;
-
 class ProyectoController extends Controller
 {
     
@@ -105,6 +105,7 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
+            $countAlianzas=count(array_filter($proyecto->alianzas_instituciones));
             $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
             $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
             $countActividades=count(array_filter($proyecto->actividades_descripciones));
@@ -133,19 +134,9 @@ class ProyectoController extends Controller
                 $AccionT->otros = $proyecto->otrosat;
                 $AccionT->save();
 
-                /*for($i=0;$i<$countObjetivosEspecificos;$i++)
->>>>>>> 696776cfe3f3faee77f470ca24c71f2d65259c77
-
-                {
-                    $objetivosespecificos=new ObjetivoEspecifico;
-                    $objetivosespecificos->id_proyecto=$proyecto->id;
-                    $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                    $objetivosespecificos->save();
-                }*/
             }
             else
             {
-                //var_dump($proyecto->id);
                 $data= Proyecto::findOne($proyecto->id);
                 $data->titulo = $proyecto->titulo;
                 $data->direccion_linea = $proyecto->direccion_linea;
@@ -190,6 +181,35 @@ class ProyectoController extends Controller
                 
                 $AccionT->update();
                 
+                /*alianzas*/
+                for($i=0;$i<$countAlianzas;$i++)
+
+                {
+                    if(isset($proyecto->alianzas_ids[$i]))
+                    {
+                        $alianza=AlianzaEstrategica::findOne($proyecto->alianzas_ids[$i]);
+                        $alianza->id_proyecto=$proyecto->id;
+                        $alianza->institucion=$proyecto->alianzas_instituciones[$i];
+                        $alianza->descripcion=$proyecto->alianzas_descripciones[$i];
+                        $alianza->nombres=$proyecto->alianzas_nombres[$i];
+                        $alianza->apellidos=$proyecto->alianzas_apellidos[$i];
+                        $alianza->correo=$proyecto->alianzas_correos[$i];
+                        $alianza->telefono=$proyecto->alianzas_telefonos[$i];
+                        $alianza->update(); 
+                    }
+                    else
+                    {
+                        $alianza=new AlianzaEstrategica;
+                        $alianza->id_proyecto=$proyecto->id;
+                        $alianza->institucion=$proyecto->alianzas_instituciones[$i];
+                        $alianza->descripcion=$proyecto->alianzas_descripciones[$i];
+                        $alianza->nombres=$proyecto->alianzas_nombres[$i];
+                        $alianza->apellidos=$proyecto->alianzas_apellidos[$i];
+                        $alianza->correo=$proyecto->alianzas_correos[$i];
+                        $alianza->telefono=$proyecto->alianzas_telefonos[$i];
+                        $alianza->save(); 
+                    }
+                }
                 
 
                 /*objetivos*/

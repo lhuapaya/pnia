@@ -65,6 +65,17 @@ class Proyecto extends \yii\db\ActiveRecord
             public $cronogramas_actividad_ids;
             public $cronogramas_meses;
             
+
+            /*alianzas*/
+            public $alianzas_ids;
+            public $alianzas_instituciones;
+            public $alianzas_descripciones;
+            public $alianzas_nombres;
+            public $alianzas_apellidos;
+            public $alianzas_correos;
+            public $alianzas_telefonos;
+            
+            
             /*colaborador*/
             public $colaboradores_ids;
             public $nombresc;
@@ -100,7 +111,9 @@ class Proyecto extends \yii\db\ActiveRecord
               'objetivos_descripciones','actividades_ids','actividades_ind_ids','actividades_descripciones',
               'indicadores_ids','indicadores_oe_ids','indicadores_descripciones',
               'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat',
-              'colaboradores_ids','nombresc','apellidosc','funcionesc'], 'safe'],
+              'alianzas_instituciones','alianzas_descripciones','alianzas_nombres','alianzas_apellidos','alianzas_correos','alianzas_telefonos',
+              'alianzas_ids','colaboradores_ids','nombresc','apellidosc','funcionesc'], 'safe'],
+
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],

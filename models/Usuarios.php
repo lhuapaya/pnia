@@ -34,7 +34,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             //[['id'], 'required'],
-            [['id'], 'integer'],
+            [['id','id_perfil','estado'], 'integer'],
             [['Name', 'username', 'password','img'], 'string', 'max' => 50]
         ];
     }
@@ -51,6 +51,11 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
             'password' => 'Password',
             'img' => 'Img',
         ];
+    }
+    
+    public function getPerfil()
+    {
+        return $this->hasOne(Perfil::className(), ['id' => 'id_perfil']);
     }
     
     
