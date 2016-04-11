@@ -4,7 +4,7 @@ use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
-/* @var $searchModel app\models\UbigeoSearch */
+/* @var $searchModel app\models\UsuariosSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Usuarios';
@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Crear usuario', ['nuevo'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Create Usuarios', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -29,17 +29,11 @@ $this->params['breadcrumbs'][] = $this->title;
             'Name',
             'username',
             'password',
-            [
-                'label'=>'Perfil',
-                'attribute' => 'id_perfil',
-                'format'=>'raw',
-                'value'=>function($data) {
-                    return $data->perfil->descripcion;
-                },
-                //'width'=>'110px',
-            ],
-            ['class' => 'yii\grid\ActionColumn',
-             'template' => '{update} {delete}',],
+            'id_perfil',
+            // 'img',
+            // 'estado',
+
+            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
 
