@@ -6,19 +6,20 @@ foreach($indicadores as $indicador)
 }
 
 ?>
-
-<div>
-	    <div class="col-xs-12 col-sm-10 col-md-8">
-		<h5>Indicadores</h5>
-		<select type="text" id="proyecto-indicador_id" class="form-control" name="Proyecto[actividades_ind_ids][]" >
-		    <option value>Seleccionar Indicador</option>
-		    <?=  $indicadores_opciones; ?>
-		</select></br>
-	    </div>    
-            <div>
+<a href="#" data-toggle="modal" data-target="#actividades_" id="actividades">
+    Lista de actividades
+</a>
+<!--Lista de Objetivos Especificos -->
+<div class="modal fade" id="actividades_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Actividades</h4>
+            </div>
+            <div class="modal-body">
                 <div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-		    <h5>Actividades</h5>
                     <table class="table table-bordered table-hover" id="actividades_tabla">
                         <thead>
                             <tr>
@@ -26,16 +27,10 @@ foreach($indicadores as $indicador)
                                     #
                                 </th>
                                 <th class="text-center">
-                                    Descripción
+                                    Objetivo especifico
                                 </th>
 				<th class="text-center">
-                                    Peso
-                                </th>
-				<th class="text-center">
-                                    Unidad de Medida
-                                </th>
-				<th class="text-center">
-                                    Cant. Programada
+                                    Actividad
                                 </th>
                                 <th>
                                 </th>
@@ -50,7 +45,7 @@ foreach($indicadores as $indicador)
 					<td>
 					<?= ($act+1) ?>
 					</td>
-					<!--<td>
+					<td>
 					    <div class="form-group field-proyecto-actividades_ind_ids_<?= $act ?> required">
 						<select type="text" id="proyecto-actividades_ind_ids_<?= $act ?>" class="form-control" name="Proyecto[actividades_ind_ids][]" >
 						    <option value>Seleccionar</option>
@@ -62,25 +57,10 @@ foreach($indicadores as $indicador)
 						    ?>
 						</select>
 					    </div>
-					</td>-->
-					<td class="col-xs-6">
+					</td>
+					<td>
 					    <div class="form-group field-proyecto-actividades_descripciones_<?= $act ?> required">
 						<input type="text" id="proyecto-actividades_descripciones_<?= $act ?>" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="Descripción #<?= $act ?>" value="<?= $actividad->descripcion ?>" />
-					    </div>
-					</td>
-					<td class="col-xs-1">
-					    <div class="form-group field-proyecto-actividades_pesos_<?= $act ?> required">
-						<input type="text" id="proyecto-actividades_pesos_<?= $act ?>" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="<?= $actividad->peso ?>" />
-					    </div>
-					</td>
-					<td>
-					    <div class="form-group field-proyecto-actividades_unidad_medidas_<?= $act ?> required">
-						<input type="text" id="proyecto-actividades_unidad_medidas_<?= $act ?>" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder="Unidad de Medida" value="<?= $actividad->unidad_medida ?>" />
-					    </div>
-					</td>
-					<td>
-					    <div class="form-group field-proyecto-actividades_programados_<?= $act ?> required">
-						<input type="text" id="proyecto-actividades_programados_<?= $act ?>" class="form-control" name="Proyecto[actividades_programados][]" placeholder="Cantidad Programada<?= $act ?>" value="<?= $actividad->programado ?>" />
 					    </div>
 					</td>
 					<td>
@@ -125,7 +105,12 @@ foreach($indicadores as $indicador)
                 </div>
                 <div class="clearfix"></div>
             </div>
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="submit" id="btn_actividades" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php

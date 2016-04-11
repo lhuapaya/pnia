@@ -6,7 +6,7 @@ $config = [
     'id' => 'basic',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
-    'defaultRoute'=>'dashboard/index',
+    'defaultRoute'=>'proyecto/nuevo',
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
@@ -23,7 +23,7 @@ $config = [
         'authManager' => [
             'class' => 'yii\rbac\DbManager',
             //'itemTable'=>'tbl_rol',
-            //'defaultRoles' => ['admin', 'author'],
+            'defaultRoles' => ['admin', 'author'],
         ],
         
         'urlManager' => [

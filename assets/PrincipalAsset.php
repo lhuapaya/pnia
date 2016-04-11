@@ -24,7 +24,7 @@ class PrincipalAsset extends AssetBundle
                   // 'https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css',
                    //'distlte/css/AdminLTE.min.css',
                    //'distlte/css/skins/_all-skins.min.css',
-                   'https://cdn.rawgit.com/esvit/ng-table/v1.0.0/dist/ng-table.min.css',
+                   //'https://cdn.rawgit.com/esvit/ng-table/v1.0.0/dist/ng-table.min.css',
                    'css/principal.css',
                    //'plugins/iCheck/flat/blue.css',
                    //'plugins/morris/morris.css',
@@ -35,6 +35,7 @@ class PrincipalAsset extends AssetBundle
                    ];
     public $js = [
                     'js/bootstrap-notify.js',
+                    //'js/angular.js',
         //'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js',
           //          'https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js',
                     

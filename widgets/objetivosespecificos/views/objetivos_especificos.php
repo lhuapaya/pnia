@@ -1,19 +1,10 @@
-<a href="#" data-toggle="modal" data-target="#objetivos_especificos" id="objetivos-especificos">
-    Lista Objetos Especificos
-</a>
-<!--Lista de Objetivos Especificos -->
-<div class="modal fade" id="objetivos_especificos" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Objetivos especificos</h4>
-            </div>
-            <div class="modal-body">
+
+<div >
                 <div class="clearfix"></div>
-                <div class="col-xs-12 col-sm-7 col-md-12">
-                    <table class="table table-bordered table-hover" id="objetivos_especificos_tabla">
-                        <thead>
+                <div class="col-xs-12 col-sm-7 col-md-12" >
+                    <h5>Objetivo especifico</h5>
+                    <table class="table table-bordered" id="objetivos_especificos_tabla">
+                       <!-- <thead>
                             <tr>
                                 <th class="text-center">
                                     #
@@ -24,72 +15,199 @@
                                 <th>
                                 </th>
                             </tr>
-                        </thead>
+                        </thead>-->
                         <tbody>
-                            <?php $oe=0; ?>
-			    <?php if($objetivosespecificos){ ?>
-				
-				<?php foreach($objetivosespecificos as $objetivoespecifico){ ?>
-				    <?php //if($objetivo->id==$proyecto->objetivo_especifico_1_id){ ?>
-				    <tr id='objetivo_addr_1_<?= $oe ?>'>
-					<td>
-					<?= ($oe+1) ?>
-					</td>
-					<td>
-					    <div class="form-group field-proyecto-objetivos_descripciones_<?= $oe ?> required">
-						
-						<input type="text" id="proyecto-objetivos_descripciones_<?= $oe ?>" class="form-control" name="Proyecto[objetivos_descripciones][]" placeholder="Descripción #<?= $oe ?>" value="<?= $objetivoespecifico->descripcion ?>" />
-					    </div>
-					</td>
-					<td>
-					    <span class="eliminar glyphicon glyphicon-minus-sign">
-						<input type="hidden" name="Proyecto[objetivos_ids][]" value="<?= $objetivoespecifico->id ?>" />
-					    </span>
-					</td>
-				    </tr>
-				    <?php $oe++; ?>
-				    <?php //}?>
-				<?php } ?>
-			    <?php }else{ ?>
-				<tr id='objetivo_addr_1_0'>
-				    <td>
-				    <?= ($oe+1) ?>
-				    </td>
-				    <td>
-					<div class="form-group field-proyecto-objetivos_descripciones_0 required">
-					    <input type="text" id="proyecto-objetivos_descripciones_0" class="form-control" name="Proyecto[objetivos_descripciones][]" placeholder="Descripción #0"  />
-					</div>
-				    </td>
-				    <td>
-					<span class="eliminar glyphicon glyphicon-minus-sign">
+                            <tr ng-repeat="fdato in fdatos">
+			    <td>
+				<div class="form-group required">{{$index+1}}	
+				    <input type="hidden"  class="form-control" placeholder="Descripción" ng-model="fdato.id" />
+				    <input type="hidden"  class="form-control" placeholder="Descripción" ng-model="fdato.id_proyecto" />
+				</div>
+			    </td>
+			    <td>
+				<div class="form-group required">		
+				    <input type="text"  class="form-control" placeholder="Descripción" ng-model="fdato.descripcion" name="descripcion" required
+					   ng-class="{ error: formObjetivos.descripcion.$error.required && !formObjetivos.$pristine }">
+				</div>
+			    </td>
+			    <td>
+					<span class="eliminar glyphicon glyphicon-minus-sign" ng-click="removeRow(fdato.id,$index)">
 					</span>
-				    </td>
-				</tr>
-				<?php $oe=1; ?>
-			    <?php } ?>
-                            <tr id='objetivo_addr_1_<?= $oe ?>'></tr>
+			    </td>
+			    </tr>
                         </tbody>
                     </table>
-                    <div id="objetivo_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
+                    <div id="objetivo_row_1-" class="btn btn-default pull-left" value="1" ng-click="addRow()">Agregar</div>
                     <br>
                 </div>
                 <div class="clearfix"></div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button type="submit" id="btn_objetivos_especificos" class="btn btn-primary" data-dismiss="modal">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 <?php
     $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarobjetivoespecifico');
+    $rutagrabaroe= Yii::$app->getUrlManager()->createUrl('objetivoe/registrar');
+    $rutagrabarog= Yii::$app->getUrlManager()->createUrl('proyecto/grabarog');
+    $rutaobetivoeindex= Yii::$app->getUrlManager()->createUrl('objetivoe/index');
+    $rutaobteneog= Yii::$app->getUrlManager()->createUrl('objetivoe/obteneog');
+    $ruraeliminaroe= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarobjetivoespecifico');
 ?>
 <script>
-    var oe=<?= $oe ?>;
+    var id_proyecto = <?= $proyecto_id ?>;
+    var app = angular.module('app', []);
+    app.controller('objetivoeCtrl', function($scope,$http) {
     
-    $("#objetivos_especificos_tabla").on('click','.eliminar',function(){
+    //cargar contenido a formulario
+     $scope.importar = function(){
+	
+	
+	$http.get('<?= $rutaobetivoeindex ?>?val='+id_proyecto)
+	.success(function (data) {
+	    $scope.fdatos = data;
+	    
+            //$scope.fdatos = [{ "id":"5","descripcion":"Objetivo 1"},{ "id":"6","descripcion":"Objetivo 2"},{ "id":"7","descripcion":"Objetivo 3"}]
+	    
+	    console.log(data);
+	    });
+     }
+     
+     $scope.importar2 = function(){
+	
+	$http.get('<?= $rutaobteneog ?>?val='+id_proyecto)
+	.success(function (data) {
+	    $scope.adatos = data;
+	    
+            //$scope.fdatos = [{ "id":"5","descripcion":"Objetivo 1"},{ "id":"6","descripcion":"Objetivo 2"},{ "id":"7","descripcion":"Objetivo 3"}]
+	    
+	    console.log(data);
+	    });
+     }
+     
+     //agregar objetivo
+     $scope.addRow = function()
+     {
+	//alert($parent.$index);
+	$scope.fdatos.push({id:'',descripcion:''});
+     }
+     
+     //borrar objetivo
+     $scope.removeRow = function(id,posicion){
+	
+	var error ='';
+	if (id) {
+	    
+	   $.post("<?= $ruraeliminaroe ?>", {'obj_esp':  JSON.stringify({"id": id})})
+
+            .success(function(data){
+		
+		if (data!='') {
+		    $.notify({
+			message: data 
+		    },{
+			type: 'danger',
+			z_index: 1000000,
+			placement: {
+			    from: 'bottom',
+			    align: 'right'
+			},
+		    });
+		}
+		else
+		{
+		    $scope.fdatos.splice( posicion, 1 );	
+		}
+            }); 
+	}
+	else
+	{$scope.fdatos.splice( posicion, 1 );	}
+		
+			
+	};   
+	
+	//grabar objetivos
+	$scope.grabaroe = function(){
+	    
+          $.post("<?= $rutagrabaroe ?>", {'obj_esp':  JSON.stringify($scope.fdatos)})
+
+            .success(function(data){
+              console.log(data);
+	      //alert(data);
+	      
+	    $.post("<?= $rutagrabarog ?>", {'obj_gen':  JSON.stringify({'objetivo_general':$scope.adatos.objetivo_general,'id_proyecto':<?= $proyecto_id ?>})})
+
+            .success(function(data){
+              console.log(data);
+	     // alert(data);
+	    });
+
+        });
+	}
+	
+	$scope.importar();
+	$scope.importar2();
+	});
+    
+    app.controller('indicadorCtrl', function($scope,$http) {
+	    
+	    //var vm = this;
+	    //vm.adatos = {objetivo_general:"Contenido del Objetivo General"};
+	    
+	 
+	    
+     $scope.cargarObjetivos = function(){
+	
+	$scope.select_oe = null
+	$scope.idatos = [];
+	
+	$http.get('<?= $rutaobetivoeindex ?>?val='+id_proyecto)
+	.success(function (data) {
+	    $scope.idatos = data;
+	    $scope.select_oe = $scope.idatos[1];
+	    console.log(data);
+	    });
+	
+	
+     }
+    //var defered = $q.defer();
+    //var promise = defered.promise;
+    
+     
+
+	$scope.cargarObjetivos();
+	
+	});
+
+    /*angular
+        .module('objetivoe', [])
+        .controller('objetivoeCtrl', ['$http', controladorObjetivoe]);
+
+    function controladorObjetivoe($http){
+        var obe=this;
+
+        //inicializo un objeto en los datos de formulario
+        obe.fdatos = {};
+	
+	$.get("<?= $rutaobetivoeindex ?>",{proyecto_id: <?= $proyecto_id ?>})
+	.success(function (response) {obe.fdatos = response.records;});
+
+	
+
+        // declaro la función enviar
+        obe.grabarobe = function(){
+          $.post("<?= $rutagrabaroe ?>", {'obj_esp':  JSON.stringify(obe.fdatos)})
+
+            .success(function(data){
+              console.log(data);
+	      alert(data);
+              //por supuesto podrás volcar la respuesta al modelo con algo como vm.res = res;
+            });
+
+	    
+        }    
+    }*/
+    
+    var oe=''; 
+    
+   /* $("#objetivos_especificos_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
         if (r == true) {
             id=$(this).children().val();
@@ -111,7 +229,7 @@
 	    }
         } 
     });
-    
+    */
     
     $("#objetivo_row_1").click(function(){
        console.log(oe);
@@ -143,7 +261,7 @@
         return true;
     });
     
-    $("#btn_objetivos_especificos").click(function(event){
+   /* $("#btn_objetivos_especificos").click(function(event){
 	var error='';
         var objetivo1=$('input[name=\'Proyecto[objetivos_descripciones][]\']').length;
         for (var i=0; i<objetivo1; i++) {
@@ -177,7 +295,7 @@
 	    $( "#w0" ).submit();
             return true;
         }
-    });
+    });*/
     
     $("#objetivos-especificos").click(function( ) {
 	var id='<?= $proyecto_id ?>';

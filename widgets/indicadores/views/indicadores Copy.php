@@ -1,43 +1,36 @@
 <?php
-/*$objetivos_opciones='';
+$objetivos_opciones='';
 foreach($objetivos as $objetivo)
 {
     $objetivos_opciones=$objetivos_opciones.'<option value="'.$objetivo->id.'">'.$objetivo->descripcion.'</option>';
-}*/
+}
 
 ?>
-<div ng-controller="indicadorCtrl" >
-	    
-	    <div class="col-xs-12 col-sm-10 col-md-8">
-		<h5>Objetivos Especificos</h5>
-		<select class="form-control" name="select_oe" id="select_oe" ng-model="select_oe" ng-options="item.id as item.descripcion for item in idatos">
-		    
-		</select>
-		
-		</br>
-	    </div>
-	    
-            <div>
-		<div class="clearfix"></div>
+<a href="#" data-toggle="modal" data-target="#indicadores_" id="indicadores">
+    Lista de Indicadores
+</a>
+<!--Lista de Objetivos Especificos -->
+<div class="modal fade" id="indicadores_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Indicadores</h4>
+            </div>
+            <div class="modal-body">
+                <div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-		    <h5>Indicadores</h5>
-                    <table class="table table-bordered table-hover" id="indicadores_tabla" border="0">
+                    <table class="table table-bordered table-hover" id="indicadores_tabla">
                         <thead>
                             <tr>
                                 <th class="text-center">
                                     #
                                 </th>
                                 <th class="text-center">
-                                    Descripción
+                                    Objetivo especifico
                                 </th>
 				<th class="text-center">
-                                    Peso
-                                </th>
-				<th class="text-center">
-                                    Unidad de Medida
-                                </th>
-				<th class="text-center">
-                                    Cant. Programada
+                                    Indicador
                                 </th>
                                 <th>
                                 </th>
@@ -52,7 +45,7 @@ foreach($objetivos as $objetivo)
 					<td>
 					<?= ($ind+1) ?>
 					</td>
-					<!--<td>
+					<td>
 					    <div class="form-group field-proyecto-indicadores_oe_ids_<?= $ind ?> required">
 						<select type="text" id="proyecto-indicadores_oe_ids_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_oe_ids][]" >
 						    <option value>Seleccionar</option>
@@ -64,25 +57,10 @@ foreach($objetivos as $objetivo)
 						    ?>
 						</select>
 					    </div>
-					</td>-->
-					<td class="col-xs-6">
-					    <div class="form-group field-proyecto-indicadores_descripciones_<?= $ind ?>  required ">
-						<input type="text" id="proyecto-indicadores_descripciones_<?= $ind ?>" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>" value="<?= $indicador->descripcion ?>" />
-					    </div>
-					</td>
-					<td class="col-xs-1">
-					    <div class="form-group field-proyecto-indicadores_pesos_<?= $ind ?>  required">
-						<input type="text" id="proyecto-indicadores_pesos_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso" value="<?= $indicador->peso ?>" />
-					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_unidad_medidas_<?= $ind ?> required">
-						<input type="text" id="proyecto-indicadores_unidad_medidas_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida " value="<?= $indicador->unidad_medida ?>" />
-					    </div>
-					</td>
-					<td>
-					    <div class="form-group field-proyecto-indicadores_programados_<?= $ind ?> required">
-						<input type="text" id="proyecto-indicadores_programados_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado" value="<?= $indicador->programado ?>" />
+					    <div class="form-group field-proyecto-indicadores_descripciones_<?= $ind ?> required">
+						<input type="text" id="proyecto-indicadores_descripciones_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_descripciones][]" placeholder="Descripción #<?= $ind ?>" value="<?= $indicador->descripcion ?>" />
 					    </div>
 					</td>
 					<td>
@@ -127,14 +105,19 @@ foreach($objetivos as $objetivo)
                 </div>
                 <div class="clearfix"></div>
             </div>
-
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                <button type="submit" id="btn_indicadores" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <?php
     $eliminarindicador= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarindicador');
 ?>
 <script>
-   
+    var objetivos_opciones='<?= $objetivos_opciones ?>';
     var ind=<?= $ind ?>;
     $("#indicadores_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");

@@ -20,8 +20,11 @@ $baseUrl = $Asset->baseUrl;
 <!DOCTYPE html>
 <html lang="<?= Yii::$app->language ?>">
 <head>
+      <?= Html::csrfMetaTags() ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript"></script>
-      
+
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js" type="text/javascript"></script>
+            
  <?php     header('Content-Type: text/html; charset=UTF-8');
             mb_internal_encoding('UTF-8');
 ?>
@@ -38,11 +41,16 @@ $baseUrl = $Asset->baseUrl;
 <div id="header">
 <h1>PNIA</h1>
 </div>
-
+<div id="lateral">
+<div id="user_login">
+<img src="<?= Yii::$app->homeUrl.'img/admin.jpg';?>" class="user-image" alt="User Image">
+<span><?= Yii::$app->user->identity->Name; ?></span>
+<?= Html::a( 'Cerrar Sesión',['login/logout'],['class'=>'']); ?>
+</div>
 <div id="nav">
        <?php
-            if(!\Yii::$app->user->can('admin'))
-            {
+           // if(\Yii::$app->user->can('investigador'))
+           // {
                
                 $modulos=Usuarios::find()
                                     ->select('modulo.id mid,modulo.descripcion')
@@ -76,26 +84,30 @@ $baseUrl = $Asset->baseUrl;
                     foreach($menus as $menu)
                     {
                         echo Html::a( $menu->descripcion,[$menu->ruta],['class'=>'']).'</br>';
-                        
+                        /*echo Html::a( 'Datos Generales',[$menu->ruta.'#general'],['class'=>'']).'</br>';
+                        echo Html::a( 'Áreas Claves',[$menu->ruta.'#areas'],['class'=>'']).'</br>';
+                        echo Html::a( 'Marco Lógico',[$menu->ruta.'#logico'],['class'=>'']).'</br>';
+                        echo Html::a( 'Otros',[$menu->ruta.'#otros'],['class'=>'']).'</br>';*/
                     }
                 
                 }
-            }
+           // }
             
             
             
             ?>
 
 </div>
-
+</div>
 <div id="section">
 <?= $content ?>
 </div>
 
-<div id="footer">
+
+<!--<div id="footer">
 Copyright © W3Schools.com
 </div>
-    
+-->    
 <?php $this->endBody() ?>
 </body>
 </html>

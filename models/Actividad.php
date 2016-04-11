@@ -8,13 +8,14 @@ use Yii;
  * This is the model class for table "actividad".
  *
  * @property integer $id
- * @property integer $id_oe
+ * @property integer $id_ind
  * @property string $descripcion
- * @property string $indicadores
- * @property string $medios
- * @property string $supuestos
+ * @property integer $peso
+ * @property string $unidad_medida
+ * @property string $meta
+ * @property integer $programado
  *
- * @property ObjetivoEspecifico $idOe
+ * @property Indicador $idInd
  * @property Cronograma[] $cronogramas
  */
 class Actividad extends \yii\db\ActiveRecord
@@ -33,10 +34,11 @@ class Actividad extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            //[['id_oe'], 'required'],
-            [['id_ind'], 'integer'],
+            [['id_ind'], 'required'],
+            [['id_ind', 'peso', 'programado'], 'integer'],
             [['descripcion'], 'string', 'max' => 3000],
-            [['indicadores', 'medios', 'supuestos'], 'string', 'max' => 500]
+            [['unidad_medida'], 'string', 'max' => 100],
+            [['meta'], 'string', 'max' => 200]
         ];
     }
 
@@ -47,18 +49,19 @@ class Actividad extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_ind' => 'Id Oe',
+            'id_ind' => 'Id Ind',
             'descripcion' => 'Descripcion',
-            'indicadores' => 'Indicadores',
-            'medios' => 'Medios',
-            'supuestos' => 'Supuestos',
+            'peso' => 'Peso',
+            'unidad_medida' => 'Unidad Medida',
+            'meta' => 'Meta',
+            'programado' => 'Programado',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIndicador()
+    public function getIdInd()
     {
         return $this->hasOne(Indicador::className(), ['id' => 'id_ind']);
     }
