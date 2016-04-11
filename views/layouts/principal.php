@@ -49,13 +49,13 @@ $baseUrl = $Asset->baseUrl;
 </div>
 <div id="nav">
        <?php
-<<<<<<< HEAD
+
            // if(\Yii::$app->user->can('investigador'))
            // {
-=======
+
             if(!\Yii::$app->user->can('1'))
             {
->>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
+
                
                 $modulos=Usuarios::find()
                                     ->select('modulo.id mid,modulo.descripcion')
@@ -96,10 +96,10 @@ $baseUrl = $Asset->baseUrl;
                     }
                 
                 }
-<<<<<<< HEAD
+
            // }
             
-=======
+
             }
             else if(\Yii::$app->user->can('1'))
             {
@@ -140,7 +140,7 @@ $baseUrl = $Asset->baseUrl;
                     
                     }
             }
->>>>>>> 6a4012ce8b432cf3dee830211093ae03c6094858
+
             
             
             ?>

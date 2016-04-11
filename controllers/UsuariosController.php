@@ -9,6 +9,7 @@ use app\models\UsuariosSearch;
 use app\models\Perfil;
 use app\models\AuthAssignment;
 
+
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -85,6 +86,22 @@ class UsuariosController extends Controller
     public function actionUpdate($id)
     {
 
+        $this->layout='principal';
+        $model = $this->findModel($id);
+        $perfiles=Perfil::find()->all();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            $assigment=AuthAssignment::find()->where("user_id='".$model->id."'")->one();
+            $assigment->user_id="$model->id";
+            $assigment->item_name="$model->id_perfil";
+            $assigment->update();
+            
+            return $this->redirect(['index', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+                'perfiles'=>$perfiles
+            ]);
+        }
     }
 
     /**
@@ -95,6 +112,8 @@ class UsuariosController extends Controller
      */
     public function actionDelete($id)
     {
+        $this->findModel($id)->delete();
+
         AuthAssignment::find()->where("user_id='".$id."'")->one()->delete();
         return $this->redirect(['index']);
     }
