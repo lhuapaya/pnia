@@ -3,6 +3,7 @@
 namespace app\controllers;
 use yii;
 use yii\web\Controller;
+use yii\web\Session;
 use yii\web\NotFoundHttpException;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
@@ -29,10 +30,10 @@ class ProyectoController extends Controller
          return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','nuevo','marcologico','datosgenerales'],
+                'only' => ['index','nuevo','marcologico','datosgenerales','recursos'],
                 'rules' => [
                     [
-                        'actions' => ['index','nuevo','marcologico','datosgenerales'],
+                        'actions' => ['index','nuevo','marcologico','datosgenerales','recursos'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -647,11 +648,20 @@ class ProyectoController extends Controller
       
     }
     
-    public function actionGuardar()
+    public function actionRecursos()
     {
-
+        $this->layout='principal';
+        $proyecto = new Proyecto();
         
-        return $this->redirect('nuevo');
+        $session = Yii::$app->session;
+        
+        
+        $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->one();
+        
+        
+        return $this->render('recursos',['proyecto'=>$proyecto]);
     }
     
     public function actionExisteproyecto()
