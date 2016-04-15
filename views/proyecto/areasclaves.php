@@ -25,6 +25,7 @@ use app\models\Maestros;
             <li>
                 <h2 name="general">2. Áreas Claves</h2>
                 <span class="required_notification">* Datos requeridos</span>
+                <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" />
             </li>
 
             
@@ -122,7 +123,10 @@ use app\models\Maestros;
                 
                 
             </li>
-            <li>
+                <li>
+                <button type="submit" id="btnproyecto" class="btn btn-primary">Guardar</button>
+                </li>
+             <li>
                 
                 
             </li>
@@ -156,10 +160,6 @@ if($.trim($('select[id=proyecto-idat]').val())!='15')
         { $("#especifiqueAT").hide();}
 else    {$("#especifiqueAT").show();;}
 
-$('#proyecto-presupuesto').keydown(function (){
-            this.value = (this.value + '').replace(/[^0-9]/g, '');
-          });
-
 
 });
 
@@ -192,68 +192,6 @@ $('#proyecto-idat').change(function(){
 $("#btnproyecto").click(function( ) {
     
     var error='';
-    if($.trim($('#proyecto-titulo').val())=='')
-        {
-            error=error+'Ingrese Nombre del Proyecto<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-        
-    if($.trim($('#proyecto-direccion_linea').val())=='')
-        {
-            error=error+'Señale la Dirección en Linea<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-    if($.trim($('#proyecto-estacion_exp').val())=='')
-        {
-            error=error+'Señale la Estación Experimental<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-    if($.trim($('#proyecto-sub_estacion_exp').val())=='')
-        {
-            error=error+'Señale la Sub Estación Experimental<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-    if($.trim($('#proyecto-nombres').val())=='')
-        {
-            error=error+'Ingrese Nombres del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-     if($.trim($('#proyecto-apellidos').val())=='')
-        {
-            error=error+'Ingrese Apellidos del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-    if($.trim($('#proyecto-telefono').val())=='')
-        {
-            error=error+'Ingrese Nro Teléfonico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-     if($.trim($('#proyecto-celular').val())=='')
-        {
-            error=error+'Ingrese Nombre Nro Celular del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-     if($.trim($('#proyecto-correo').val())=='')
-        {
-            error=error+'Ingrese Correo Electrónico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
 
      if($.trim($('select[id=proyecto-tipocc]').val())=='0')
         {
@@ -271,6 +209,13 @@ $("#btnproyecto").click(function( ) {
         {
             error=error+'Seleccione el Tipo de Investigación<br>';
             $('#proyecto-tipoInvestigacion').addClass('has-error');
+            //alert('hola');
+        }
+        
+    if($.trim($('#proyecto-desc_tipo_proy').val())=='')
+        {
+            error=error+'Ingrese la Descripción del Proyecto<br>';
+            $('#proyecto-desc_tipo_proy').addClass('has-error');
             //alert('hola');
         }
     
@@ -342,33 +287,7 @@ $("#btnproyecto").click(function( ) {
 });
 
 
-$("#proyecto-colaboradores").click(function( ) {
-    var existe=$.ajax({
-                url: '<?= $urlproyectoExiste ?>',
-                type: 'POST',
-                async: false,
-                //data: {},
-                success: function(data){
-                    
-                }
-            });
-    if(existe.responseText!=1)
-        {
-            $.notify({
-                message: existe.responseText
-            },{
-                type: 'danger',
-                offset: 20,
-                spacing: 10,
-                z_index: 1031,
-                placement: {
-                    from: 'top',
-                    align: 'right'
-                },
-            });
-            return false;
-        }
-});
+
 
 </script>
 

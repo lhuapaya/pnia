@@ -88,15 +88,17 @@ $baseUrl = $Asset->baseUrl;
                 
                     foreach($menus as $menu)
                     {
-                        echo Html::a( $menu->descripcion,[$menu->ruta],['class'=>'']).'</br>';
+                        echo Html::a( $menu->descripcion,[$menu->ruta],['options' => ['class' => '','id'=>'','name'=>'' ]]).'</br>';
                         /*echo Html::a( 'Datos Generales',[$menu->ruta.'#general'],['class'=>'']).'</br>';
                         echo Html::a( 'Áreas Claves',[$menu->ruta.'#areas'],['class'=>'']).'</br>';
                         echo Html::a( 'Marco Lógico',[$menu->ruta.'#logico'],['class'=>'']).'</br>';
                         echo Html::a( 'Otros',[$menu->ruta.'#otros'],['class'=>'']).'</br>';*/
                     }
+                    
+                    echo '</ul>';
                 
                 }
-
+            
            // }
             
 

@@ -18,9 +18,9 @@ use app\models\Maestros;
 
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
-
+<div >
     <?php $form = ActiveForm::begin(['options' => ['class' => 'contact_form', ]]); ?>
-    <div><a name="general" ></a>
+    <div ><a name="general" ></a>
         <ul>
             <li>
                 <h2 name="general">1. Datos Generales</h2>
@@ -38,20 +38,58 @@ use app\models\Maestros;
             </li>
             <li>
                 <h4>1.2 Dependencia del INIA que Ejecutara el Proyecto</h4>
-                <label for="proyecto-direccion_linea">Señale Dirección en Linea:</label>
-                <input type="text" value="<?= $proyecto->direccion_linea?>" placeholder="Señale Dirección en Linea" id="proyecto-direccion_linea" name="Proyecto[direccion_linea]"  required/> <!-- required-->
-                
+                <label for="proyecto-id_direccion_linea">Dirección en Linea:</label>
+                <select id="proyecto-id_direccion_linea" name="Proyecto[id_direccion_linea]" style="width:200px;">
+                    <option value="0">--Seleccione--</option>
+                    <?php
+                 
+                    $tipoDireccion = Maestros::find()
+                                ->where('id_padre = 21 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                    
+                           foreach($tipoDireccion as $tipoDireccion2)
+                            {
+                    ?>
+                               <option value="<?= $tipoDireccion2->id; ?>" <?=($tipoDireccion2->id == $proyecto->id_direccion_linea)?'selected':'' ?> required> <?= $tipoDireccion2->descripcion ?></option>;
+                    <?php   } ?>
+
+                 
+
+                </select>
              
                 
             </li>
             <li>
-                <label for="proyecto-estacion_exp">Señale Estación Experimental Agraria:</label>
-                <input type="text" value="<?= $proyecto->estacion_exp?>" placeholder="Señale Estación Experimental Agraria" id="proyecto-estacion_exp" name="Proyecto[estacion_exp]"  required/> <!-- required-->
+                <label for="proyecto-id_unidad_ejecutora">Unidad Ejecutora:</label>
+                <select id="proyecto-id_unidad_ejecutora" name="Proyecto[id_unidad_ejecutora]" style="width:200px;">
+                    <option value="0">--Seleccione--</option>
+                    <?php
+                 
+                    $tipoUnidadEj = Maestros::find()
+                                ->where('id_padre = 25 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                    
+                           foreach($tipoUnidadEj as $tipoUnidadEj2)
+                            {
+                    ?>
+                               <option value="<?= $tipoUnidadEj2->id; ?>" <?=($tipoUnidadEj2->id == $proyecto->id_unidad_ejecutora)?'selected':'' ?> required> <?= $tipoUnidadEj2->descripcion ?></option>;
+                    <?php   } ?>
+
+                 
+
+                </select>
                 
             </li>
             <li>
-                <label for="proyecto-sub_estacion_exp">Señale Sub Estación Experimental Agraria:</label>
-                <input type="text" value="<?= $proyecto->sub_estacion_exp?>" placeholder="Señale Sub Estación Experimental Agraria" id="proyecto-sub_estacion_exp" name="Proyecto[sub_estacion_exp]"  required/> <!-- required-->
+                <label for="proyecto-id_dependencia_inia">Dependencia del INIA :</label>
+                <select  name="Proyecto[id_dependencia_inia]" id="proyecto-id_dependencia_inia" style="width:200px;">
+                    <option value="0">--Seleccione--</option>
+
+                </select>
                 
             </li>
             <li>
@@ -105,7 +143,9 @@ use app\models\Maestros;
                 <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
 
             </li>
-
+            <li>
+            <button type="submit" id="btnproyecto" class="btn btn-primary">Guardar</button>
+            </li>
             <li>
                 
                 
@@ -118,60 +158,80 @@ use app\models\Maestros;
     
     
  <?php ActiveForm::end(); ?>
-
+</div>
 
 <?php
 
     $urlproyectoExiste= Yii::$app->getUrlManager()->createUrl('proyecto/existeproyecto');
     $urlresponsable= Yii::$app->getUrlManager()->createUrl('responsable/guardar');
+    $urlDependencia= Yii::$app->getUrlManager()->createUrl('maestros/dependencia');
     /*$validarintegrante2= Yii::$app->getUrlManager()->createUrl('equipo/validarintegrante2');
     $existeequipo=Yii::$app->getUrlManager()->createUrl('equipo/existeequipo');*/
 ?>
 
 
 <script type="text/javascript">
+    
 $(document).ready(function(){
- 
-if($.trim($('select[id=proyecto-tipocc]').val())=='0')
-        { $("#descripcioncc").hide();}
-else    {$("#descripcioncc").show();;}
 
-if($.trim($('select[id=proyecto-idat]').val())!='15')
-        { $("#especifiqueAT").hide();}
-else    {$("#especifiqueAT").show();;}
-
-$('#proyecto-presupuesto').keydown(function (){
-            this.value = (this.value + '').replace(/[^0-9]/g, '');
-          });
-
-
-});
-
-$('#proyecto-tipocc').change(function(){ 
-     var valor = $('#proyecto-tipocc').val(); 
+var inicialdependencia = <?= $proyecto-> id_dependencia_inia;?>;
+if (inicialdependencia != '')
+{
+    var dependencia = $("#proyecto-id_dependencia_inia");
+     var unidad = $("#proyecto-id_unidad_ejecutora");
      
-     if (valor != 0) {
-       $("#descripcioncc").show();;
-     }
-     else
-     {
-      $("#descripcioncc").hide();  
-     }
-     //saludo(nombre); 
+     if(unidad.val() != '0')
+        {
+        $.ajax({
+                    url: '<?= $urlDependencia ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                        dependencia.find('option').remove();
+                        dependencia.append(data);
+                        $("#proyecto-id_dependencia_inia option[value="+inicialdependencia+"]").attr('selected','selected');
+                        dependencia.prop('disabled', false);
+                    }
+                });
+        }
+}
+else
+{
+$("#proyecto-id_dependencia_inia").prop('disabled', true);
+}
+    
+$("#proyecto-id_unidad_ejecutora").change(function(){
+    
+     var dependencia = $("#proyecto-id_dependencia_inia");
+     var unidad = $(this);
+     
+     if($(this).val() != '0')
+        {
+        $.ajax({
+                    url: '<?= $urlDependencia ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                        dependencia.find('option').remove();
+                        dependencia.append(data);
+                        dependencia.prop('disabled', false);
+                    }
+                });
+        }
+        else
+        {
+            dependencia.find('option').remove();
+            dependencia.append('<option value="0">--Seleccione--</option>');
+            dependencia.prop('disabled', true);
+        }
+ });
+
 });
 
-$('#proyecto-idat').change(function(){ 
-     var valor2 = $('#proyecto-idat').val(); 
-     
-     if (valor2 == 15) {
-       $("#especifiqueAT").show();
-     }
-     else
-     {
-      $("#especifiqueAT").hide();  
-     }
-    // saludo(valor2); 
-});
+
+
 
 $("#btnproyecto").click(function( ) {
     
@@ -183,24 +243,24 @@ $("#btnproyecto").click(function( ) {
             //alert('hola');
         }
         
-    if($.trim($('#proyecto-direccion_linea').val())=='')
+    if($.trim($('#proyecto-id_direccion_linea').val())=='0')
         {
-            error=error+'Señale la Dirección en Linea<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Seleccione la Dirección en Linea<br>';
+            $('#proyecto-id_direccion_linea').addClass('has-error');
             //alert('hola');
         }
     
-    if($.trim($('#proyecto-estacion_exp').val())=='')
+    if($.trim($('#proyecto-id_unidad_ejecutora').val())=='0')
         {
-            error=error+'Señale la Estación Experimental<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Seleccione La Unidad Ejecutora<br>';
+            $('#proyecto-id_unidad_ejecutora').addClass('has-error');
             //alert('hola');
         }
     
-    if($.trim($('#proyecto-sub_estacion_exp').val())=='')
+    if($.trim($('#proyecto-id_dependencia_inia').val())=='0')
         {
-            error=error+'Señale la Sub Estación Experimental<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Seleccione la Dependencia INIA<br>';
+            $('#proyecto-id_dependencia_inia').addClass('has-error');
             //alert('hola');
         }
     
@@ -238,46 +298,21 @@ $("#btnproyecto").click(function( ) {
             $('#proyecto-titulo').addClass('has-error');
             //alert('hola');
         }
-
-     if($.trim($('select[id=proyecto-tipocc]').val())=='0')
-        {
-            error=error+'Seleccione Cultivo O Crianza<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-     if($.trim($('select[id=proyecto-idat]').val())=='0')
-        {
-            error=error+'Seleccione Acción Transversal<br>';
-            $('#proyecto-idat').addClass('has-error');
-            //alert('hola');
-        }
-    if($.trim($('select[id=proyecto-id_tipo_proyecto]').val())=='0')
-        {
-            error=error+'Seleccione el Tipo de Investigación<br>';
-            $('#proyecto-tipoInvestigacion').addClass('has-error');
-            //alert('hola');
-        }
     
-    /*if($.trim($('#proyecto-Correo').val())=='')
+    if($.trim($('#proyecto-resumen_ejecutivo').val())=='')
         {
-            error=error+'Ingrese Correo Electrónico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Ingrese el Resumen Ejecutivo<br>';
+            $('#proyecto-resumen_ejecutivo').addClass('has-error');
             //alert('hola');
         }
         
-    if($.trim($('#proyecto-Correo').val())=='')
+    if($.trim($('#proyecto-relevancia').val())=='')
         {
-            error=error+'Ingrese Correo Electrónico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Ingrese La Relevancia del Proyecto<br>';
+            $('#proyecto-relevancia').addClass('has-error');
             //alert('hola');
         }
-        
-    if($.trim($('#proyecto-Correo').val())=='')
-        {
-            error=error+'Ingrese Correo Electrónico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }*/
+   
         
                  
         
@@ -325,7 +360,7 @@ $("#btnproyecto").click(function( ) {
     return true;
 });
 
-
+/*
 $("#proyecto-colaboradores").click(function( ) {
     var existe=$.ajax({
                 url: '<?= $urlproyectoExiste ?>',
@@ -352,7 +387,7 @@ $("#proyecto-colaboradores").click(function( ) {
             });
             return false;
         }
-});
+});*/
 
 </script>
 

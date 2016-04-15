@@ -90,6 +90,10 @@ class Proyecto extends \yii\db\ActiveRecord
             
             public $otrosat;
             public $idat;
+            
+            public $zona_ids;
+            public $zona_distrito;
+            public $zona_departamento;
     
     /**
      * @inheritdoc
@@ -105,18 +109,18 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
+            [['id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
             [['presupuesto'], 'number'],
             [['nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
               'objetivos_descripciones','actividades_ids','actividades_ind_ids','actividades_descripciones',
               'indicadores_ids','indicadores_oe_ids','indicadores_descripciones',
               'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat',
               'alianzas_instituciones','alianzas_descripciones','alianzas_nombres','alianzas_apellidos','alianzas_correos','alianzas_telefonos',
-              'alianzas_ids','colaboradores_ids','nombresc','apellidosc','funcionesc'], 'safe'],
+              'alianzas_ids','colaboradores_ids','nombresc','apellidosc','funcionesc','zona_ids','zona_distrito','zona_departamento'], 'safe'],
 
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
-            [['direccion_linea', 'estacion_exp', 'sub_estacion_exp', 'desc_tipo_proy'], 'string', 'max' => 200],
+            [['desc_tipo_proy'], 'string', 'max' => 200],
             [['resumen_ejecutivo', 'relevancia'], 'string', 'max' => 9000],
             [['objetivo_general'], 'string', 'max' => 4000],
             [['plan_trabajo', 'resultados_esperados'], 'string', 'max' => 8000],
@@ -133,9 +137,9 @@ class Proyecto extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'titulo' => 'Titulo',
-            'direccion_linea' => 'Direccion Linea',
-            'estacion_exp' => 'Estacion Exp',
-            'sub_estacion_exp' => 'Sub Estacion Exp',
+            'id_direccion_linea' => 'Direccion Linea',
+            'id_unidad_ejecutora' => 'Unidad Ejecutora',
+            'id_dependencia_inia' => 'Dependencia INIA',
             'id_tipo_proyecto' => 'Id Tipo Proyecto',
             'desc_tipo_proy' => 'Desc Tipo Proy',
             'resumen_ejecutivo' => 'Resumen Ejecutivo',

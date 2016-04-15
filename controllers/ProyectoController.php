@@ -19,6 +19,8 @@ use app\models\Indicador;
 use app\models\AlianzaEstrategica;
 use app\models\Colaborador;
 use app\models\Ubigeo;
+use app\models\ZonaAccion;
+
 class ProyectoController extends Controller
 {
     
@@ -401,10 +403,6 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
-            $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
-            $countActividades=count(array_filter($proyecto->actividades_descripciones));
-            $countCronogramas=count(array_filter($proyecto->cronogramas_meses));
             $countColaboradores = count(array_filter($proyecto->nombresc));
             if($existe == 0)
             {
@@ -418,16 +416,6 @@ class ProyectoController extends Controller
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 $responsable->save();
-                
-                $cultivo->id_proyecto = $proyecto->id;
-                $cultivo->tipo = $proyecto->tipocc;
-                $cultivo->descripcion = $proyecto->descripcioncc;
-                $cultivo->save();
-                
-                $AccionT->id_proyecto = $proyecto->id;
-                $AccionT->id_accion_transversal = $proyecto->idat;
-                $AccionT->otros = $proyecto->otrosat;
-                $AccionT->save();
 
             }
             else
@@ -435,20 +423,11 @@ class ProyectoController extends Controller
                 //var_dump($proyecto->id);
                 $data= Proyecto::findOne($proyecto->id);
                 $data->titulo = $proyecto->titulo;
-                $data->direccion_linea = $proyecto->direccion_linea;
-                $data->estacion_exp = $proyecto->estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
-                $data->desc_tipo_proy = $proyecto->desc_tipo_proy;
+                $data->id_direccion_linea = $proyecto->id_direccion_linea;
+                $data->id_unidad_ejecutora = $proyecto->id_unidad_ejecutora;
+                $data->id_dependencia_inia = $proyecto->id_dependencia_inia;
                 $data->resumen_ejecutivo = $proyecto->resumen_ejecutivo;
                 $data->relevancia = $proyecto->relevancia;
-                $data->objetivo_general = $proyecto->objetivo_general;
-                $data->plan_trabajo = $proyecto->plan_trabajo;
-                $data->resultados_esperados = $proyecto->resultados_esperados;
-                $data->presupuesto = $proyecto->presupuesto;
-                $data->referencias_bibliograficas = $proyecto->referencias_bibliograficas;
                 $data->update();
                 
                 
@@ -460,106 +439,8 @@ class ProyectoController extends Controller
                 $responsable->correo = $proyecto->correo;
                 
                 $responsable->update();
-                
-                $cultivo = CultivoCrianza::findOne($proyecto->idcc);
-                $cultivo->id_proyecto = $proyecto->id;
-                $cultivo->tipo = $proyecto->tipocc;
-                $cultivo->descripcion = $proyecto->descripcioncc;
-                $cultivo->update();
-                
-                $AccionT = AccionTransversal::findOne($proyecto->id);
-                $AccionT->id_accion_transversal = $proyecto->idat;
-                
-                if($proyecto->idat == 15)
-                $AccionT->otros = $proyecto->otrosat;
-                else
-                $AccionT->otros = '';
-                
-                $AccionT->update();
-                
-                
 
-                /*objetivos*/
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
-
-                {
-                    if(isset($proyecto->objetivos_ids[$i]))
-                    {
-                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->objetivos_ids[$i]);
-                        $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                        $objetivosespecificos->update(); 
-                    }
-                    else
-                    {
-                        $objetivosespecificos=new ObjetivoEspecifico;
-                        $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                        $objetivosespecificos->save(); 
-                    }
-                }
-                
-                
-                /*indicadores*/
-                for($i=0;$i<$countIndicadores;$i++)
-                {
-                    //var_dump($proyecto->actividades_ids);die;
-                    if(isset($proyecto->indicadores_ids[$i]))
-                    {
-                        $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
-                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
-                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
-                        $indicador->update(); 
-                    }
-                    else
-                    {
-                        $indicador=new Indicador;
-                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
-                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
-                        $indicador->save(); 
-                    }
-                }
-                
-                /*actividades*/
-                for($i=0;$i<$countActividades;$i++)
-                {
-                    //var_dump($proyecto->actividades_ids);die;
-                    if(isset($proyecto->actividades_ids[$i]))
-                    {
-                        $actividad=Actividad::findOne($proyecto->actividades_ids[$i]);
-                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
-                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
-                        $actividad->update(); 
-                    }
-                    else
-                    {
-                        $actividad=new Actividad;
-                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
-                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
-                        $actividad->save(); 
-                    }
-                }
-                
-                /*cronogramas*/
-                for($i=0;$i<$countCronogramas;$i++)
-                {
-                    //var_dump($proyecto->cronogramas_meses);die;
-                    if(isset($proyecto->cronogramas_ids[$i]))
-                    {
-                        $cronograma=Cronograma::findOne($proyecto->cronogramas_ids[$i]);
-                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
-                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
-                        $cronograma->update(); 
-                    }
-                    else
-                    {
-                        $cronograma=new Cronograma;
-                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
-                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
-                        $cronograma->save(); 
-                    }
-                }
-                
+ 
                 /*colaboradores*/
                 for($i=0;$i<$countColaboradores;$i++)
                 {
@@ -598,24 +479,12 @@ class ProyectoController extends Controller
            $responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
-            $cultivo =  CultivoCrianza::find()
-                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
-            
-            $cultivo =  CultivoCrianza::find()
-                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
-           // var_dump($cultivo); die;
-           
-            $AccionT =  AccionTransversal::find()
-                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
                         
         }
         
         
         
-        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'cultivo'=>$cultivo,'AccionT'=>$AccionT]);
+        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable]);
       
     }
     
@@ -634,23 +503,8 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
-            $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
-            $countActividades=count(array_filter($proyecto->actividades_descripciones));
-            $countCronogramas=count(array_filter($proyecto->cronogramas_meses));
-            $countColaboradores = count(array_filter($proyecto->nombresc));
             if($existe == 0)
             {
-                $proyecto->user_propietario = Yii::$app->user->identity->id;
-                $proyecto->estado = 1;
-                $proyecto->save();
-                $responsable->id_proyecto = $proyecto->id;
-                $responsable->nombres = $proyecto->nombres;
-                $responsable->apellidos = $proyecto->apellidos;
-                $responsable->telefono = $proyecto->telefono;
-                $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;
-                $responsable->save();
                 
                 $cultivo->id_proyecto = $proyecto->id;
                 $cultivo->tipo = $proyecto->tipocc;
@@ -667,35 +521,11 @@ class ProyectoController extends Controller
             {
                 //var_dump($proyecto->id);
                 $data= Proyecto::findOne($proyecto->id);
-                $data->titulo = $proyecto->titulo;
-                $data->direccion_linea = $proyecto->direccion_linea;
-                $data->estacion_exp = $proyecto->estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
                 $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
                 $data->desc_tipo_proy = $proyecto->desc_tipo_proy;
-                $data->resumen_ejecutivo = $proyecto->resumen_ejecutivo;
-                $data->relevancia = $proyecto->relevancia;
-                $data->objetivo_general = $proyecto->objetivo_general;
-                $data->plan_trabajo = $proyecto->plan_trabajo;
-                $data->resultados_esperados = $proyecto->resultados_esperados;
-                $data->presupuesto = $proyecto->presupuesto;
-                $data->referencias_bibliograficas = $proyecto->referencias_bibliograficas;
                 $data->update();
                 
-                
-                $responsable = Responsable::findOne($proyecto->id);
-                $responsable->nombres = $proyecto->nombres;
-                $responsable->apellidos = $proyecto->apellidos;
-                $responsable->telefono = $proyecto->telefono;
-                $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;
-                
-                $responsable->update();
-                
                 $cultivo = CultivoCrianza::findOne($proyecto->idcc);
-                $cultivo->id_proyecto = $proyecto->id;
                 $cultivo->tipo = $proyecto->tipocc;
                 $cultivo->descripcion = $proyecto->descripcioncc;
                 $cultivo->update();
@@ -710,112 +540,6 @@ class ProyectoController extends Controller
                 
                 $AccionT->update();
                 
-                
-
-                /*objetivos*/
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
-
-                {
-                    if(isset($proyecto->objetivos_ids[$i]))
-                    {
-                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->objetivos_ids[$i]);
-                        $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                        $objetivosespecificos->update(); 
-                    }
-                    else
-                    {
-                        $objetivosespecificos=new ObjetivoEspecifico;
-                        $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                        $objetivosespecificos->save(); 
-                    }
-                }
-                
-                
-                /*indicadores*/
-                for($i=0;$i<$countIndicadores;$i++)
-                {
-                    //var_dump($proyecto->actividades_ids);die;
-                    if(isset($proyecto->indicadores_ids[$i]))
-                    {
-                        $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
-                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
-                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
-                        $indicador->update(); 
-                    }
-                    else
-                    {
-                        $indicador=new Indicador;
-                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
-                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
-                        $indicador->save(); 
-                    }
-                }
-                
-                /*actividades*/
-                for($i=0;$i<$countActividades;$i++)
-                {
-                    //var_dump($proyecto->actividades_ids);die;
-                    if(isset($proyecto->actividades_ids[$i]))
-                    {
-                        $actividad=Actividad::findOne($proyecto->actividades_ids[$i]);
-                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
-                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
-                        $actividad->update(); 
-                    }
-                    else
-                    {
-                        $actividad=new Actividad;
-                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
-                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
-                        $actividad->save(); 
-                    }
-                }
-                
-                /*cronogramas*/
-                for($i=0;$i<$countCronogramas;$i++)
-                {
-                    //var_dump($proyecto->cronogramas_meses);die;
-                    if(isset($proyecto->cronogramas_ids[$i]))
-                    {
-                        $cronograma=Cronograma::findOne($proyecto->cronogramas_ids[$i]);
-                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
-                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
-                        $cronograma->update(); 
-                    }
-                    else
-                    {
-                        $cronograma=new Cronograma;
-                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
-                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
-                        $cronograma->save(); 
-                    }
-                }
-                
-                /*colaboradores*/
-                for($i=0;$i<$countColaboradores;$i++)
-                {
-                    //var_dump($proyecto->cronogramas_meses);die;
-                    if(isset($proyecto->colaboradores_ids[$i]))
-                    {
-                        $Colaborador=Colaborador::findOne($proyecto->colaboradores_ids[$i]);
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->nombres=$proyecto->nombresc[$i];
-                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
-                        $Colaborador->funcion=$proyecto->funcionesc[$i];
-                        $Colaborador->update(); 
-                    }
-                    else
-                    {
-                        $Colaborador=new Colaborador;
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->nombres=$proyecto->nombresc[$i];
-                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
-                        $Colaborador->funcion=$proyecto->funcionesc[$i];
-                        $Colaborador->save(); 
-                    }
-                }
             }
             
             return $this->refresh();
@@ -857,9 +581,7 @@ class ProyectoController extends Controller
         $this->layout='principal';
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
-        $responsable = new Responsable();
-        $cultivo = new CultivoCrianza();
-        $AccionT = new AccionTransversal();
+
         
         
         $existe = Proyecto::find()
@@ -867,188 +589,44 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
-            $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
-            $countActividades=count(array_filter($proyecto->actividades_descripciones));
-            $countCronogramas=count(array_filter($proyecto->cronogramas_meses));
-            $countColaboradores = count(array_filter($proyecto->nombresc));
+            $countZonaAccion=count(array_filter($proyecto->zona_departamento));
             if($existe == 0)
             {
-                $proyecto->user_propietario = Yii::$app->user->identity->id;
-                $proyecto->estado = 1;
-                $proyecto->save();
-                $responsable->id_proyecto = $proyecto->id;
-                $responsable->nombres = $proyecto->nombres;
-                $responsable->apellidos = $proyecto->apellidos;
-                $responsable->telefono = $proyecto->telefono;
-                $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;
-                $responsable->save();
-                
-                $cultivo->id_proyecto = $proyecto->id;
-                $cultivo->tipo = $proyecto->tipocc;
-                $cultivo->descripcion = $proyecto->descripcioncc;
-                $cultivo->save();
-                
-                $AccionT->id_proyecto = $proyecto->id;
-                $AccionT->id_accion_transversal = $proyecto->idat;
-                $AccionT->otros = $proyecto->otrosat;
-                $AccionT->save();
 
             }
             else
             {
                 //var_dump($proyecto->id);
                 $data= Proyecto::findOne($proyecto->id);
-                $data->titulo = $proyecto->titulo;
-                $data->direccion_linea = $proyecto->direccion_linea;
-                $data->estacion_exp = $proyecto->estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->sub_estacion_exp = $proyecto->sub_estacion_exp;
-                $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
-                $data->desc_tipo_proy = $proyecto->desc_tipo_proy;
-                $data->resumen_ejecutivo = $proyecto->resumen_ejecutivo;
-                $data->relevancia = $proyecto->relevancia;
-                $data->objetivo_general = $proyecto->objetivo_general;
                 $data->plan_trabajo = $proyecto->plan_trabajo;
                 $data->resultados_esperados = $proyecto->resultados_esperados;
                 $data->presupuesto = $proyecto->presupuesto;
                 $data->referencias_bibliograficas = $proyecto->referencias_bibliograficas;
                 $data->update();
-                
-                
-                $responsable = Responsable::findOne($proyecto->id);
-                $responsable->nombres = $proyecto->nombres;
-                $responsable->apellidos = $proyecto->apellidos;
-                $responsable->telefono = $proyecto->telefono;
-                $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;
-                
-                $responsable->update();
-                
-                $cultivo = CultivoCrianza::findOne($proyecto->idcc);
-                $cultivo->id_proyecto = $proyecto->id;
-                $cultivo->tipo = $proyecto->tipocc;
-                $cultivo->descripcion = $proyecto->descripcioncc;
-                $cultivo->update();
-                
-                $AccionT = AccionTransversal::findOne($proyecto->id);
-                $AccionT->id_accion_transversal = $proyecto->idat;
-                
-                if($proyecto->idat == 15)
-                $AccionT->otros = $proyecto->otrosat;
-                else
-                $AccionT->otros = '';
-                
-                $AccionT->update();
+
                 
                 
 
-                /*objetivos*/
-                for($i=0;$i<$countObjetivosEspecificos;$i++)
+                /*ZOna Accion*/
+                for($i=0;$i<$countZonaAccion;$i++)
 
                 {
-                    if(isset($proyecto->objetivos_ids[$i]))
+                    if(isset($proyecto->zona_ids[$i]))
                     {
-                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->objetivos_ids[$i]);
-                        $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                        $objetivosespecificos->update(); 
+                        $zonaAccion=ZonaAccion::findOne($proyecto->zona_ids[$i]);
+                        $zonaAccion->id_distrito=$proyecto->zona_distrito[$i];
+                        $zonaAccion->update(); 
                     }
                     else
                     {
-                        $objetivosespecificos=new ObjetivoEspecifico;
-                        $objetivosespecificos->id_proyecto=$proyecto->id;
-                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
-                        $objetivosespecificos->save(); 
+                        $zonaAccion=new ZonaAccion;
+                        $zonaAccion->id_proyecto=$proyecto->id;
+                        $zonaAccion->id_distrito=$proyecto->zona_distrito[$i];
+                        $zonaAccion->save(); 
                     }
                 }
                 
                 
-                /*indicadores*/
-                for($i=0;$i<$countIndicadores;$i++)
-                {
-                    //var_dump($proyecto->actividades_ids);die;
-                    if(isset($proyecto->indicadores_ids[$i]))
-                    {
-                        $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
-                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
-                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
-                        $indicador->update(); 
-                    }
-                    else
-                    {
-                        $indicador=new Indicador;
-                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
-                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
-                        $indicador->save(); 
-                    }
-                }
-                
-                /*actividades*/
-                for($i=0;$i<$countActividades;$i++)
-                {
-                    //var_dump($proyecto->actividades_ids);die;
-                    if(isset($proyecto->actividades_ids[$i]))
-                    {
-                        $actividad=Actividad::findOne($proyecto->actividades_ids[$i]);
-                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
-                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
-                        $actividad->update(); 
-                    }
-                    else
-                    {
-                        $actividad=new Actividad;
-                        $actividad->id_ind=$proyecto->actividades_ind_ids[$i];
-                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
-                        $actividad->save(); 
-                    }
-                }
-                
-                /*cronogramas*/
-                for($i=0;$i<$countCronogramas;$i++)
-                {
-                    //var_dump($proyecto->cronogramas_meses);die;
-                    if(isset($proyecto->cronogramas_ids[$i]))
-                    {
-                        $cronograma=Cronograma::findOne($proyecto->cronogramas_ids[$i]);
-                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
-                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
-                        $cronograma->update(); 
-                    }
-                    else
-                    {
-                        $cronograma=new Cronograma;
-                        $cronograma->id_actividad=$proyecto->cronogramas_actividad_ids[$i];
-                        $cronograma->mes=$proyecto->cronogramas_meses[$i];
-                        $cronograma->save(); 
-                    }
-                }
-                
-                /*colaboradores*/
-                for($i=0;$i<$countColaboradores;$i++)
-                {
-                    //var_dump($proyecto->cronogramas_meses);die;
-                    if(isset($proyecto->colaboradores_ids[$i]))
-                    {
-                        $Colaborador=Colaborador::findOne($proyecto->colaboradores_ids[$i]);
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->nombres=$proyecto->nombresc[$i];
-                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
-                        $Colaborador->funcion=$proyecto->funcionesc[$i];
-                        $Colaborador->update(); 
-                    }
-                    else
-                    {
-                        $Colaborador=new Colaborador;
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->nombres=$proyecto->nombresc[$i];
-                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
-                        $Colaborador->funcion=$proyecto->funcionesc[$i];
-                        $Colaborador->save(); 
-                    }
-                }
             }
             
             return $this->refresh();
@@ -1060,28 +638,12 @@ class ProyectoController extends Controller
            $proyecto = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->one();
-            
-           $responsable = Responsable::find()
-                            ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                            ->one();
-            $cultivo =  CultivoCrianza::find()
-                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
-            
-            $cultivo =  CultivoCrianza::find()
-                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
-           // var_dump($cultivo); die;
-           
-            $AccionT =  AccionTransversal::find()
-                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
                         
         }
         
         
         
-        return $this->render('otros',['proyecto'=>$proyecto,'responsable'=>$responsable,'cultivo'=>$cultivo,'AccionT'=>$AccionT]);
+        return $this->render('otros',['proyecto'=>$proyecto]);
       
     }
     
@@ -1120,7 +682,7 @@ class ProyectoController extends Controller
         //var_dump($validarIndicador);
         if(!isset($validarIndicador))
         {
-           //ObjetivoEspecifico::findOne($myData->id)->delete();
+           ObjetivoEspecifico::findOne($myData->id)->delete();
            $mesaje = "";
         }
         
@@ -1151,16 +713,33 @@ class ProyectoController extends Controller
     
     public function actionObtenerprovincia($id)
     {
-        $option = '';
+        $option = '<option value="0">--Seleccione--</option>';
        $provincia = Ubigeo::find('province_id, province')
                             ->where('department_id = :department_id',[':department_id'=>$id])
-                            ->groupBy('province_id')
-                            ->orderBy('province_id')
+                            ->groupBy('province')
+                            ->orderBy('province')
                             ->all();
                             
         foreach($provincia as $provincias)
         {
            $option .= '<option value="'.$provincias->province_id.'" >'.$provincias->province.'</option>';
+        }
+        
+        echo $option;
+    }
+    
+    public function actionObtenerdistrito($id)
+    {
+        $option = '<option value="0">--Seleccione--</option>';
+       $distritos = Ubigeo::find('district_id, district')
+                            ->where('province_id = :province_id',[':province_id'=>$id])
+                            ->groupBy('district')
+                            ->orderBy('district')
+                            ->all();
+                            
+        foreach($distritos as $distrito)
+        {
+           $option .= '<option value="'.$distrito->district_id.'" >'.$distrito->district.'</option>';
         }
         
         echo $option;
@@ -1175,6 +754,44 @@ class ProyectoController extends Controller
                 $proyecto->update();
                         
         echo'';
+    }
+    
+    public function actionEliminarcolaborador($id)
+    {
+        //$mesaje = "No existe el Identificador del Colaborador";
+        
+       // $validarColaborador = Colaborador::find()->where('id = :id_co',[':id_co'=>$colaborador])->all();
+        
+        //var_dump($validarIndicador);
+        //if(isset($validarColaborador))
+        //{
+           Colaborador::findOne($id)->delete();
+           $mesaje = "Se elimino Colaborador Correctamente";
+        //}
+        
+        echo $mesaje;
+        
+        /*if(ObjetivoEspecifico::findOne($myData->id)->delete())
+        {
+            
+        }
+        else
+        {
+            echo "El Objetivo se encuentra asociado a un Indicador";
+        }*/
+        
+        
+    }
+    
+    public function actionEliminarubigeo($id)
+    {
+
+           ZonaAccion::findOne($id)->delete();
+           $mesaje = "Se elimino la Zona de Acción";
+        
+        echo $mesaje;
+
+        
     }
 
 }

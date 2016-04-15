@@ -28,7 +28,7 @@ class ColaboradoresWidget extends Widget
             //1return \Yii::$app->getResponse()->refresh();
         //}
         
-        return $this->render('colaboradores',['colaborador'=>$colaborador]
+        return $this->render('colaboradores',['colaborador'=>$colaborador,'proyecto_id'=>$this->id]
                              );
     }
 }

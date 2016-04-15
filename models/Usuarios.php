@@ -89,5 +89,16 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
 		//return $this->password === $password;
             return static::find()->where('password=:password and username=:username and estado=1',[':password' => $password,':username' => $username])->one();
 	}
+	
+	
+	public static function roleInArray($arr_role)
+	{
+	return in_array(Yii::$app->user->identity->role, $arr_role);
+	}
+	
+	public static function isActive()
+	{
+	return Yii::$app->user->identity->status == self::STATUS_ACTIVE;
+	}
     
 }
