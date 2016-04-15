@@ -7,14 +7,25 @@ foreach($objetivos as $objetivo)
 
 ?>
 <div ng-controller="indicadorCtrl" >
-	    
+    
+    
 	    <div class="col-xs-12 col-sm-10 col-md-8">
 		<h5>Objetivos Especificos</h5>
-		<select class="form-control" name="select_oe" id="select_oe" ng-model="select_oe" ng-options="item.id as item.descripcion for item in idatos">
+		<select class="form-control" name="select_oe" id="select_oe" ng-model="select_oe" ng-options="item.id as item.descripcion for item in idatos" ng-change="selectAction()">
 		    
 		</select>
 		
 		</br>
+		<table class="table">
+		    <tbody>
+			<tr ng-repeat="indicador in indicadores">
+			    <td>
+				<div class="form-group">{{$index+1}}
+				asd</div>
+			    </td>
+			</tr>
+		    </tbody>
+		</table>
 	    </div>
 	    
             <div>
@@ -132,10 +143,53 @@ foreach($objetivos as $objetivo)
 
 <?php
     $eliminarindicador= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarindicador');
+    $rutaobetivoeindex= Yii::$app->getUrlManager()->createUrl('objetivoe/index');
+    $indicadores= Yii::$app->getUrlManager()->createUrl('indicador/resultados');
 ?>
 <script>
    
     var ind=<?= $ind ?>;
+    
+    app.controller('indicadorCtrl', function($scope,$http) {
+	$scope.id_objetivo_especifico=null;
+	$scope.cargarObjetivos = function(){
+	
+	    $scope.select_oe = null
+	    $scope.idatos = [];
+	    
+	    $http.get('<?= $rutaobetivoeindex ?>?val='+id_proyecto).success(function (data) {
+		$scope.idatos = data;
+		$scope.select_oe = $scope.idatos[1];
+		console.log(data);
+	    });
+	}
+	$scope.cargarObjetivos();
+	$scope.selectAction = function() {
+	    $scope.id_objetivo_especifico=$scope.select_oe;
+	    console.log($scope.select_oe);
+	    /*$http.get('<?= $indicadores ?>?objetivo='+$scope.select_oe).success(function (data) {
+		//$scope.indicadores = data;
+	    });*/
+	};
+      console.log($scope.id_objetivo_especifico);
+	/*
+	$scope.indicadoresFunction = function(elemento){
+	    console.log(elemento);
+	    if (elemento!="") {
+		$http.get('<?= $indicadores ?>?objetivo='+$('#select_oe').val()).success(function (data) {
+		    $scope.indicadores = data;
+		});	
+	    }
+	    
+	}*/
+	//$scope.indicadoresFunction($('#select_oe').val());
+     
+    });
+    
+    
+    
+    
+    
     $("#indicadores_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
         if (r == true) {

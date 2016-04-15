@@ -1112,18 +1112,23 @@ class ProyectoController extends Controller
     
     public function actionEliminarobjetivoespecifico()
     {
-        $mesaje = "El Objetivo se encuentra asociado a un Indicador";
+        //var_dump($_REQUEST);die;
+        $mesaje = "";
         $myData = json_decode($_POST['obj_esp']);
         
         $validarIndicador = Indicador::find()->where('id_oe = :id_oe',[':id_oe'=>$myData->id])->all();
-        
+        //var_dump($validarIndicador);die;
         //var_dump($validarIndicador);
-        if(!isset($validarIndicador))
+        if($validarIndicador)
         {
            //ObjetivoEspecifico::findOne($myData->id)->delete();
-           $mesaje = "";
+           $mesaje = "El Objetivo se encuentra asociado a un Indicador";
         }
-        
+        else
+        {
+            ObjetivoEspecifico::findOne($myData->id)->delete();
+        }
+        //var_dump($mesaje);die;
         echo $mesaje;
         
         /*if(ObjetivoEspecifico::findOne($myData->id)->delete())
