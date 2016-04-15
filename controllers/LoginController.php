@@ -95,6 +95,9 @@ class LoginController extends Controller
     public function actionLogout()
     {
         \Yii::$app->user->logout();
+        
+        $session = Yii::$app->session;
+        $session->destroy();
 
         return $this->redirect(['login/index']);
     }

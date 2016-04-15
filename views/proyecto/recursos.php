@@ -1,21 +1,21 @@
 <div id="contenido" ng-app="app">
 
 <ul class="tabs">
-    <li><a href="#tab1">Objetivos</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/marcologico'); ?>">Objetivos</a></li>
     <li><a href="#tab2">Indicadores</a></li>
     <li><a href="#tab3">Actividades</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/recursos') ?>">Recursos</a></li>
+    <li><a href="#tab4">Recursos</a></li>
   </ul>
   <div class="clr"></div>
   <section class="block">
-    <article id="tab1">
+    <article id="tab4">
         <form name="formObjetivos">
         <div ng-controller="objetivoeCtrl">
         
         
         <div class="col-xs-12 col-sm-7 col-md-12" >
             <h5>Objetivo General</h5>
-                <!--<label for="proyecto-objetivo_general">SeÃ±ale Objeto General:</label>-->
+                <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
                 <textarea class="form-control" type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 100%; height: 40px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]" ng-model="adatos.objetivo_general" required>{{adatos.objetivo_general}}</textarea>
         </div>
         
@@ -38,7 +38,7 @@
   <script>
 
   $(function(){
-  $('ul.tabs li:nth-child(1)').addClass('active');
+  $('ul.tabs li:nth-child(4)').addClass('active');
   $('.block article').hide();
   $('.block article:first').show();
   $('ul.tabs li').on('click',function(){
