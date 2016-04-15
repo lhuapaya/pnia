@@ -70,7 +70,7 @@ class LoginController extends Controller
        
         if($model->load(Yii::$app->request->post()) && $model->login())
         {
-            return $this->redirect(['proyecto/nuevo']);
+            return $this->redirect(['dashboard/index']);
         }
         //return $this->redirect('http://10.1.1.64/jec/web');
         return $this->render('index',['model'=>$model]);

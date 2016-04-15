@@ -25,6 +25,7 @@ use app\models\Maestros;
             <li>
                 <h2 name="general">4. Otros</h2>
                 <span class="required_notification">* Datos requeridos</span>
+                <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" />
             </li>
             
             <li>

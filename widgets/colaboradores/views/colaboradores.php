@@ -110,21 +110,33 @@
 </div>
 
 <?php
-    $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminaractividad');
+    $eliminarColaborador= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarcolaborador');
 ?>
 <script>
     var co = <?= $co ?>;
+    
     $("#colaboradores_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro?");
         if (r == true) {
             id=$(this).children().val();
             if (id) {
 		$.ajax({
-                    url: '<?= $eliminaractividad ?>',
+                    url: '<?= $eliminarColaborador ?>',
                     type: 'GET',
                     async: true,
                     data: {id:id},
                     success: function(data){
+			
+			$.notify({
+					    message: data 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
                         
                     }
                 });
@@ -143,10 +155,58 @@
         
        // var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
 
-        if(($('#proyecto-nombresc_'+(co-1)).val()=='') && ($('#proyecto-apellidosc_'+(co-1)).val()=='') && ($('#proyecto-funcionesc_'+(co-1)).val()==''))
+        if(($('#proyecto-nombresc_'+(co-1)).val()!=''))
         {
+		if (($('#proyecto-apellidosc_'+(co-1)).val()!=''))
+		{
+			if (($('#proyecto-funcionesc_'+(co-1)).val()!=''))
+			{
+				$('#colaborador_addr_1_'+co).html("<td>"+(co+1)+"</td><td><div class='form-group field-proyecto-nombresc_"+co+" required'> <input type='text' id='proyecto-nombresc_"+co+"' class='form-control' name='Proyecto[nombresc][]' placeholder='Nombres #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-aapellidosc_"+co+" required'><input type='text' id='proyecto-apellidosc_"+co+"' class='form-control' name='Proyecto[apellidosc][]' placeholder='Apellidos #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-funcionesc_"+co+" required'><input type='text' id='proyecto-funcionesc_"+co+"' class='form-control' name='Proyecto[funcionesc][]' placeholder='Función #"+(co+1)+"'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
+				$('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
+				co++;			
+			}
+			else
+			{
+				var error='Complete todos los Campos del Colaborador #'+co+' <br>';
+					//$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
+			    
+					$.notify({
+					    message: error 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
+					return false;
+			}
+			
+		}
+		else
+		{
+			var error='Complete todos los Campos del Colaborador #'+co+' <br>';
+			//$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
+	    
+			$.notify({
+			    message: error 
+			},{
+			    type: 'danger',
+			    z_index: 1000000,
+			    placement: {
+				from: 'top',
+				align: 'right'
+                },
+            });
+            return false;	
+		}
             
-            var error='Complete todos los Campos del Colaborador #'+co+' <br>';
+            
+        }
+        else
+        {
+           var error='Complete todos los Campos del Colaborador #'+co+' <br>';
             //$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
 
             $.notify({
@@ -160,15 +220,7 @@
                 },
             });
             return false;
-        }
-        else
-        {
-           /* $('.field-proyecto-descripciones_'+(i-1)).addClass('has-success');
-            $('.field-proyecto-descripciones_'+(i-1)).removeClass('has-error');*/
             
-            $('#colaborador_addr_1_'+co).html("<td>"+(co+1)+"</td><td><div class='form-group field-proyecto-nombresc_"+co+" required'> <input type='text' id='proyecto-nombresc_"+co+"' class='form-control' name='Proyecto[nombresc][]' placeholder='Nombres #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-aapellidosc_"+co+" required'><input type='text' id='proyecto-aapellidosc_"+co+"' class='form-control' name='Proyecto[apellidosc][]' placeholder='Apellidos #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-funcionesc_"+co+" required'><input type='text' id='proyecto-funcionesc_"+co+"' class='form-control' name='Proyecto[funcionesc][]' placeholder='Función #"+(co+1)+"'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
-            $('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
-            co++;
         }
         
         
@@ -209,5 +261,27 @@
             $( "#w0" ).submit();
             return true;
         }
+    });
+    
+    
+    $("#proyecto-colaboradores").click(function( ) {
+	var id='<?= $proyecto_id ?>';
+	console.log(id);
+	if (id=='') {
+	    $.notify({
+                message: 'No existe Proyecto Registrado.'
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+            return false;
+	}
+	return true;
     });
 </script>

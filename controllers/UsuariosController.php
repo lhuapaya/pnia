@@ -9,7 +9,7 @@ use app\models\UsuariosSearch;
 use app\models\Perfil;
 use app\models\AuthAssignment;
 
-
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -21,7 +21,28 @@ class UsuariosController extends Controller
 {
     public function behaviors()
     {
+        
         return [
+                'access' => [
+            'class' => AccessControl::className(),
+            'only' => ['index', 'view','create','update','delete','nuevo'],
+            'rules' => [
+                /*[
+                    'actions' => ['logout', 'index'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                ],*/
+                [
+                    'actions' => ['index', 'view','create','update','delete','nuevo'],
+                    'allow' => true,
+                    'roles' => ['@'],
+                    'matchCallback' => function ($rule, $action) {
+                        //$valid_roles = ['administrador'];
+                         if(\Yii::$app->user->can('administrador')) return true; else return $this->redirect(['dashboard/index']);;
+                    }
+                ],
+            ],
+        ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
