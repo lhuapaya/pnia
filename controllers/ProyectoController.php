@@ -683,13 +683,9 @@ class ProyectoController extends Controller
         //var_dump($validarIndicador);
         if($validarIndicador)
         {
-<<<<<<< HEAD
            //ObjetivoEspecifico::findOne($myData->id)->delete();
            $mesaje = "El Objetivo se encuentra asociado a un Indicador";
-=======
-           ObjetivoEspecifico::findOne($myData->id)->delete();
-           $mesaje = "";
->>>>>>> refs/remotes/origin/master
+
         }
         else
         {
