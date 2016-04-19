@@ -19,27 +19,88 @@ use app\models\Maestros;
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
 <div >
-    <?php $form = ActiveForm::begin(['options' => ['class' => 'contact_form', ]]); ?>
+    <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
     <div ><a name="general" ></a>
-        <ul>
-            <li>
-                <h2 name="general">1. Datos Generales</h2>
-                <span class="required_notification">* Datos requeridos</span>
-            </li>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Datos Generales</h4></div>
             
-            <li>
-                <h4>1.1 Titulo del Proyecto</h4>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-titulo required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
                 <label for="proyecto-titulo">Nombre del Proyecto:</label>
-                <input type="text" value="<?= $proyecto->titulo?>" placeholder="Nombre del Proyecto" id="proyecto-titulo" name="Proyecto[titulo]"  required/> <!-- required-->
-                
+                <input class="form-control" type="text" value="<?= $proyecto->titulo?>" placeholder="Nombre del Proyecto" id="proyecto-titulo" name="Proyecto[titulo]"  required/> <!-- required-->
+                </div>
              
                 
-            </li>
-            <li>
-                <h4>1.2 Dependencia del INIA que Ejecutara el Proyecto</h4>
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-3" >
+                <div class="form-group field-proyecto-vigencia required">
+                <label for="proyecto-vigencia">Vigencia (En Meses):</label>
+                <input class="form-control" type="text" id="proyecto-vigencia" value="<?= $proyecto->vigencia?>" placeholder="Vigencia del Proyecto en Meses" name="Proyecto[vigencia]"  required/> <!-- required-->
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-3" >
+                <div class="form-group field-proyecto-departamento required">
+                <label for="proyecto-departamento">Departamento:</label>
+                <select class="form-control" onchange="provincia(1)" id="proyecto-departamento" name="Proyecto[departamento][]" style="width:200px;" >
+                                                <option value="0">--Departamento--</option>
+                                                <?php
+                                                       foreach($departamentos as $departamentos2)
+                                                        {
+                                                ?>
+                                                           <option value="<?= $departamentos2->department_id; ?>" <?=($departamentos2->department_id == substr($proyecto->ubigeo,0,2))?'selected':'' ?> > <?= $departamentos2->department ?></option>
+                                                <?php   } ?>
+                            
+                                             
+                            
+                                            </select>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-3" >
+                <div class="form-group field-proyecto-provincia required">
+                    <label for="proyecto-provincia">Provincia:</label>
+                    <select class="form-control" onchange="distrito(1)" id="proyecto-provincia" name="Proyecto[provincia]" style="width:200px;">
+                                                <option value="0">--Provincia--</option>
+                    <?php
+                    if ($proyecto->ubigeo) {
+                        
+                        foreach($provincias as $provincias2)
+                        {
+                            echo '<option value="'.$provincias2->province_id.'" '.($provincias2->province_id == substr($proyecto->ubigeo,0,4) ? 'selected="selected"' : '' ).'> '.$provincias2->province .'</option>';
+                        }
+                        
+                    }
+                    ?>
+                    
+                    </select>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-3" >
+                <div class="form-group field-proyecto-distrito required">
+                    <label for="proyecto-distrito">Distrito:</label>
+                    <select class="form-control" id="proyecto-distrito" name="Proyecto[distrito]" style="width:200px;">
+                                                <option value="0">--Provincia--</option>
+                    <?php
+                    if ($proyecto->ubigeo) {
+                        
+                        foreach($distritos as $distritos2)
+                        {
+                            echo '<option value="'.$distritos2->district_id.'" '.($distritos2->district_id == $proyecto->ubigeo ? 'selected="selected"' : '' ).'> '.$distritos2->district .'</option>';
+                        }
+                        
+                    }
+                    ?>
+                    
+                    </select>
+            </div>    
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Dependencia del INIA que Ejecutara el Proyecto</h4></div>
+            
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_direccion_linea required">
                 <label for="proyecto-id_direccion_linea">Dirección en Linea:</label>
-                <select id="proyecto-id_direccion_linea" name="Proyecto[id_direccion_linea]" style="width:200px;">
+                <select  class="form-control" id="proyecto-id_direccion_linea" name="Proyecto[id_direccion_linea]" style="width:200px;">
                     <option value="0">--Seleccione--</option>
                     <?php
                  
@@ -58,12 +119,12 @@ use app\models\Maestros;
                  
 
                 </select>
-             
-                
-            </li>
-            <li>
+             </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_unidad_ejecutora required">
                 <label for="proyecto-id_unidad_ejecutora">Unidad Ejecutora:</label>
-                <select id="proyecto-id_unidad_ejecutora" name="Proyecto[id_unidad_ejecutora]" style="width:200px;">
+                <select class="form-control" id="proyecto-id_unidad_ejecutora" name="Proyecto[id_unidad_ejecutora]" style="width:200px;">
                     <option value="0">--Seleccione--</option>
                     <?php
                  
@@ -83,75 +144,91 @@ use app\models\Maestros;
 
                 </select>
                 
-            </li>
-            <li>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_dependencia_inia required">
                 <label for="proyecto-id_dependencia_inia">Dependencia del INIA :</label>
-                <select  name="Proyecto[id_dependencia_inia]" id="proyecto-id_dependencia_inia" style="width:200px;">
+                <select class="form-control" name="Proyecto[id_dependencia_inia]" id="proyecto-id_dependencia_inia" style="width:200px;">
                     <option value="0">--Seleccione--</option>
 
                 </select>
                 
-            </li>
-            <li>
-                <h4>1.3 Nombres y Apellidos del Responsable Técnico del Proyecto</h4>
+            </div>    
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Nombres y Apellidos del Responsable Técnico del Proyecto</h4></div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-nombres required">
                 <label for="proyecto-nombres">Nombres:</label>
-                <input type="text" value="<?= $responsable->nombres?>" placeholder="Nombres" id="proyecto-nombres" name="Proyecto[nombres]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->nombres?>" placeholder="Nombres" id="proyecto-nombres" name="Proyecto[nombres]"  required/> <!-- required-->
                 
-            </li>
-            <li>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-apellidos required">
                 <label for="proyecto-apellidos">Apellidos:</label>
-                <input type="text" value="<?= $responsable->apellidos?>" placeholder="Apellidos" id="proyecto-apellidos" name="Proyecto[apellidos]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->apellidos?>" placeholder="Apellidos" id="proyecto-apellidos" name="Proyecto[apellidos]"  required/> <!-- required-->
                 
-            </li>
-            <li>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-6" >
+                <div class="form-group field-proyecto-telefono required">
                 <label for="proyecto-telefono">Teléfono Fijo:</label>
-                <input type="text" value="<?= $responsable->telefono?>" placeholder="Teléfono Fijo" id="proyecto-telefono" name="Proyecto[telefono]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->telefono?>" placeholder="Teléfono Fijo" id="proyecto-telefono" name="Proyecto[telefono]"  required/> <!-- required-->
                 
-            </li>
-            <li>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-6" >
+                <div class="form-group field-proyecto-celular required">
                 <label for="proyecto-celular">Celular:</label>
-                <input type="text" value="<?= $responsable->celular?>" placeholder="Celular" id="proyecto-celular" name="Proyecto[celular]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->celular?>" placeholder="Celular" id="proyecto-celular" name="Proyecto[celular]"  required/> <!-- required-->
                 
-            </li>
-            <li>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-correo required">
                 <label for="proyecto-correo">Correo Electrónico:</label>
-                <input type="text" value="<?= $responsable->correo?>" placeholder="Correo Electrónico" id="proyecto-correo" name="Proyecto[correo]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->correo?>" placeholder="Correo Electrónico" id="proyecto-correo" name="Proyecto[correo]"  required/> <!-- required-->
                 <span class="form_hint">Formato correcto: "nombre@dominio.com"</span>
                 
-            </li>
+            </div>    
+            </div>
             
-            <li>
-                <h4>1.4 Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4>
-                <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?> 
-                                
-            </li>
-            <li>
-                <h4>1.5 Alianza Estratégica establecidas para el Proyecto</h4>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4></div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?>   
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Alianza Estratégica establecidas para el Proyecto</h4></div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
                 <?= \app\widgets\instituciones\InstitucionesWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
                 
                 
-            </li>
-                        <li>
-                <h4>1.6 Resumen Ejecutivo del Proyecto</h4>
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Resumen Ejecutivo del Proyecto</h4></div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-resumen_ejecutivo required">
                 <label for="proyecto-resumen_ejecutivo">Descripción:</label>
-                <textarea type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-resumen_ejecutivo" name="Proyecto[resumen_ejecutivo]"  required><?= $proyecto->resumen_ejecutivo?></textarea>
+                <textarea class="form-control" type="text"  placeholder="..."  rows="10"  id="proyecto-resumen_ejecutivo" name="Proyecto[resumen_ejecutivo]"  required><?= $proyecto->resumen_ejecutivo?></textarea>
 
-            </li>
-            <li>
-                <h4>1.7 Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4>
+            </div>    
+            </div>
+            <div class="clearfix"></div>
+            <div class="clearfix"><h4>Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4></div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-relevancia required">
                 <label for="proyecto-relevancia">Descripción:</label>
-                <textarea type="text" placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 600px; height: 150px;" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
+                <textarea class="form-control" type="text" placeholder="..."  rows="10" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
 
-            </li>
-            <li>
-            <button type="submit" id="btnproyecto" class="btn btn-primary">Guardar</button>
-            </li>
-            <li>
-                
-                
-            </li>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+            <button type="submit" id="btnproyecto" class="btn btn-primary">Guardar</button>   
+            </div>
         
-        </ul>
     </div>
     
     
@@ -165,8 +242,8 @@ use app\models\Maestros;
     $urlproyectoExiste= Yii::$app->getUrlManager()->createUrl('proyecto/existeproyecto');
     $urlresponsable= Yii::$app->getUrlManager()->createUrl('responsable/guardar');
     $urlDependencia= Yii::$app->getUrlManager()->createUrl('maestros/dependencia');
-    /*$validarintegrante2= Yii::$app->getUrlManager()->createUrl('equipo/validarintegrante2');
-    $existeequipo=Yii::$app->getUrlManager()->createUrl('equipo/existeequipo');*/
+    $obtenerprovincia = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerprovincia');
+    $obtenerdistrito = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerdistrito');
 ?>
 
 
@@ -231,6 +308,65 @@ $("#proyecto-id_unidad_ejecutora").change(function(){
 });
 
 
+
+function provincia(valor) {
+	
+	var departamento = $('#proyecto-departamento');
+	var provincia = $('#proyecto-provincia');
+	var distrito = $('#proyecto-distrito');
+	
+     if(departamento.val() != '0')
+        {
+        $.ajax({
+                    url: '<?= $obtenerprovincia ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {id:departamento.val()},
+                    success: function(data){
+                        provincia.find('option').remove();
+                        provincia.append(data);
+                        provincia.prop('disabled', false);
+                    }
+                });
+        }
+        else
+        {
+            provincia.find('option').remove();
+            provincia.append('<option value="0">--Seleccione--</option>');
+	    provincia.prop('disabled', true);
+	    distrito.find('option').remove();
+            distrito.append('<option value="0">--Seleccione--</option>');
+            distrito.prop('disabled', true);
+        }
+
+    }
+
+
+function distrito(identificador) {
+	var provincia = $('#proyecto-provincia');
+	var distrito = $('#proyecto-distrito');
+	
+     if(provincia.val() != '0')
+        {
+        $.ajax({
+                    url: '<?= $obtenerdistrito ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {id:provincia.val()},
+                    success: function(data){
+                        distrito.find('option').remove();
+                        distrito.append(data);
+                        distrito.prop('disabled', false);
+                    }
+                });
+        }
+        else
+        {
+	    distrito.find('option').remove();
+            distrito.append('<option value="0">--Seleccione--</option>');
+            distrito.prop('disabled', true);
+        }
+    }
 
 
 $("#btnproyecto").click(function( ) {
@@ -313,7 +449,21 @@ $("#btnproyecto").click(function( ) {
             //alert('hola');
         }
    
-        
+     if($.trim($('#proyecto-vigencia').val())=='')
+        {
+            error=error+'Ingrese la Vigencia del Proyecto<br>';
+            $('#proyecto-vigencia').addClass('has-error');
+            //alert('hola');
+        }
+    
+    if($.trim($('#proyecto-departamento').val())=='0' || $.trim($('#proyecto-provincia').val())=='0' || $.trim($('#proyecto-distrito').val())=='0')
+        {
+            error=error+'Seleccione Ubigeo<br>';
+            $('#proyecto-departamento').addClass('has-error');
+            $('#proyecto-provincia').addClass('has-error');
+            $('#proyecto-distrito').addClass('has-error');
+            //alert('hola');
+        }
                  
         
     if(error!='')

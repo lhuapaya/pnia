@@ -1,33 +1,6 @@
-<?php
-/*$objetivos_opciones='';
-foreach($objetivos as $objetivo)
-{
-    $objetivos_opciones=$objetivos_opciones.'<option value="'.$objetivo->id.'">'.$objetivo->descripcion.'</option>';
-}*/
 
-?>
-<div ng-controller="indicadorCtrl" >
-    
-    
-	    <div class="col-xs-12 col-sm-10 col-md-8">
-		<h5>Objetivos Especificos</h5>
-		<select class="form-control" name="select_oe" id="select_oe" ng-model="select_oe" ng-options="item.id as item.descripcion for item in idatos" ng-change="selectAction()">
-		    
-		</select>
-		
-		</br>
-		<table class="table">
-		    <tbody>
-			<tr ng-repeat="indicador in indicadores">
-			    <td>
-				<div class="form-group">{{$index+1}}
-				asd</div>
-			    </td>
-			</tr>
-		    </tbody>
-		</table>
-	    </div>
-	    
+<div >
+
             <div>
 		<div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
@@ -62,20 +35,9 @@ foreach($objetivos as $objetivo)
 				    <tr id='indicador_addr_1_<?= $ind ?>'>
 					<td>
 					<?= ($ind+1) ?>
+					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_<?= $ind; ?>" value="<?= $ind; ?>" />
 					</td>
-					<!--<td>
-					    <div class="form-group field-proyecto-indicadores_oe_ids_<?= $ind ?> required">
-						<select type="text" id="proyecto-indicadores_oe_ids_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_oe_ids][]" >
-						    <option value>Seleccionar</option>
-						    <?php foreach($objetivos as $objetivo) 
-						    { ?>
-							<option value="<?= $objetivo->id ?>" <?= ($objetivo->id==$indicador->id_oe)?'selected':'' ?> ><?= $objetivo->descripcion?> </option>;
-						    <?php
-						    }
-						    ?>
-						</select>
-					    </div>
-					</td>-->
+
 					<td class="col-xs-6">
 					    <div class="form-group field-proyecto-indicadores_descripciones_<?= $ind ?>  required ">
 						<input type="text" id="proyecto-indicadores_descripciones_<?= $ind ?>" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>" value="<?= $indicador->descripcion ?>" />
@@ -107,26 +69,34 @@ foreach($objetivos as $objetivo)
 			    <?php }else{ ?>
 				<tr id='indicador_addr_1_0'>
 				    <td>
-				    <?= ($ind+1) ?>
-				    </td>
-				    <td>
-					
-					<div class="form-group field-proyecto-indicadores_oe_ids_0 required">
-					    <select type="text" id="proyecto-indicadores_oe_ids_0" class="form-control" name="Proyecto[indicadores_oe_ids][]" >
-						<option value>Seleccionar</option>
-						<?= $objetivos_opciones ?>
-					    </select>
-					</div>
-				    </td>
-				    <td>
-					<div class="form-group field-proyecto-indicadores_descripciones_0 required">
-					    <input type="text" id="proyecto-indicadores_descripciones_0" class="form-control" name="Proyecto[indicadores_descripciones][]" placeholder="Descripción #1"  />
-					</div>
-				    </td>
-				    <td>
-					<span class="eliminar glyphicon glyphicon-minus-sign">
-					</span>
-				    </td>
+					<?= ($ind+1) ?>
+					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_0" value="<?= $ind; ?>" />
+					</td>
+
+					<td class="col-xs-6">
+					    <div class="form-group field-proyecto-indicadores_descripciones_0  required ">
+						<input type="text" id="proyecto-indicadores_descripciones_0" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>"  />
+					    </div>
+					</td>
+					<td class="col-xs-1">
+					    <div class="form-group field-proyecto-indicadores_pesos_0  required">
+						<input type="text" id="proyecto-indicadores_pesos_0" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-indicadores_unidad_medidas_0 required">
+						<input type="text" id="proyecto-indicadores_unidad_medidas_0" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-indicadores_programados_0 required">
+						<input type="text" id="proyecto-indicadores_programados_0" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado"  />
+					    </div>
+					</td>
+					<td>
+					    <span class="eliminar glyphicon glyphicon-minus-sign">
+					    </span>
+					</td>
 				</tr>
 				<?php $ind=1; ?>
 			    <?php } ?>
@@ -137,110 +107,109 @@ foreach($objetivos as $objetivo)
                     <br>
                 </div>
                 <div class="clearfix"></div>
+		<div id="control_boton">
+                <button type="submit" id="btn_indicadores" class="btn btn-primary" >Guardar</button>
+        </div>
             </div>
 
 </div>
 
 <?php
     $eliminarindicador= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarindicador');
-    $rutaobetivoeindex= Yii::$app->getUrlManager()->createUrl('objetivoe/index');
-    $indicadores= Yii::$app->getUrlManager()->createUrl('indicador/resultados');
+    $refrescarindicador = Yii::$app->getUrlManager()->createUrl('proyecto/refrescarindicadores');
 ?>
 <script>
-   
-    var ind=<?= $ind ?>;
     
-    app.controller('indicadorCtrl', function($scope,$http) {
-	$scope.id_objetivo_especifico=null;
-	$scope.cargarObjetivos = function(){
-	
-	    $scope.select_oe = null
-	    $scope.idatos = [];
-	    
-	    $http.get('<?= $rutaobetivoeindex ?>?val='+id_proyecto).success(function (data) {
-		$scope.idatos = data;
-		$scope.select_oe = $scope.idatos[1];
-		console.log(data);
-	    });
-	}
-	$scope.cargarObjetivos();
-	$scope.selectAction = function() {
-	    $scope.id_objetivo_especifico=$scope.select_oe;
-	    console.log($scope.select_oe);
-	    /*$http.get('<?= $indicadores ?>?objetivo='+$scope.select_oe).success(function (data) {
-		//$scope.indicadores = data;
-	    });*/
-	};
-      console.log($scope.id_objetivo_especifico);
-	/*
-	$scope.indicadoresFunction = function(elemento){
-	    console.log(elemento);
-	    if (elemento!="") {
-		$http.get('<?= $indicadores ?>?objetivo='+$('#select_oe').val()).success(function (data) {
-		    $scope.indicadores = data;
-		});	
-	    }
-	    
-	}*/
-	//$scope.indicadoresFunction($('#select_oe').val());
-     
-    });
+ var ind = <?= $ind; ?>
+ 
+ $( "#proyecto-id_indicador" ).change(function() {
     
-    
-    
-    
-    
+  var id_objetivo = $(this).val();
+  $('#indicadores_tabla > tbody > tr').remove();
+        
+        $.ajax({
+                    url: '<?= $refrescarindicador ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {id:id_objetivo},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+                        $('#indicadores_tabla').append(valor.html);
+                       ind = valor.contador;
+                       console.log(ind);
+                    }
+                });
+  
+  
+  
+});
+ 
     $("#indicadores_tabla").on('click','.eliminar',function(){
-        var r = confirm("Estas seguro?");
+        var r = confirm("Estas seguro de Eliminar?");
+	var mensaje = '';
+	var estado2 = 0;
+	var valor = null;
         if (r == true) {
             id=$(this).children().val();
             if (id) {
 		$.ajax({
                     url: '<?= $eliminarindicador ?>',
                     type: 'GET',
-                    async: true,
+                    async: false,
                     data: {id:id},
                     success: function(data){
+			 valor = jQuery.parseJSON(data);
+			estado2 = valor.estado ;
+			mensaje = valor.mensaje;
+
                         
                     }
                 });
-		$(this).parent().parent().remove();	
+		
+		if (estado2 == 1)
+		    {
+		    $(this).parent().parent().remove();
+		    }
 	    }
 	    else
 	    {
 		$(this).parent().parent().remove();
+		
+		mensaje: "Se elimino el Indicador Correctamente";
 	    }
-        } 
+	    
+	    $.notify({
+					    message: mensaje 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
+	    
+	    
+        }
+	
+					
     });
     
     
     $("#indicadores_row_1").click(function(){
-        var error='';
+
+        var error = '';
+        var clasificador=($('input[name=\'Proyecto[indicadores_descripciones][]\']').length);
+        var valor=($('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray());
         
-        var objetivo=$('input[name=\'Proyecto[indicadores_descripciones][]\']').length;
-        if($('#proyecto-indicadores_oe_ids_'+(ind-1)).val()=='')
-        {
-            var error=error+'seleccione un objetivo #'+ind+' <br>';
-            $('.field-proyecto-indicadores_oe_ids_'+(ind-1)).addClass('has-error');
-            
+        for (var i=0; i<clasificador; i++) {
+            if(($.trim($('#proyecto-indicadores_descripciones_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_pesos_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_unidad_medidas_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_programados_'+(valor[i].value)).val())==''))
+            {
+                error=error+'Complete todos los Campos del Indicador #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
+
         }
-	else
-	{
-	    $('.field-proyecto-indicadores_oe_ids_'+(ind-1)).addClass('has-success');
-	    $('.field-proyecto-indicadores_oe_ids_'+(ind-1)).removeClass('has-error');
-	}
-	
-	if($('#proyecto-indicadores_descripciones_'+(ind-1)).val()=='')
-        {
-            var error=error+'ingrese un indicador #'+ind+' <br>';
-            $('.field-proyecto-indicadores_descripciones_'+(ind-1)).addClass('has-error');
-            
-        }
-        else
-	{
-	    $('.field-proyecto-indicadores_descripciones_'+(ind-1)).addClass('has-success');
-	    $('.field-proyecto-indicadores_descripciones_'+(ind-1)).removeClass('has-error');
-	}
 	
         if(error!='')
         {
@@ -260,10 +229,7 @@ foreach($objetivos as $objetivo)
         }
         else
         {
-            $('#indicador_addr_1_'+ind).html("<td>"+ (ind+1) +"</td>"+
-				 "<td><div class='form-group field-proyecto-indicadores_oe_ids_"+ind+" required'><select id='proyecto-indicadores_oe_ids_"+ind+"' name='Proyecto[indicadores_oe_ids][]' class='form-control'><option value>Seleccionar</option>"+objetivos_opciones+"</select></div></td>"+
-				 "<td><div class='form-group field-proyecto-indicadores_descripciones_"+ind+" required'><input id='proyecto-indicadores_descripciones_"+ind+"' name='Proyecto[indicadores_descripciones][]' type='text' placeholder='Descripción #"+(ind+1)+"' class='form-control'  /></div></td>"+
-				 "<td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
+            $('#indicador_addr_1_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"><div class="form-group field-proyecto-indicadores_descripciones_'+ind+' required "><input type="text" id="proyecto-indicadores_descripciones_'+ind+'" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'+(ind+1)+'"  /></div></td><td class="col-xs-1"><div class="form-group field-proyecto-indicadores_pesos_'+ind+'  required"><input type="text" id="proyecto-indicadores_pesos_'+ind+'" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  /></div></td><td><div class="form-group field-proyecto-indicadores_unidad_medidas_'+ind+' required"><input type="text" id="proyecto-indicadores_unidad_medidas_'+ind+'" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  /></div></td><td><div class="form-group field-proyecto-indicadores_programados_'+ind+' required"><input type="text" id="proyecto-indicadores_programados_'+ind+'" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado"  /></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
             $('#indicadores_tabla').append('<tr id="indicador_addr_1_'+(ind+1)+'"></tr>');
             ind++;
         }
@@ -274,32 +240,17 @@ foreach($objetivos as $objetivo)
     
     $("#btn_indicadores").click(function(event){
 	var error='';
-        var objetivos=$('input[name=\'Proyecto[indicadores_oe_ids][]\']').length;
-	var indicadores=$('input[name=\'Proyecto[indicadores_descripciones][]\']').length;
+	var indicadores=($('input[name=\'Proyecto[indicadores_descripciones][]\']').length);
+        var valor=($('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray());
         
 	
 	for (var i=0; i<indicadores; i++) {
-	    if($('#proyecto-indicadores_oe_ids_'+i).val()=='')
+            if(($.trim($('#proyecto-indicadores_descripciones_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_pesos_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_unidad_medidas_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_programados_'+(valor[i].value)).val())==''))
             {
-                error=error+'seleccione un objetivo #'+i+'  <br>';
-                $('.field-proyecto-indicadores_oe_ids_'+i).addClass('has-error');
+                error=error+'Complete todos los Campos del Indicador #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
-            else
-            {
-                $('.field-proyecto-indicadores_oe_ids_'+i).addClass('has-success');
-                $('.field-proyecto-indicadores_oe_ids_'+i).removeClass('has-error');
-            }
-	    
-            if($('#proyecto-indicadores_descripciones_'+i).val()=='')
-            {
-                error=error+'ingrese un indicador #'+i+'  <br>';
-                $('.field-proyecto-indicadores_descripciones_'+i).addClass('has-error');
-            }
-            else
-            {
-                $('.field-proyecto-indicadores_descripciones_'+i).addClass('has-success');
-                $('.field-proyecto-indicadores_descripciones_'+i).removeClass('has-error');
-            }
+
         }
 	
 	if (error!='') {
@@ -317,14 +268,13 @@ foreach($objetivos as $objetivo)
         }
         else
         {
-	    $( "#w0" ).submit();
             return true;
         }
     });
     
-    $("#indicadores").click(function( ) {
-	var proyecto_id='<?= $proyecto_id ?>';
-	var objetivos=<?= $CountObjetivos ?> ;
+    /*$("#indicadores").click(function( ) {
+	var proyecto_id='<? //$proyecto_id ?>';
+	var objetivos=<? //$CountObjetivos ?> ;
 	if (proyecto_id=='') {
 	    $.notify({
                 message: 'No existe proyecto registrado'
@@ -356,6 +306,6 @@ foreach($objetivos as $objetivo)
             return false;
 	}
 	return true;
-    });
+    });*/
     
 </script>

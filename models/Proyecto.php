@@ -44,6 +44,7 @@ use Yii;
  */
 class Proyecto extends \yii\db\ActiveRecord
 {
+            public $distrito;
             public $nombres;
             public $apellidos;
             public $telefono;
@@ -56,10 +57,19 @@ class Proyecto extends \yii\db\ActiveRecord
             public $indicadores_ids;
             public $indicadores_oe_ids;
             public $indicadores_descripciones;
+            public $indicadores_pesos;
+            public $indicadores_unidad_medidas;
+            public $indicadores_programados;
+            public $id_indicador;
             /*actividades*/
             public $actividades_ids;
-            public $actividades_ind_ids;
             public $actividades_descripciones;
+            public $actividades_indicadorbid;
+            public $actividades_pesos;
+            public $actividades_unidad_medidas;
+            public $actividades_programados;
+            public $actividades_finicio;
+            public $actividades_ffin;
             /*cronogrmas*/
             public $cronogramas_ids;
             public $cronogramas_actividad_ids;
@@ -94,7 +104,16 @@ class Proyecto extends \yii\db\ActiveRecord
             public $zona_ids;
             public $zona_distrito;
             public $zona_departamento;
-    
+            
+            
+            
+            public $id_actividad;
+            public $recurso_clasificador;
+            public $recurso_descripcion;
+            public $recurso_unidad;
+            public $recurso_cantidad;
+            public $recurso_precioun;
+            public $recurso_ids;
     /**
      * @inheritdoc
      */
@@ -109,18 +128,22 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id'], 'integer'],
+            [['id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id','vigencia'], 'integer'],
             [['presupuesto'], 'number'],
-            [['nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
-              'objetivos_descripciones','actividades_ids','actividades_ind_ids','actividades_descripciones',
+            [['distrito','nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
+              'objetivos_descripciones','actividades_ids','actividades_descripciones',
               'indicadores_ids','indicadores_oe_ids','indicadores_descripciones',
               'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat',
               'alianzas_instituciones','alianzas_descripciones','alianzas_nombres','alianzas_apellidos','alianzas_correos','alianzas_telefonos',
-              'alianzas_ids','colaboradores_ids','nombresc','apellidosc','funcionesc','zona_ids','zona_distrito','zona_departamento'], 'safe'],
+              'alianzas_ids','colaboradores_ids','nombresc','apellidosc','funcionesc','zona_ids','zona_distrito','zona_departamento',
+              'id_actividad','recurso_clasificador','recurso_descripcion','recurso_unidad','recurso_cantidad','recurso_precioun','recurso_ids',
+              'id_indicador','indicadores_pesos','indicadores_unidad_medidas','indicadores_programados',
+              'actividades_indicadorbid','actividades_pesos','actividades_unidad_medidas','actividades_programados','actividades_finicio','actividades_ffin'], 'safe'],
 
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],
             [['desc_tipo_proy'], 'string', 'max' => 200],
+            [['ubigeo'], 'string', 'max' => 6],
             [['resumen_ejecutivo', 'relevancia'], 'string', 'max' => 9000],
             [['objetivo_general'], 'string', 'max' => 4000],
             [['plan_trabajo', 'resultados_esperados'], 'string', 'max' => 8000],
@@ -221,10 +244,10 @@ class Proyecto extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getRecursos()
+   /* public function getRecursos()
     {
         return $this->hasMany(Recursos::className(), ['id_proyecto' => 'id']);
-    }
+    }*/
 
     /**
      * @return \yii\db\ActiveQuery

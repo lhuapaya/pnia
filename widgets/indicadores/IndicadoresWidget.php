@@ -17,7 +17,7 @@ use app\models\Cronograma;
 use app\models\Indicador;
 class IndicadoresWidget extends Widget
 {
-    public $proyecto_id;
+    public $objetivo_id;
     public function init()
     {
         parent::init();
@@ -25,19 +25,17 @@ class IndicadoresWidget extends Widget
 
     public function run()
     {
-        $proyecto=Proyecto::findOne($this->proyecto_id);
-        $CountObjetivos=ObjetivoEspecifico::find()->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->proyecto_id])->count();
-        $objetivos=ObjetivoEspecifico::find()->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->proyecto_id])->all();
+        //$proyecto=Proyecto::findOne($this->proyecto_id);
+        //$CountObjetivos=ObjetivoEspecifico::find()->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->proyecto_id])->count();
+        //$objetivos=ObjetivoEspecifico::find()->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->proyecto_id])->all();
         $indicadores=Indicador::find()
-                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
-                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
-                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
-                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$this->proyecto_id])
+                                ->where('id_oe=:objetivo_id',[':objetivo_id'=>$this->objetivo_id])
                                 ->all();
         
-        return $this->render('indicadores',['indicadores'=>$indicadores,
-                                            'proyecto_id'=>$this->proyecto_id,
-                                            'CountObjetivos'=>$CountObjetivos,
-                                            'objetivos'=>$objetivos]);
+        return $this->render('indicadores',['indicadores'=>$indicadores
+                                            ///'proyecto_id'=>$this->proyecto_id,
+                                            //'CountObjetivos'=>$CountObjetivos,
+                                            //'objetivos'=>$objetivos
+                                            ]);
     }
 }

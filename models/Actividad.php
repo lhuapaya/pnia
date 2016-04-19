@@ -10,13 +10,17 @@ use Yii;
  * @property integer $id
  * @property integer $id_ind
  * @property string $descripcion
+ * @property integer $id_bid
  * @property integer $peso
  * @property string $unidad_medida
  * @property string $meta
  * @property integer $programado
+ * @property string $fecha_inicio
+ * @property string $fecha_fin
  *
  * @property Indicador $idInd
  * @property Cronograma[] $cronogramas
+ * @property Recurso[] $recursos
  */
 class Actividad extends \yii\db\ActiveRecord
 {
@@ -35,10 +39,11 @@ class Actividad extends \yii\db\ActiveRecord
     {
         return [
             [['id_ind'], 'required'],
-            [['id_ind', 'peso', 'programado'], 'integer'],
+            [['id_ind', 'id_bid', 'peso', 'programado'], 'integer'],
             [['descripcion'], 'string', 'max' => 3000],
             [['unidad_medida'], 'string', 'max' => 100],
-            [['meta'], 'string', 'max' => 200]
+            [['meta'], 'string', 'max' => 200],
+            [['fecha_inicio', 'fecha_fin'], 'string', 'max' => 20]
         ];
     }
 
@@ -51,10 +56,13 @@ class Actividad extends \yii\db\ActiveRecord
             'id' => 'ID',
             'id_ind' => 'Id Ind',
             'descripcion' => 'Descripcion',
+            'id_bid' => 'Id Bid',
             'peso' => 'Peso',
             'unidad_medida' => 'Unidad Medida',
             'meta' => 'Meta',
             'programado' => 'Programado',
+            'fecha_inicio' => 'Fecha Inicio',
+            'fecha_fin' => 'Fecha Fin',
         ];
     }
 
@@ -72,5 +80,13 @@ class Actividad extends \yii\db\ActiveRecord
     public function getCronogramas()
     {
         return $this->hasMany(Cronograma::className(), ['id_actividad' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRecursos()
+    {
+        return $this->hasMany(Recurso::className(), ['actividad_id' => 'id']);
     }
 }

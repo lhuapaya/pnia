@@ -1,20 +1,14 @@
 <?php
-$indicadores_opciones='';
+/*$indicadores_opciones='';
 foreach($indicadores as $indicador)
 {
     $indicadores_opciones=$indicadores_opciones.'<option value="'.$indicador->id.'">'.$indicador->descripcion.'</option>';
 }
-
+*/
 ?>
 
 <div>
-	    <div class="col-xs-12 col-sm-10 col-md-8">
-		<h5>Indicadores</h5>
-		<select type="text" id="proyecto-indicador_id" class="form-control" name="Proyecto[actividades_ind_ids][]" >
-		    <option value>Seleccionar Indicador</option>
-		    <?=  $indicadores_opciones; ?>
-		</select></br>
-	    </div>    
+   
             <div>
                 <div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
@@ -29,6 +23,9 @@ foreach($indicadores as $indicador)
                                     Descripción
                                 </th>
 				<th class="text-center">
+                                    Id. BID
+                                </th>
+				<th class="text-center">
                                     Peso
                                 </th>
 				<th class="text-center">
@@ -36,6 +33,9 @@ foreach($indicadores as $indicador)
                                 </th>
 				<th class="text-center">
                                     Cant. Programada
+                                </th>
+				<th>
+                                    
                                 </th>
                                 <th>
                                 </th>
@@ -49,25 +49,30 @@ foreach($indicadores as $indicador)
 				    <tr id='actividad_addr_1_<?= $act ?>'>
 					<td>
 					<?= ($act+1) ?>
+					<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_<?= $act; ?>" value="<?= $act; ?>" />
 					</td>
-					<!--<td>
-					    <div class="form-group field-proyecto-actividades_ind_ids_<?= $act ?> required">
-						<select type="text" id="proyecto-actividades_ind_ids_<?= $act ?>" class="form-control" name="Proyecto[actividades_ind_ids][]" >
-						    <option value>Seleccionar</option>
-						    <?php foreach($indicadores as $indicador) 
-						    { ?>
-							<option value="<?= $indicador->id ?>" <?= ($indicador->id==$actividad->id_ind)?'selected':'' ?> ><?= $indicador->descripcion?> </option>;
-						    <?php
-						    }
-						    ?>
-						</select>
-					    </div>
-					</td>-->
-					<td class="col-xs-6">
+					<td class="col-xs-4">
 					    <div class="form-group field-proyecto-actividades_descripciones_<?= $act ?> required">
 						<input type="text" id="proyecto-actividades_descripciones_<?= $act ?>" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="Descripción #<?= $act ?>" value="<?= $actividad->descripcion ?>" />
 					    </div>
 					</td>
+					<td class="col-xs-1">
+                                        <div class="form-group field-proyecto-actividades_indicadorbid_<?= $act; ?> required">
+                                            <select  class="form-control " id="proyecto-actividades_indicadorbid_<?= $act; ?>" name="Proyecto[actividades_indicadorbid][]" >
+                                                <option value="0">--Indicador BID--</option>
+                                                <?php
+                                                       foreach($indicadorBID as $indicadorBID2)
+                                                        {
+                                                ?>
+                                                           <option value="<?= $indicadorBID2->id; ?>" <?=($indicadorBID2->id == $actividad->id_bid)?'selected':'' ?>> <?= $indicadorBID2->descripcion ?></option>;
+                                                <?php   } ?>
+                            
+                                             
+                            
+                                            </select>
+					    
+                                            </div>    
+                                        </td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_pesos_<?= $act ?> required">
 						<input type="text" id="proyecto-actividades_pesos_<?= $act ?>" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="<?= $actividad->peso ?>" />
@@ -84,6 +89,11 @@ foreach($indicadores as $indicador)
 					    </div>
 					</td>
 					<td>
+					    <div>
+					    <?= \app\widgets\fechas\FechasWidget::widget(['actividad_id'=>$actividad->id,'act'=>$act]); ?> 
+					    </div>
+					</td>
+					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
 						<input type="hidden" name="Proyecto[actividades_ids][]" value="<?= $actividad->id ?>" />
 					    </span>
@@ -94,22 +104,51 @@ foreach($indicadores as $indicador)
 			    <?php }else{ ?>
 				<tr id='actividad_addr_1_0'>
 				    <td>
-				    <?= ($act+1) ?>
-				    </td>
-				    <td>
-					
-					<div class="form-group field-proyecto-actividades_ind_ids_0 required">
-					    <select type="text" id="proyecto-actividades_ind_ids_0" class="form-control" name="Proyecto[actividades_ind_ids][]" >
-						<option value>Seleccionar</option>
-						<?= $indicadores_opciones ?>
-					    </select>
-					</div>
-				    </td>
-				    <td>
-					<div class="form-group field-proyecto-actividades_descripciones_0 required">
-					    <input type="text" id="proyecto-actividades_descripciones_0" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="Descripción #1"  />
-					</div>
-				    </td>
+					<?= ($act+1) ?>
+					<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_<?= $act; ?>" value="<?= $act; ?>" />
+					</td>
+					<td class="col-xs-4">
+					    <div class="form-group field-proyecto-actividades_descripciones_0 required">
+						<input type="text" id="proyecto-actividades_descripciones_0" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="Descripción #<?= $act ?>"  />
+					    </div>
+					</td>
+					<td class="col-xs-1">
+                                        <div class="form-group field-proyecto-actividades_indicadorbid_0 required">
+                                            <select  class="form-control " id="proyecto-actividades_indicadorbid_0" name="Proyecto[actividades_indicadorbid][]" >
+                                                <option value="0">--Indicador BID--</option>
+                                                <?php
+                                                       foreach($indicadorBID as $indicadorBID2)
+                                                        {
+                                                ?>
+                                                           <option value="<?= $indicadorBID2->id; ?>" > <?= $indicadorBID2->descripcion ?></option>;
+                                                <?php   } ?>
+                            
+                                             
+                            
+                                            </select>
+					    
+                                            </div>    
+                                        </td>
+					<td class="col-xs-1">
+					    <div class="form-group field-proyecto-actividades_pesos_0 required">
+						<input type="text" id="proyecto-actividades_pesos_0" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="" " />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-actividades_unidad_medidas_0 required">
+						<input type="text" id="proyecto-actividades_unidad_medidas_0" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder=""  />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-actividades_programados_0 required">
+						<input type="text" id="proyecto-actividades_programados_0" class="form-control" name="Proyecto[actividades_programados][]" placeholder="" />
+					    </div>
+					</td>
+					<td>
+					    <div>
+					    <?= \app\widgets\fechas\FechasWidget::widget(['actividad_id'=>$actividad->id,'act'=>$act]); ?> 
+					    </div>
+					</td>
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">
 					</span>
@@ -124,67 +163,124 @@ foreach($indicadores as $indicador)
                     <br>
                 </div>
                 <div class="clearfix"></div>
+		<div id="control_boton">
+                <button type="submit" id="btn_actividades" class="btn btn-primary" >Guardar</button>
+        </div>
             </div>
 
 </div>
 
 <?php
     $eliminaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/eliminaractividad');
+    $refrescaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/refrescaractividades');
 ?>
 <script>
-    var indicadores_opciones='<?= $indicadores_opciones ?>';
-    var act=<?= $act ?>;
-    $("#actividades_tabla").on('click','.eliminar',function(){
-        var r = confirm("Estas seguro?");
+   var act = <?= $act; ?>
+
+ $( "#proyecto-id_indicador" ).change(function() {
+    
+  var id_indicador = $(this).val();
+  $('#actividades_tabla > tbody > tr').remove();
+        
+        $.ajax({
+                    url: '<?= $refrescaractividad ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {id:id_indicador},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+                        $('#actividades_tabla').append(valor.html);
+                       act = valor.contador;
+                       console.log(act);
+                    }
+                });
+  
+  
+  
+});
+
+
+   
+ $("#actividades_tabla").on('click','.eliminar',function(){
+        var r = confirm("Estas seguro de Eliminar?");
+	var mensaje = '';
+	var estado2 = 0;
+	var valor = null;
+	//var valor = null;
         if (r == true) {
             id=$(this).children().val();
+	    
             if (id) {
 		$.ajax({
                     url: '<?= $eliminaractividad ?>',
                     type: 'GET',
-                    async: true,
+                    async: false,
                     data: {id:id},
                     success: function(data){
-                        
+			var valor = jQuery.parseJSON(data);
+			
+			valor = jQuery.parseJSON(data);
+			estado2 = valor.estado ;
+			mensaje = valor.mensaje;
+
+			
+				
                     }
                 });
-		$(this).parent().parent().remove();	
+		
+		if (estado2 == 1)
+		    {
+		    $(this).parent().parent().remove();
+		    }
+		    
+		$.notify({
+					    message: mensaje 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});	
 	    }
 	    else
 	    {
 		$(this).parent().parent().remove();
+		$.notify({
+					    message: "Se elimino la Actividad Correctamente"
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
+
 	    }
-        } 
-    });
+	    
+	    
+        }
+
+    }); 
+    
     
     
     $("#actividades_row_1").click(function(){
-        var error='';
+
+        var error = '';
+        var cantidadregistros=($('input[name=\'Proyecto[actividades_descripciones][]\']').length);
+        var valor=($('input[name=\'Proyecto[actividades_numero][]\']').serializeArray());
         
-        var objetivo=$('input[name=\'Proyecto[actividades_descripciones][]\']').length;
-        if($('#proyecto-actividades_ind_ids_'+(act-1)).val()=='')
-        {
-            var error=error+'seleccione un objetivo #'+act+' <br>';
-            $('.field-proyecto-actividades_ind_ids_'+(act-1)).addClass('has-error');
-            
+        for (var i=0; i<cantidadregistros; i++) {
+            if(($.trim($('#proyecto-actividades_descripciones_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_indicadorbid_'+(valor[i].value)).val())=='0') || ($.trim($('#proyecto-actividades_pesos_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_unidad_medidas_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_programados_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_finicio_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_ffin_'+(valor[i].value)).val())==''))
+            {
+                error=error+'Complete todos los Campos de la Actividad #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
+
         }
-	else
-	{
-	    $('.field-proyecto-actividades_ind_ids_'+(act-1)).addClass('has-success');
-	    $('.field-proyecto-actividades_ind_ids_'+(act-1)).removeClass('has-error');
-	}
-	
-	if($('#proyecto-actividades_descripciones_'+(act-1)).val()=='')
-        {
-            var error=error+'ingrese la actividad #'+act+' <br>';
-            $('.field-proyecto-actividades_descripciones_'+(act-1)).addClass('has-error');
-            
-        }
-        else
-	{
-	    $('.field-proyecto-actividades_descripciones_'+(act-1)).addClass('has-success');
-	    $('.field-proyecto-actividades_descripciones_'+(act-1)).removeClass('has-error');
-	}
 	
         if(error!='')
         {
@@ -204,11 +300,32 @@ foreach($indicadores as $indicador)
         }
         else
         {
-            $('#actividad_addr_1_'+act).html("<td>"+ (act+1) +"</td>"+
-				 "<td><div class='form-group field-proyecto-actividades_ind_ids_"+act+" required'><select id='proyecto-actividades_ind_ids_"+act+"' name='Proyecto[actividades_ind_ids][]' class='form-control'><option value>Seleccionar</option>"+indicadores_opciones+"</select></div></td>"+
-				 "<td><div class='form-group field-proyecto-actividades_descripciones_"+act+" required'><input id='proyecto-actividades_descripciones_"+act+"' name='Proyecto[actividades_descripciones][]' type='text' placeholder='Descripción #"+(act+1)+"' class='form-control'  /></div></td>"+
-				 "<td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
-            $('#actividades_tabla').append('<tr id="actividad_addr_1_'+(act+1)+'"></tr>');
+
+            $('#actividad_addr_1_'+act).html('<td>'+(act+1)+'<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_'+act+'" value="'+act+'" /></td><td class="col-xs-4"><div class="form-group field-proyecto-actividades_descripciones_'+act+' required"><input type="text" id="proyecto-actividades_descripciones_'+act+'" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="" /></div></td><td class="col-xs-1"><div class="form-group field-proyecto-actividades_indicadorbid_'+act+' required"><select  class="form-control " id="proyecto-actividades_indicadorbid_'+act+'" name="Proyecto[actividades_indicadorbid][]" ><option value="0">--Indicador BID--</option><?php foreach($indicadorBID as $indicadorBID2){ ?> <option value="<?= $indicadorBID2->id; ?>" > <?= $indicadorBID2->descripcion ?></option>; <?php   } ?> </select></div></td><td class="col-xs-1"><div class="form-group field-proyecto-actividades_pesos_'+act+' required"><input type="text" id="proyecto-actividades_pesos_'+act+'" class="form-control" name="Proyecto[actividades_pesos][]" placeholder=""  /></div></td><td><div class="form-group field-proyecto-actividades_unidad_medidas_'+act+' required"><input type="text" id="proyecto-actividades_unidad_medidas_'+act+'" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder=""  /></div></td><td><div class="form-group field-proyecto-actividades_programados_'+act+' required"><input type="text" id="proyecto-actividades_programados_'+act+'" class="form-control" name="Proyecto[actividades_programados][]" placeholder=""  /></div></td><td><div id="ruta_'+act+'"></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
+	    
+	    
+	    $('#ruta_'+act).html('<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#fechas'+act+'_" id="fechas">Fechas</button>'+
+'<div class="modal fade" id="fechas'+act+'_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">'+
+    '<div class="modal-dialog" role="document">'+
+        '<div class="modal-content">'+
+            '<div class="modal-header">'+
+                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                '<h4 class="modal-title" id="myModalLabel">Fechas</h4>'+
+            '</div><div class="modal-body"><div class="clearfix"></div>'+
+                '<div class="col-xs-12 col-sm-7 col-md-12"><table class="table table-bordered table-hover" id="fechas_tabla">'+
+                        '<thead><tr><th class="text-center">#</th><th class="text-center">Fecha Inicio</th>'+
+				'<th class="text-center">Fecha Fin</th><th></th></tr></thead><tbody><tr>'+
+					'<td>'+(act+1)+'</td><td class="col-xs-1"><div class="form-group field-proyecto-actividades_finicio_'+act+' required">'+
+					'<input type="month" id="proyecto-actividades_finicio_'+act+'" class="form-control" name="Proyecto[actividades_finicio][]" placeholder="Mes" />'+
+					 '</div></td><td class="col-xs-1"><div class="form-group field-proyecto-actividades_ffin_'+act+' required">'+
+					'<input type="month" id="proyecto-actividades_ffin_'+act+'" class="form-control" name="Proyecto[actividades_ffin][]" placeholder="Mes" />'+
+					 '</div></td><td></td></tr></tbody></table><br></div><div class="clearfix"></div></div>'+
+            '<div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>'+
+                     '</div></div></div></div>');
+	    
+	    
+	    
+	    $('#actividades_tabla').append('<tr id="actividad_addr_1_'+(act+1)+'"></tr>');
             act++;
         }
         
@@ -216,34 +333,18 @@ foreach($indicadores as $indicador)
         return true;
     });
     
-    $("#btn_actividades").click(function(event){
-	var error='';
-        var objetivos=$('input[name=\'Proyecto[actividades_ind_ids][]\']').length;
-	var actividades=$('input[name=\'Proyecto[actividades_descripciones][]\']').length;
+  $("#btn_actividades").click(function(event){
+	var error = '';
+        var cantidadregistros=($('input[name=\'Proyecto[actividades_descripciones][]\']').length);
+        var valor=($('input[name=\'Proyecto[actividades_numero][]\']').serializeArray());
         
-	
-	for (var i=0; i<actividades; i++) {
-	    if($('#proyecto-actividades_ind_ids_'+i).val()=='')
+        for (var i=0; i<cantidadregistros; i++) {
+            if(($.trim($('#proyecto-actividades_descripciones_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_indicadorbid_'+(valor[i].value)).val())=='0') || ($.trim($('#proyecto-actividades_pesos_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_unidad_medidas_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_programados_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_finicio_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-actividades_ffin_'+(valor[i].value)).val())==''))
             {
-                error=error+'seleccione un objetivo #'+i+'  <br>';
-                $('.field-proyecto-actividades_ind_ids_'+i).addClass('has-error');
+                error=error+'Complete todos los Campos de la Actividad #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
-            else
-            {
-                $('.field-proyecto-actividades_ind_ids_'+i).addClass('has-success');
-                $('.field-proyecto-actividades_ind_ids_'+i).removeClass('has-error');
-            }
-	    
-            if($('#proyecto-actividades_descripciones_'+i).val()=='')
-            {
-                error=error+'ingrese una actividad #'+i+'  <br>';
-                $('.field-proyecto-actividades_descripciones_'+i).addClass('has-error');
-            }
-            else
-            {
-                $('.field-proyecto-actividades_descripciones_'+i).addClass('has-success');
-                $('.field-proyecto-actividades_descripciones_'+i).removeClass('has-error');
-            }
+
         }
 	
 	if (error!='') {
@@ -261,45 +362,9 @@ foreach($indicadores as $indicador)
         }
         else
         {
-	    $( "#w0" ).submit();
             return true;
         }
-    });
+    });  
     
-    $("#actividades").click(function( ) {
-	var proyecto_id='<?= $proyecto_id ?>';
-	var indicadores=<?= $CountIndicadores ?> ;
-	if (proyecto_id=='') {
-	    $.notify({
-                message: 'No existe proyecto registrado'
-            },{
-                type: 'danger',
-                offset: 20,
-                spacing: 10,
-                z_index: 1031,
-                placement: {
-                    from: 'top',
-                    align: 'right'
-                },
-            });
-            return false;
-	}
-	if (indicadores==0) {
-	    $.notify({
-                message: 'No existe indicadores listados'
-            },{
-                type: 'danger',
-                offset: 20,
-                spacing: 10,
-                z_index: 1031,
-                placement: {
-                    from: 'top',
-                    align: 'right'
-                },
-            });
-            return false;
-	}
-	return true;
-    });
     
 </script>

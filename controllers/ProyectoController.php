@@ -21,6 +21,8 @@ use app\models\AlianzaEstrategica;
 use app\models\Colaborador;
 use app\models\Ubigeo;
 use app\models\ZonaAccion;
+use app\models\Recurso;
+use app\models\Maestros;
 
 class ProyectoController extends Controller
 {
@@ -349,39 +351,7 @@ class ProyectoController extends Controller
                         
         }
         
-       /* if($proyecto->load(Yii::$app->request->post()) && ($existe == 0))
-        {
-            
-            $proyecto->user_propietario = Yii::$app->user->identity->id;
-            $proyecto->estado = 1;
-            $proyecto->save();
-            
-            
-            
-            
-            $idproyecto = Proyecto::find('id')
-                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
-                        ->one();
-            
-            $responsable->id_proyecto = $idproyecto->id;
-            $responsable->nombres = $proyecto->nombres;
-            $responsable->apellidos = $proyecto->apellidos;
-            $responsable->telefono = $proyecto->telefono;
-            $responsable->celular = $proyecto->celular;
-            $responsable->correo = $proyecto->correo;
-            
-            $responsable->save();
-            
-            //var_dump($proyecto->nombres);
-        }
-        
-        if($proyecto->load(Yii::$app->request->post()) && ($existe > 0))
-        {
-            $proyecto->titulo = $proyecto->proyecto-titulo;
-            $proyecto->user_propietario = Yii::$app->user->identity->id;
-            $proyecto->estado = 1;
-            $proyecto->save();
-        }*/
+
         
         
         return $this->render('nuevo',['proyecto'=>$proyecto,'responsable'=>$responsable,'cultivo'=>$cultivo,'AccionT'=>$AccionT]);
@@ -395,8 +365,8 @@ class ProyectoController extends Controller
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
         $responsable = new Responsable();
-        $cultivo = new CultivoCrianza();
-        $AccionT = new AccionTransversal();
+        $provincias = new Ubigeo();
+        $distritos = new Ubigeo();
         
         
         $existe = Proyecto::find()
@@ -405,6 +375,7 @@ class ProyectoController extends Controller
         if($proyecto->load(Yii::$app->request->post()) )
         {
             $countColaboradores = count(array_filter($proyecto->nombresc));
+            $countAlianzas=count(array_filter($proyecto->alianzas_instituciones));
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
@@ -424,6 +395,8 @@ class ProyectoController extends Controller
                 //var_dump($proyecto->id);
                 $data= Proyecto::findOne($proyecto->id);
                 $data->titulo = $proyecto->titulo;
+                $data->vigencia = $proyecto->vigencia;
+                $data->ubigeo = $proyecto->distrito;
                 $data->id_direccion_linea = $proyecto->id_direccion_linea;
                 $data->id_unidad_ejecutora = $proyecto->id_unidad_ejecutora;
                 $data->id_dependencia_inia = $proyecto->id_dependencia_inia;
@@ -465,6 +438,36 @@ class ProyectoController extends Controller
                         $Colaborador->save(); 
                     }
                 }
+                
+                /*Instituciones Alianza*/
+                for($i=0;$i<$countAlianzas;$i++)
+
+                {
+                    if(isset($proyecto->alianzas_ids[$i]))
+                    {
+                        $alianza=AlianzaEstrategica::findOne($proyecto->alianzas_ids[$i]);
+                        $alianza->id_proyecto=$proyecto->id;
+                        $alianza->institucion=$proyecto->alianzas_instituciones[$i];
+                        $alianza->descripcion=$proyecto->alianzas_descripciones[$i];
+                        $alianza->nombres=$proyecto->alianzas_nombres[$i];
+                        $alianza->apellidos=$proyecto->alianzas_apellidos[$i];
+                        $alianza->correo=$proyecto->alianzas_correos[$i];
+                        $alianza->telefono=$proyecto->alianzas_telefonos[$i];
+                        $alianza->update(); 
+                    }
+                    else
+                    {
+                        $alianza=new AlianzaEstrategica;
+                        $alianza->id_proyecto=$proyecto->id;
+                        $alianza->institucion=$proyecto->alianzas_instituciones[$i];
+                        $alianza->descripcion=$proyecto->alianzas_descripciones[$i];
+                        $alianza->nombres=$proyecto->alianzas_nombres[$i];
+                        $alianza->apellidos=$proyecto->alianzas_apellidos[$i];
+                        $alianza->correo=$proyecto->alianzas_correos[$i];
+                        $alianza->telefono=$proyecto->alianzas_telefonos[$i];
+                        $alianza->save(); 
+                    }
+                }
             }
             
             return $this->refresh();
@@ -480,12 +483,30 @@ class ProyectoController extends Controller
            $responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
+            
+            $departamentos = Ubigeo::find(['department_id', 'department'])
+                        ->groupBy('department_id')
+                        ->orderBy('department')
+                        ->all();
                         
+            if($proyecto->ubigeo)
+            {
+                $provincias = Ubigeo::find('province_id, province')
+                            ->where('department_id = :department_id',[':department_id'=>substr($proyecto->ubigeo,0,2)])
+                            ->groupBy('province')
+                            ->orderBy('province')
+                            ->all();
+        
+                $distritos = Ubigeo::find('district_id, district')
+                            ->where('province_id = :province_id',[':province_id'=>substr($proyecto->ubigeo,0,4)])
+                            ->groupBy('district')
+                            ->orderBy('district')
+                            ->all();       
+            }
         }
         
         
-        
-        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable]);
+        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos]);
       
     }
     
@@ -652,17 +673,248 @@ class ProyectoController extends Controller
     {
         $this->layout='principal';
         $proyecto = new Proyecto();
+        $session = Yii::$app->session;
+        $flat = '';
         
+        
+        $existe = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->count();
+                        
+        if($proyecto->load(Yii::$app->request->post()) )
+        {
+            $countRecurso = count(array_filter($proyecto->recurso_descripcion));
+            //var_dump($proyecto->recurso_ids);
+            //var_dump($proyecto->recurso_descripcion);
+            //die;
+            if($existe == 0)
+            {
+
+            }
+            else
+            {
+ 
+                
+                for($i=0;$i<$countRecurso;$i++)
+                {
+                    $flat .= 'a';
+                    if(isset($proyecto->recurso_ids[$i]))
+                    {
+                        $recurso=Recurso::findOne($proyecto->recurso_ids[$i]);
+                        $recurso->actividad_id=$proyecto->id_actividad;
+                        $recurso->clasificador_id=$proyecto->recurso_clasificador[$i];
+                        $recurso->detalle=$proyecto->recurso_descripcion[$i];
+                        $recurso->unidad_medida=$proyecto->recurso_unidad[$i];
+                        $recurso->cantidad=$proyecto->recurso_cantidad[$i];
+                        $recurso->precio_unit=$proyecto->recurso_precioun[$i];
+                        $recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
+                        $recurso->update(); 
+                    }
+                    else
+                    {
+                        
+                        $recurso = new Recurso;
+                        $recurso->actividad_id=$proyecto->id_actividad;
+                        $recurso->clasificador_id=$proyecto->recurso_clasificador[$i];
+                        $recurso->detalle=$proyecto->recurso_descripcion[$i];
+                        $recurso->unidad_medida=$proyecto->recurso_unidad[$i];
+                        $recurso->cantidad=$proyecto->recurso_cantidad[$i];
+                        $recurso->precio_unit=$proyecto->recurso_precioun[$i];
+                        $recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
+                        $recurso->save(); 
+                    }
+                }
+                //var_dump($flat);die;
+            }
+            
+            return $this->refresh();
+        }
+        
+                        
+        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {
+            $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->one();
+                        
+           $actividades=Actividad::find()
+                                ->select('actividad.id,actividad.descripcion,actividad.id_ind')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->all();
+                        
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades]);
+    }
+    
+    
+    public function actionIndicador()
+    {
+        $this->layout='principal';
+        $flatUpdate = 0;        
+        $proyecto = new Proyecto();
         $session = Yii::$app->session;
         
         
-        $proyecto = Proyecto::find()
+        $existe = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->count();
+                        
+        if($proyecto->load(Yii::$app->request->post()) )
+        {
+            $countIndicadores=count(array_filter($proyecto->indicadores_descripciones));
+            if($existe == 0)
+            {
+
+            }
+            else
+            {
+                
+                /*indicadores*/
+                for($i=0;$i<$countIndicadores;$i++)
+                {
+                    //var_dump($proyecto->actividades_ids);die;
+                    if(isset($proyecto->indicadores_ids[$i]))
+                    {
+                        $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
+                        $indicador->id_oe=$proyecto->id_indicador;
+                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
+                        $indicador->peso=$proyecto->indicadores_pesos[$i];
+                        $indicador->unidad_medida=$proyecto->indicadores_unidad_medidas[$i];
+                        $indicador->programado=$proyecto->indicadores_programados[$i];
+                        $indicador->update(); 
+                    }
+                    else
+                    {
+                        $indicador=new Indicador;
+                        $indicador->id_oe=$proyecto->id_indicador;
+                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
+                        $indicador->peso=$proyecto->indicadores_pesos[$i];
+                        $indicador->unidad_medida=$proyecto->indicadores_unidad_medidas[$i];
+                        $indicador->programado=$proyecto->indicadores_programados[$i];
+                        $indicador->save(); 
+                    }
+                }
+                
+                
+            }
+            
+            return $this->refresh();
+        }
+        
+                        
+        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {
+           $proyecto = Proyecto::find()
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                         ->one();
+                        
+            $objetivos=ObjetivoEspecifico::find()->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])->all();
+                    
+                        
+        }
         
         
-        return $this->render('recursos',['proyecto'=>$proyecto]);
+        
+        return $this->render('indicador',['objetivos'=>$objetivos]);
+      
     }
+    
+    
+    public function actionActividad()
+    {
+        $this->layout='principal';
+        $flatUpdate = 0;        
+        $proyecto = new Proyecto();
+        $session = Yii::$app->session;
+        
+        
+        $existe = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->count();
+                        
+        if($proyecto->load(Yii::$app->request->post()) )
+        {
+            $countActividades=count(array_filter($proyecto->actividades_descripciones));
+            if($existe == 0)
+            {
+
+            }
+            else
+            {
+                
+                
+                for($i=0;$i<$countActividades;$i++)
+                {
+                    
+                    if(isset($proyecto->actividades_ids[$i]))
+                    {
+                        $actividad=Actividad::findOne($proyecto->actividades_ids[$i]);
+                        $actividad->id_ind=$proyecto->id_indicador;
+                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
+                        $actividad->id_bid=$proyecto->actividades_indicadorbid[$i];
+                        $actividad->peso=$proyecto->actividades_pesos[$i];
+                        $actividad->unidad_medida=$proyecto->actividades_unidad_medidas[$i];
+                        $actividad->programado=$proyecto->actividades_programados[$i];
+                        $actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
+                        $actividad->fecha_fin=$proyecto->actividades_ffin[$i];
+                        $actividad->update(); 
+                    }
+                    else
+                    {
+                        $actividad=new Actividad;
+                        $actividad->id_ind=$proyecto->id_indicador;
+                        $actividad->descripcion=$proyecto->actividades_descripciones[$i];
+                        $actividad->id_bid=$proyecto->actividades_indicadorbid[$i];
+                        $actividad->peso=$proyecto->actividades_pesos[$i];
+                        $actividad->unidad_medida=$proyecto->actividades_unidad_medidas[$i];
+                        $actividad->programado=$proyecto->actividades_programados[$i];
+                        $actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
+                        $actividad->fecha_fin=$proyecto->actividades_ffin[$i];
+                        $actividad->save(); 
+                    }
+                }
+                
+                
+            }
+            
+            return $this->refresh();
+        }
+        
+                        
+        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {
+           $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->one();
+                        
+            $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->all();
+                    
+                        
+        }
+        
+        
+        
+        return $this->render('actividad',['indicadores'=>$indicadores]);
+      
+    }
+    
     
     public function actionExisteproyecto()
     {
@@ -716,10 +968,54 @@ class ProyectoController extends Controller
         
     }
     
+    public function actionEliminarindicador($id)
+    {
+        $mesaje = "";
+        $estado = 0;
+        $validaractividades = Actividad::find()->where('id_ind = :id_ind',[':id_ind'=>$id])->all();
+
+        if($validaractividades)
+        {
+           $mesaje = "El Indicador se encuentra asociado con Actividades";
+
+        }
+        else
+        {
+            Indicador::findOne($id)->delete();
+            $estado = 1;
+            $mesaje = "Se elimino el Indicador Correctamente.";
+        }
+        
+        
+        
+        $array = array('mensaje'=>$mesaje,'estado'=>$estado);
+            echo json_encode($array);
+    }
     
     public function actionEliminaractividad($id)
     {
-        Actividad::findOne($id)->delete();
+        $mesaje = "";
+        $estado = '0';
+        $validarrecurso = Recurso::find()->where('actividad_id = :actividad_id',[':actividad_id'=>$id])->all();
+
+        if($validarrecurso)
+        {
+           //ObjetivoEspecifico::findOne($myData->id)->delete();
+           $mesaje = "La Actividad se encuentra asociado Recursos";
+
+        }
+        else
+        {
+            Actividad::findOne($id)->delete();
+            $estado = '1';
+            $mesaje = "Se elimino la Actividad Correctamente.";
+        }
+        
+        
+        
+        $array = array('mensaje'=>$mesaje,'estado'=>$estado);
+            echo json_encode($array);
+
     }
     
     public function actionEliminarcronograma($id)
@@ -808,6 +1104,390 @@ class ProyectoController extends Controller
         echo $mesaje;
 
         
+    }
+    
+    public function actionEliminarrecurso($id)
+    {
+
+           Recurso::findOne($id)->delete();
+           $mesaje = "Se elimino el Recurso Correctamente.";
+        
+        echo $mesaje;
+
+        
+    }
+    
+    public function actionRefrescarrecursos($id)
+    {
+        $html = '';
+        $opcion1 = '';
+        $re = 0;
+        $recursos=Recurso::find()
+                                ->where('actividad_id=:actividad_id',[':actividad_id'=>$id])
+                                ->all();
+        
+        $clasificador = Maestros::find()
+                                ->where('id_padre = 32 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+        
+
+        
+        if($recursos)
+        {
+            
+            
+                foreach($recursos as $recursos2)
+                {
+                    
+                    foreach($clasificador as $clasificador2)
+                    {
+                                                        
+                     $opcion1 .='<option value="'.$clasificador2->id.'" '.($clasificador2->id == $recursos2->clasificador_id ? 'selected="selected"' : '' ).'>'.$clasificador2->descripcion.'</option>';
+                                                          
+                    }
+
+			$html .= '<tr id="recurso_addr_1_'.$re.'">
+					<td>
+					'.($re+1).'
+                                        <input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'.$re.'" value="'.$re.'" />
+					</td>
+					<td>
+                                        <div class="form-group field-proyecto-recurso_clasificador_'.$re.' required">
+                                            <select  class="form-control " id="proyecto-recurso_clasificador_'.$re.'" name="Proyecto[recurso_clasificador][]" >
+                                                <option value="0">--Clasificador--</option>'.$opcion1.'</select>
+					    
+                                            </div>    
+                                        </td>
+                                        <td class="col-xs-3"  >
+                                            <div class="form-group field-proyecto-recurso_descripcion_'.$re.' required">
+                                                <input class="form-control " value="'.$recursos2->detalle.'" type="text"  placeholder="..." id="proyecto-recurso_descripcion_'.$re.'" name="Proyecto[recurso_descripcion][]"/>
+                                            </div>
+                                        </td>
+                                        <td class="col-xs-3">
+                                            <div class="form-group field-proyecto-recurso_unidad_'.$re.' required">
+                                                <input class="form-control " value="'.$recursos2->unidad_medida.'" type="text"  placeholder="..." id="proyecto-recurso_unidad_'.$re.'" name="Proyecto[recurso_unidad][]"/>
+                                            </div>
+                                        </td>
+                                        <td class="col-xs-1">
+                                            <div class="form-group field-proyecto-recurso_cantidad_'.$re.' required">
+                                                <input  class="form-control " value="'.$recursos2->cantidad.'" class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'.$re.'" name="Proyecto[recurso_cantidad][]"/>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="form-group field-proyecto-recurso_precioun_'.$re.' required">
+                                                <input class="form-control " value="'.$recursos2->precio_unit.'" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_precioun_'.$re.'" name="Proyecto[recurso_precioun][]"/>
+                                            </div>
+                                        </td>
+					<td>
+					    <span class="eliminar glyphicon glyphicon-minus-sign">
+						<input type="hidden" name="Proyecto[recurso_ids][]" value="'.$recursos2->id.'" />
+					    </span>
+					</td>
+				    </tr>';
+				     $re++;
+		}
+        }
+        else
+        {
+            foreach($clasificador as $clasificador2)
+            {
+                                                
+             $opcion1 .='<option value="'.$clasificador2->id.'" >'.$clasificador2->descripcion.'></option>';
+                                                  
+            }
+            
+         $html .='<tr id="recurso_addr_1_0">
+				    <td>
+				    '.($re+1).'
+                                    <input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'.$re.'" value="'.$re.'" />
+				    </td>
+				    <td class="col-xs-2" >
+					<div class="form-group field-proyecto-recurso_clasificador_0 required">
+                                            <select  class="form-control " id="proyecto-recurso_clasificador_0" name="Proyecto[recurso_clasificador][]" >
+                                                <option value="0">--Clasificador--</option>'.$opcion1.'</select>
+					    
+					</div>
+				    </td>
+                                    <td class="col-xs-3"  >
+					<div class="form-group field-proyecto-recurso_descripcion_0 required">
+					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_0" name="Proyecto[recurso_descripcion][]"/>
+					</div>
+				    </td>
+                                    <td class="col-xs-3">
+					<div class="form-group field-proyecto-recurso_unidad_0 required">
+					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_0" name="Proyecto[recurso_unidad][]"/>
+					</div>
+				    </td>
+                                    <td class="col-xs-1">
+					<div class="form-group field-proyecto-recurso_cantidad_0 required">
+					    <input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_0" name="Proyecto[recurso_cantidad][]"/>
+					</div>
+				    </td>
+                                    <td>
+					<div class="form-group field-proyecto-recurso_precioun_0 required">
+					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_precioun_0" name="Proyecto[recurso_precioun][]"/>
+					</div>
+				    </td>
+				    <td>
+					<span class="eliminar glyphicon glyphicon-minus-sign">
+					    
+					</span>
+				    </td>
+				</tr>';
+                                
+                                $re = 1;
+        }
+        
+            $html .='<tr id="recurso_addr_1_'.$re.'"></tr>';
+            
+            $array = array('html'=>$html,'contador'=>$re);
+            //$array[] = $re;
+            echo json_encode($array);
+    }
+    
+    
+    public function actionRefrescarindicadores($id)
+    {
+        $html = '';
+        $opcion1 = '';
+        $ind = 0;
+        
+        $indicadores=Indicador::find()
+                                ->where('id_oe=:objetivo_id',[':objetivo_id'=>$id])
+                                ->all();        
+
+        
+        if($indicadores)
+        {
+            
+            
+                foreach($indicadores as $indicadores2)
+                {
+                    
+
+
+			$html .= '<tr id="indicador_addr_1_'.$ind.'">
+					<td>
+					'.($ind+1).'
+					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'.$ind.'" value="'.$ind.'" />
+					</td>
+
+					<td class="col-xs-6">
+					    <div class="form-group field-proyecto-indicadores_descripciones_'.$ind.'  required ">
+						<input type="text" id="proyecto-indicadores_descripciones_'.$ind.'" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'.$ind.'" value="'.$indicadores2->descripcion.'" />
+					    </div>
+					</td>
+					<td class="col-xs-1">
+					    <div class="form-group field-proyecto-indicadores_pesos_'.$ind.' required">
+						<input type="text" id="proyecto-indicadores_pesos_'.$ind.'" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso" value="'.$indicadores2->peso.'" />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-indicadores_unidad_medidas_'.$ind.' required">
+						<input type="text" id="proyecto-indicadores_unidad_medidas_'.$ind.'" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida " value="'.$indicadores2->unidad_medida.'" />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-indicadores_programados_'.$ind.' required">
+						<input type="text" id="proyecto-indicadores_programados_'.$ind.'" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado" value="'.$indicadores2->programado.'" />
+					    </div>
+					</td>
+					<td>
+					    <span class="eliminar glyphicon glyphicon-minus-sign">
+						<input type="hidden" name="Proyecto[indicadores_ids][]" value="'.$indicadores2->id.'" />
+					    </span>
+					</td>
+				    </tr>';
+				     $ind++;
+		}
+        }
+        else
+        {
+            
+         $html .='<tr id="indicador_addr_1_0">
+				    <td>
+					'.($ind+1).'
+					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_0" value="'.$ind.'" />
+					</td>
+
+					<td class="col-xs-6">
+					    <div class="form-group field-proyecto-indicadores_descripciones_0  required ">
+						<input type="text" id="proyecto-indicadores_descripciones_0" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'.($ind+1).'"  />
+					    </div>
+					</td>
+					<td class="col-xs-1">
+					    <div class="form-group field-proyecto-indicadores_pesos_0  required">
+						<input type="text" id="proyecto-indicadores_pesos_0" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-indicadores_unidad_medidas_0 required">
+						<input type="text" id="proyecto-indicadores_unidad_medidas_0" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-indicadores_programados_0 required">
+						<input type="text" id="proyecto-indicadores_programados_0" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado"  />
+					    </div>
+					</td>
+					<td>
+					    <span class="eliminar glyphicon glyphicon-minus-sign">
+					    </span>
+					</td>
+				</tr>';
+                                
+                                $ind = 1;
+        }
+        
+            $html .='<tr id="indicador_addr_1_'.$ind.'"></tr>';
+            
+            $array = array('html'=>$html,'contador'=>$ind);
+            echo json_encode($array);
+    }
+    
+    
+    
+    
+    public function actionRefrescaractividades($id)
+    {
+        $html = '';
+        $opcion1 = '';
+        $act = 0;
+
+        $actividades=Actividad::find()
+                                ->where('id_ind=:id_ind',[':id_ind'=>$id])
+                                ->all();
+                                
+        $indicadorBID = Maestros::find()
+                                ->where('id_padre = 38 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+        
+
+        
+        if($actividades)
+        {
+            
+            
+                foreach($actividades as $actividad)
+                {
+                    
+                    foreach($indicadorBID as $indicadorBID2)
+                    {
+                                                        
+                     $opcion1 .='<option value="'.$indicadorBID2->id.'" '.($indicadorBID2->id == $actividad->id_bid ? 'selected="selected"' : '' ).'>'.$indicadorBID2->descripcion.'</option>';
+                                                          
+                    }
+
+			$html .= '<tr id="actividad_addr_1_'.$act.'">
+					<td>
+					'.($act+1).'
+					<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_'.$act.'" value="'.$act.'" />
+					</td>
+					<td class="col-xs-4">
+					    <div class="form-group field-proyecto-actividades_descripciones_'.$act.' required">
+						<input type="text" id="proyecto-actividades_descripciones_'.$act.'" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="" value="'.$actividad->descripcion.'" />
+					    </div>
+					</td>
+					<td class="col-xs-1">
+                                        <div class="form-group field-proyecto-actividades_indicadorbid_'.$act.' required">
+                                            <select  class="form-control " id="proyecto-actividades_indicadorbid_'.$act.'" name="Proyecto[actividades_indicadorbid][]" >
+                                                <option value="0">--Indicador BID--</option>'.$opcion1.'</select>
+					    
+                                            </div>    
+                                        </td>
+					<td class="col-xs-1">
+					    <div class="form-group field-proyecto-actividades_pesos_'.$act.' required">
+						<input type="text" id="proyecto-actividades_pesos_'.$act.'" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="'.$actividad->peso.'" />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-actividades_unidad_medidas_'.$act.' required">
+						<input type="text" id="proyecto-actividades_unidad_medidas_'.$act.'" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder="Unidad de Medida" value="'.$actividad->unidad_medida.'" />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-actividades_programados_'.$act.' required">
+						<input type="text" id="proyecto-actividades_programados_'.$act.'" class="form-control" name="Proyecto[actividades_programados][]" placeholder="Cantidad Programada<?= $act ?>" value="'.$actividad->programado.'" />
+					    </div>
+					</td>
+					<td>
+					    <div>
+					    '.\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>$actividad->id,'act'=>$act]).'
+					    </div>
+					</td>
+					<td>
+					    <span class="eliminar glyphicon glyphicon-minus-sign">
+						<input type="hidden" name="Proyecto[actividades_ids][]" value="'.$actividad->id.'" />
+					    </span>
+					</td>
+				    </tr>';
+				     $act++;
+                                     $opcion1 = '';
+		}
+                
+                
+        }
+        else
+        {
+            foreach($indicadorBID as $indicadorBID2)
+                    {
+                                                        
+                     $opcion1 .='<option value="'.$indicadorBID2->id.'" >'.$indicadorBID2->descripcion.'</option>';
+                                                          
+                    }
+            
+         $html .='<tr id="actividad_addr_1_0">
+				    <td>
+					'.($act+1).'
+					<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_0" value="0" />
+					</td>
+					<td class="col-xs-4">
+					    <div class="form-group field-proyecto-actividades_descripciones_0 required">
+						<input type="text" id="proyecto-actividades_descripciones_0" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder=""  />
+					    </div>
+					</td>
+					<td class="col-xs-1">
+                                        <div class="form-group field-proyecto-actividades_indicadorbid_0 required">
+                                            <select  class="form-control " id="proyecto-actividades_indicadorbid_0" name="Proyecto[actividades_indicadorbid][]" >
+                                                <option value="0">--Indicador BID--</option>'.$opcion1.'</select>
+					    
+                                            </div>    
+                                        </td>
+					<td class="col-xs-1">
+					    <div class="form-group field-proyecto-actividades_pesos_0 required">
+						<input type="text" id="proyecto-actividades_pesos_0" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="" " />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-actividades_unidad_medidas_0 required">
+						<input type="text" id="proyecto-actividades_unidad_medidas_0" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder=""  />
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-proyecto-actividades_programados_0 required">
+						<input type="text" id="proyecto-actividades_programados_0" class="form-control" name="Proyecto[actividades_programados][]" placeholder="" />
+					    </div>
+					</td>
+					<td>
+					    <div>'.\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>'','act'=>$act]).' 
+					    </div>
+					</td>
+				    <td>
+					<span class="eliminar glyphicon glyphicon-minus-sign">
+					</span>
+				    </td>
+				</tr>';
+                                
+                                $act = 1;
+        }
+        
+            $html .='<tr id="actividad_addr_1_'.$act.'"></tr>';
+            
+            $array = array('html'=>$html,'contador'=>$act);
+            //$array[] = $re;
+            echo json_encode($array);
     }
 
 }

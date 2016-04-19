@@ -2,8 +2,8 @@
 
 <ul class="tabs">
     <li><a href="#tab1">Objetivos</a></li>
-    <li><a href="#tab2">Indicadores</a></li>
-    <li><a href="#tab3">Actividades</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Indicadores</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/actividad') ?>">Actividades</a></li>
     <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/recursos') ?>">Recursos</a></li>
   </ul>
   <div class="clr"></div>

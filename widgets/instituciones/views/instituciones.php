@@ -2,8 +2,8 @@
     Lista de Instituciones Asociadas
 </a>
 <!--Lista de Objetivos Especificos -->
-<div class="modal fade" id="institucion_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-    <div class="modal-dialog" role="document">
+<div class="modal fade" id="institucion_" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -18,13 +18,13 @@
 				<div class="panel-heading">
 				    <h4 class="panel-title">
 					<a data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $inst ?>">
-					Collapsible Group <?= $inst ?></a>
+					Institución Colaboradora #<?= ($inst+1) ?></a>
 				    </h4>
 				</div>
 				<div id="collapse<?= $inst ?>" class="panel-collapse collapse">
-				    <div class="col-xs-12 col-sm-12 col-md-12">
+				    <div class="col-xs-12 col-sm-7 col-md-12" >
 					<div class="form-group field-proyecto-alianza_institucion_<?= $inst ?> required">
-					    <label for="proyecto-alianza_institucion_<?= $inst ?>">Institución:</label>
+					    <h5 for="proyecto-alianza_institucion_<?= $inst ?>">Institución:</h5>
 					    <input type="text" id="proyecto-alianza_institucion_<?= $inst ?>" name="Proyecto[alianzas_instituciones][]" class="form-control" placeholder="Institución" value="<?= $alianza->institucion ?>">
 					</div>
 				    </div>
@@ -36,28 +36,26 @@
 					</div>
 				    </div>
 				    <div class="clearfix"></div>
-				    <div class="col-xs-12 col-sm-12 col-md-12">
+				    <div class="col-xs-12 col-sm-12 col-md-6">
 					<div class="form-group field-proyecto-alianza_nombres_<?= $inst ?> required">
 					    <label for="proyecto-alianza_nombres_<?= $inst ?>">Nombres:</label>
 					    <input type="text" id="proyecto-alianza_nombres_<?= $inst ?>" name="Proyecto[alianzas_nombres][]" class="form-control" placeholder="Nombres" value="<?= $alianza->nombres ?>">
 					</div>
 				    </div>
-				    <div class="clearfix"></div>
-				    <div class="col-xs-12 col-sm-12 col-md-12">
+				    <div class="col-xs-12 col-sm-12 col-md-6">
 					<div class="form-group field-proyecto-alianza_apellidos_<?= $inst ?> required">
 					    <label for="proyecto-alianza_apellidos_<?= $inst ?>">Apellidos:</label>
 					    <input type="text" id="proyecto-alianza_apellidos_<?= $inst ?>" name="Proyecto[alianzas_apellidos][]" class="form-control" placeholder="Apellidos" value="<?= $alianza->apellidos ?>">
 					</div>
 				    </div>
 				    <div class="clearfix"></div>
-				    <div class="col-xs-12 col-sm-12 col-md-12">
+				    <div class="col-xs-12 col-sm-12 col-md-6">
 					<div class="form-group field-proyecto-alianza_correo_<?= $inst ?> required">
 					    <label for="proyecto-alianza_correo_<?= $inst ?>">Correo:</label>
 					    <input type="email" id="proyecto-alianza_correo_<?= $inst ?>" name="Proyecto[alianzas_correos][]" class="form-control" placeholder="Email" value="<?= $alianza->correo ?>">
 					</div>
 				    </div>
-				    <div class="clearfix"></div>
-				    <div class="col-xs-12 col-sm-12 col-md-12">
+				    <div class="col-xs-12 col-sm-12 col-md-6">
 					<div class="form-group field-proyecto-alianza_telefono_<?= $inst ?> required">
 					    <label for="proyecto-alianza_telefono_<?= $inst ?>">Telefono:</label>
 					    <input type="text" id="proyecto-alianza_telefono_<?= $inst ?>" name="Proyecto[alianzas_telefonos][]" class="form-control" placeholder="Telefono" value="<?= $alianza->telefono ?>">
