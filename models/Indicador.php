@@ -13,6 +13,7 @@ use Yii;
  * @property integer $peso
  * @property string $unidad_medida
  * @property integer $programado
+ * @property string $meta
  *
  * @property Actividad[] $actividads
  * @property ObjetivoEspecifico $idOe
@@ -35,7 +36,8 @@ class Indicador extends \yii\db\ActiveRecord
         return [
             [['id_oe', 'peso', 'programado'], 'integer'],
             [['descripcion'], 'string', 'max' => 500],
-            [['unidad_medida'], 'string', 'max' => 200]
+            [['unidad_medida'], 'string', 'max' => 200],
+            [['meta'], 'string', 'max' => 5000]
         ];
     }
 
@@ -51,6 +53,7 @@ class Indicador extends \yii\db\ActiveRecord
             'peso' => 'Peso',
             'unidad_medida' => 'Unidad Medida',
             'programado' => 'Programado',
+            'meta' => 'Meta',
         ];
     }
 

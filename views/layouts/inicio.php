@@ -23,28 +23,28 @@ AppAsset::register($this);
     <style>
         .btnrecuperar:focus
         {
-            border: 2px solid #3F1860;
-            background: #3F1860;
+            border: 2px solid #449d44;
+            background: #449d44;
             color: white;
         }
         .btnrecuperar:hover
         {
-            border: 2px solid #3F1860;
-            background: #3F1860;
+            border: 2px solid #449d44;
+            background: #449d44;
             color: white;
         }
         .btnrecuperar
         {
-            border: 2px solid #3F1860;
+            border: 2px solid #449d44;
             background: white;
-            color: #3F1860;
+            color: #449d44;
         }
     </style>
 </head>
 <body>
 <?php $this->beginBody() ?>
 
-<div class="wrap" style="background: #EAEAEA;margin: 0px;padding: 0px;margin: 0px;border-top:8px solid #3F1860">
+<div class="wrap" style="background: #EAEAEA;margin: 0px;padding: 0px;margin: 0px;border-top:10px solid #449d44">
     
     <!--<div class="container " style="width:100%;background: white;padding: 0px;">
         <div class="col-md-10 " style="float:none;margin:0 auto;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px; border: 0px;margin-bottom:  0px;">

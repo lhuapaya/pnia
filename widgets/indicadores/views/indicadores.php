@@ -4,15 +4,14 @@
             <div>
 		<div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-		    <h5>Indicadores</h5>
-                    <table class="table table-bordered table-hover" id="indicadores_tabla" border="0">
+                    <table class="table borderless table-hover" name="Proyecto[indicadores_tabla][]" id="indicadores_tabla_<?= $correlativo; ?>" border="0">
                         <thead>
                             <tr>
                                 <th class="text-center">
                                     #
                                 </th>
                                 <th class="text-center">
-                                    Descripción
+                                    Indicador
                                 </th>
 				<th class="text-center">
                                     Peso
@@ -21,96 +20,99 @@
                                     Unidad de Medida
                                 </th>
 				<th class="text-center">
-                                    Cant. Programada
+                                    Meta
                                 </th>
                                 <th>
                                 </th>
                             </tr>
                         </thead>
+		    
                         <tbody>
                             <?php $ind=0; ?>
 			    <?php if($indicadores){ ?>
 				
 				<?php foreach($indicadores as $indicador){?>
-				    <tr id='indicador_addr_1_<?= $ind ?>'>
+				    <tr id='indicador_addr_<?= $correlativo; ?>_<?= $ind ?>'>
 					<td>
 					<?= ($ind+1) ?>
+	    
+					<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_<?= $ind; ?>" value="<?= $objetivosind; ?>" />
 					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_<?= $ind; ?>" value="<?= $ind; ?>" />
 					</td>
 
 					<td class="col-xs-6">
-					    <div class="form-group field-proyecto-indicadores_descripciones_<?= $ind ?>  required ">
-						<input type="text" id="proyecto-indicadores_descripciones_<?= $ind ?>" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>" value="<?= $indicador->descripcion ?>" />
+					    <div class="form-group field-proyecto-indicadores_descripciones_<?= $correlativo; ?>_<?= $ind ?>  required ">
+						<input type="text" id="proyecto-indicadores_descripciones_<?= $correlativo; ?>_<?= $ind ?>" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>" value="<?= $indicador->descripcion ?>" />
 					    </div>
 					</td>
 					<td class="col-xs-1">
-					    <div class="form-group field-proyecto-indicadores_pesos_<?= $ind ?>  required">
-						<input type="text" id="proyecto-indicadores_pesos_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso" value="<?= $indicador->peso ?>" />
+					    <div class="form-group field-proyecto-indicadores_pesos_<?= $correlativo; ?>_<?= $ind ?>  required">
+						<input type="text" id="proyecto-indicadores_pesos_<?= $correlativo; ?>_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso" value="<?= $indicador->peso ?>" />
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_unidad_medidas_<?= $ind ?> required">
-						<input type="text" id="proyecto-indicadores_unidad_medidas_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida " value="<?= $indicador->unidad_medida ?>" />
+					    <div class="form-group field-proyecto-indicadores_unidad_medidas_<?= $correlativo; ?>_<?= $ind ?> required">
+						<input type="text" id="proyecto-indicadores_unidad_medidas_<?= $correlativo; ?>_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida " value="<?= $indicador->unidad_medida ?>" />
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_programados_<?= $ind ?> required">
-						<input type="text" id="proyecto-indicadores_programados_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado" value="<?= $indicador->programado ?>" />
+					    <div class="form-group field-proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?> required">
+						<input type="text" id="proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta" value="<?= $indicador->meta ?>" />
 					    </div>
 					</td>
 					<td>
-					    <span class="eliminar glyphicon glyphicon-minus-sign">
-						<input type="hidden" name="Proyecto[indicadores_ids][]" value="<?= $indicador->id ?>" />
+					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,<?= $ind ?>)">
+						<input type="hidden" id="indicadores_ids_<?= $ind ?>" name="Proyecto[indicadores_ids][]" value="<?= $indicador->id ?>" />
 					    </span>
 					</td>
 				    </tr>
 				    <?php $ind++; ?>
 				<?php } ?>
 			    <?php }else{ ?>
-				<tr id='indicador_addr_1_0'>
+				<tr id='indicador_addr_0_0'>
 				    <td>
 					<?= ($ind+1) ?>
 					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_0" value="<?= $ind; ?>" />
 					</td>
 
 					<td class="col-xs-6">
-					    <div class="form-group field-proyecto-indicadores_descripciones_0  required ">
-						<input type="text" id="proyecto-indicadores_descripciones_0" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>"  />
+					    <div class="form-group field-proyecto-indicadores_descripciones_0_0  required ">
+						<input type="text" id="proyecto-indicadores_descripciones_0_0" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>"  />
 					    </div>
 					</td>
 					<td class="col-xs-1">
-					    <div class="form-group field-proyecto-indicadores_pesos_0  required">
-						<input type="text" id="proyecto-indicadores_pesos_0" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  />
+					    <div class="form-group field-proyecto-indicadores_pesos_0_0  required">
+						<input type="text" id="proyecto-indicadores_pesos_0_0" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  />
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_unidad_medidas_0 required">
-						<input type="text" id="proyecto-indicadores_unidad_medidas_0" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  />
+					    <div class="form-group field-proyecto-indicadores_unidad_medidas_0_0 required">
+						<input type="text" id="proyecto-indicadores_unidad_medidas_0_0" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  />
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_programados_0 required">
-						<input type="text" id="proyecto-indicadores_programados_0" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado"  />
+					    <div class="form-group field-proyecto-indicadores_meta_0_0 required">
+						<input type="text" id="proyecto-indicadores_meta_0_0" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta"  />
 					    </div>
 					</td>
 					<td>
-					    <span class="eliminar glyphicon glyphicon-minus-sign">
+					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,<?= $ind ?>)">
 					    </span>
 					</td>
 				</tr>
 				<?php $ind=1; ?>
 			    <?php } ?>
-                            <tr id='indicador_addr_1_<?= $ind ?>'></tr>
+                            <tr id='indicador_addr_<?= $correlativo; ?>_<?= $ind ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="indicadores_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
+                    <div id="indicadores_row_1" onclick="agregarind(<?= $correlativo; ?>,<?= $ind ?>,<?= $objetivosind; ?>)" class="btn btn-default pull-left" value="1">Agregar</div>
                     <br>
                 </div>
-                <div class="clearfix"></div>
-		<div id="control_boton">
+                <div class="clearfix"><br/><br/></div>
+		<!--<div id="control_boton">
                 <button type="submit" id="btn_indicadores" class="btn btn-primary" >Guardar</button>
-        </div>
-            </div>
+		</div>
+            </div>-->
 
 </div>
 
@@ -120,7 +122,7 @@
 ?>
 <script>
     
- var ind = <?= $ind; ?>
+ var ind = 0;
  
  $( "#proyecto-id_indicador" ).change(function() {
     
@@ -144,7 +146,7 @@
   
 });
  
-    $("#indicadores_tabla").on('click','.eliminar',function(){
+ /*   $("#indicadores_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro de Eliminar?");
 	var mensaje = '';
 	var estado2 = 0;
@@ -193,28 +195,86 @@
         }
 	
 					
-    });
+    });*/
     
-    
-    $("#indicadores_row_1").click(function(){
+    function eliminarind(ntabla,ntr)
+    {
+	
+        var r = confirm("Estas seguro de Eliminar?");
+	var mensaje = '';
+	var estado2 = 0;
+	var valor = null;
+        if (r == true)
+	{
+            id= $('#indicadores_tabla_'+ntabla).find('#indicadores_ids_'+ntr).val();
+            if (id) {
+		$.ajax({
+                    url: '<?= $eliminarindicador ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id:id},
+                    success: function(data){
+			 valor = jQuery.parseJSON(data);
+			estado2 = valor.estado ;
+			mensaje = valor.mensaje;
 
-        var error = '';
-        var clasificador=($('input[name=\'Proyecto[indicadores_descripciones][]\']').length);
-        var valor=($('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray());
-        
+                        
+                    }
+                });
+		
+		if (estado2 == 1)
+		    {
+		$('#indicador_addr_'+ntabla+'_'+ntr).remove();
+		//$('#indicadores_tabla_'+ntabla).children().eq(ntr).remove();
+		  //  $(this).parent().parent().remove();
+		   }
+	    }
+	    else
+	    {
+		alert("llego vacio");
+		
+		//$(this).parent().parent().remove();
+		$('#indicador_addr_'+ntabla+'_'+ntr).remove();
+		mensaje: "Se elimino el Indicador Correctamente";
+	    }
+	    
+	    $.notify({
+					    message: mensaje 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
+	    
+	    
+        }
+    }
+    
+    
+    
+ function agregarind(ntabla,ntr,obj){  
+
+	
+
+	var clasificador= $('#indicadores_tabla_'+ntabla).find('input[name=\'Proyecto[indicadores_descripciones][]\']').length;
+        ind = clasificador;
+	var error = '';
+        var valor=$('#indicadores_tabla_'+ntabla).find('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray();
+
         for (var i=0; i<clasificador; i++) {
-            if(($.trim($('#proyecto-indicadores_descripciones_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_pesos_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_unidad_medidas_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_programados_'+(valor[i].value)).val())==''))
-            {
+            if(($.trim($('#proyecto-indicadores_descripciones_'+ntabla+'_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_pesos_'+ntabla+'_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_unidad_medidas_'+ntabla+'_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_meta_'+ntabla+'_'+(valor[i].value)).val())==''))
+	    {
                 error=error+'Complete todos los Campos del Indicador #'+((parseInt(valor[i].value)) + 1)+' <br>';
-               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+
             }
 
         }
 	
         if(error!='')
         {
-            //var error='ingrese el objetivo #'+i+' <br>';
-            //$('.field-proyecto-actividades_descripciones_'+(i-1)).addClass('has-error');
             $.notify({
                 message: error 
             },{
@@ -229,18 +289,22 @@
         }
         else
         {
-            $('#indicador_addr_1_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"><div class="form-group field-proyecto-indicadores_descripciones_'+ind+' required "><input type="text" id="proyecto-indicadores_descripciones_'+ind+'" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'+(ind+1)+'"  /></div></td><td class="col-xs-1"><div class="form-group field-proyecto-indicadores_pesos_'+ind+'  required"><input type="text" id="proyecto-indicadores_pesos_'+ind+'" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  /></div></td><td><div class="form-group field-proyecto-indicadores_unidad_medidas_'+ind+' required"><input type="text" id="proyecto-indicadores_unidad_medidas_'+ind+'" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  /></div></td><td><div class="form-group field-proyecto-indicadores_programados_'+ind+' required"><input type="text" id="proyecto-indicadores_programados_'+ind+'" class="form-control" name="Proyecto[indicadores_programados][]" placeholder="Programado"  /></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
-            $('#indicadores_tabla').append('<tr id="indicador_addr_1_'+(ind+1)+'"></tr>');
-            ind++;
+            $('#indicador_addr_'+ntabla+'_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_'+ind+'" value="'+obj+'" /><input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"><div class="form-group field-proyecto-indicadores_descripciones_'+ntabla+'_'+ind+' required "><input type="text" id="proyecto-indicadores_descripciones_'+ntabla+'_'+ind+'" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'+(ind+1)+'"  /></div></td><td class="col-xs-1"><div class="form-group field-proyecto-indicadores_pesos_'+ntabla+'_'+ind+'  required"><input type="text" id="proyecto-indicadores_pesos_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  /></div></td><td><div class="form-group field-proyecto-indicadores_unidad_medidas_'+ntabla+'_'+ind+' required"><input type="text" id="proyecto-indicadores_unidad_medidas_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  /></div></td><td><div class="form-group field-proyecto-indicadores_meta_'+ntabla+'_'+ind+' required"><input type="text" id="proyecto-indicadores_meta_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta"  /></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
+            //$('#indicador_addr_'+ntabla+'_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_'+ind+'" value="'+obj+'" /><input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"></td><td class="col-xs-1"></td><td></td><td></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
+	    $('#indicadores_tabla_'+ntabla).append('<tr id="indicador_addr_'+ntabla+'_'+(ind+1)+'"></tr>');
         }
         
         
         return true;
-    });
+  
+ }
     
     $("#btn_indicadores").click(function(event){
 	var error='';
-	var indicadores=($('input[name=\'Proyecto[indicadores_descripciones][]\']').length);
+	var tablas=($('table[name=\'Proyecto[indicadores_tabla][]\']').length);
+	alert(tablas);
+	
+	/*var indicadores=($('input[name=\'Proyecto[indicadores_descripciones][]\']').length);
         var valor=($('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray());
         
 	
@@ -248,7 +312,6 @@
             if(($.trim($('#proyecto-indicadores_descripciones_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_pesos_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_unidad_medidas_'+(valor[i].value)).val())=='') || ($.trim($('#proyecto-indicadores_programados_'+(valor[i].value)).val())==''))
             {
                 error=error+'Complete todos los Campos del Indicador #'+((parseInt(valor[i].value)) + 1)+' <br>';
-               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
 
         }
@@ -269,7 +332,7 @@
         else
         {
             return true;
-        }
+        }*/
     });
     
     /*$("#indicadores").click(function( ) {

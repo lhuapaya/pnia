@@ -10,11 +10,10 @@ use Yii;
  * @property integer $id
  * @property integer $id_proyecto
  * @property string $descripcion
- * @property string $indicadores
- * @property string $medios
- * @property string $supuestos
+ * @property integer $peso
+ * @property integer $estado
  *
- * @property Actividad[] $actividads
+ * @property Indicador[] $indicadors
  * @property Proyecto $idProyecto
  */
 class ObjetivoEspecifico extends \yii\db\ActiveRecord
@@ -34,9 +33,8 @@ class ObjetivoEspecifico extends \yii\db\ActiveRecord
     {
         return [
             [['id_proyecto'], 'required'],
-            [['id_proyecto'], 'integer'],
-            [['descripcion'], 'string', 'max' => 2000],
-            [['indicadores', 'medios', 'supuestos'], 'string', 'max' => 500]
+            [['id_proyecto', 'peso', 'estado'], 'integer'],
+            [['descripcion'], 'string', 'max' => 2000]
         ];
     }
 
@@ -49,18 +47,17 @@ class ObjetivoEspecifico extends \yii\db\ActiveRecord
             'id' => 'ID',
             'id_proyecto' => 'Id Proyecto',
             'descripcion' => 'Descripcion',
-            'indicadores' => 'Indicadores',
-            'medios' => 'Medios',
-            'supuestos' => 'Supuestos',
+            'peso' => 'Peso',
+            'estado' => 'Estado',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getActividads()
+    public function getIndicadors()
     {
-        return $this->hasMany(Actividad::className(), ['id_oe' => 'id']);
+        return $this->hasMany(Indicador::className(), ['id_oe' => 'id']);
     }
 
     /**

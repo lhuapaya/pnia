@@ -25,7 +25,7 @@ $baseUrl = $Asset->baseUrl;
       <?= Html::csrfMetaTags() ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js" type="text/javascript"></script>
 
-<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js" type="text/javascript"></script>
+<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.3/angular.min.js" type="text/javascript"></script>-->
             
  <?php     header('Content-Type: text/html; charset=UTF-8');
             mb_internal_encoding('UTF-8');
@@ -40,8 +40,12 @@ $baseUrl = $Asset->baseUrl;
 <?php $this->beginBody() ?>
 
 
-<div id="header">
-<h1>PNIA</h1>
+<div id="header" style="border-top:10px solid #449d44">
+<div class="container " style="width:100%;background: white;padding: 0px;">
+        <div class="col-md-3 " style="float:right;margin:0 auto;border-bottom-right-radius: 0px;border-bottom-left-radius: 0px; border: 0px;margin-bottom:  0px;">
+           <?= Html::img(Yii::$app->homeUrl.'/img/logo-principal.png',['class'=>'img-responsive', 'alt'=>'Responsive image','style'=>'margin:0px;padding:0px;height:55px']);?>
+        </div>
+    </div>
 </div>
 <div id="lateral">
 <div id="user_login">
@@ -175,3 +179,30 @@ Copyright © W3Schools.com
 </body>
 </html>
 <?php $this->endPage() ?>
+
+<script>
+/*
+$('.numerico').keypress(function (tecla) {
+        var reg = /^[0-9\s]+$/;
+        if(!reg.test(String.fromCharCode(tecla.which))){
+            return false;
+        }
+        return true;
+        
+    });
+*/
+
+$(document).ready(function(){
+      
+        $('.decimal').numeric({ decimalPlaces: 2 });
+        $('.entero').numeric(false); 
+        
+    });
+
+function getNum(val) {
+   if (val == '') {
+     return 0;
+   }
+   return val;
+}      
+</script>

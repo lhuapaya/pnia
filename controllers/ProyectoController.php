@@ -23,6 +23,7 @@ use app\models\Ubigeo;
 use app\models\ZonaAccion;
 use app\models\Recurso;
 use app\models\Maestros;
+use app\models\Aportante;
 
 class ProyectoController extends Controller
 {
@@ -374,20 +375,20 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countColaboradores = count(array_filter($proyecto->nombresc));
-            $countAlianzas=count(array_filter($proyecto->alianzas_instituciones));
+            $countColaboradores = count(array_filter($proyecto->aportante_colaborador));
+           // $countAlianzas=count(array_filter($proyecto->alianzas_instituciones));
             if($existe == 0)
             {
                 $proyecto->user_propietario = Yii::$app->user->identity->id;
                 $proyecto->estado = 1;
                 $proyecto->save();
-                $responsable->id_proyecto = $proyecto->id;
+               /* $responsable->id_proyecto = $proyecto->id;
                 $responsable->nombres = $proyecto->nombres;
                 $responsable->apellidos = $proyecto->apellidos;
                 $responsable->telefono = $proyecto->telefono;
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
-                $responsable->save();
+                $responsable->save();*/
 
             }
             else
@@ -396,6 +397,12 @@ class ProyectoController extends Controller
                 $data= Proyecto::findOne($proyecto->id);
                 $data->titulo = $proyecto->titulo;
                 $data->vigencia = $proyecto->vigencia;
+                $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
+                $data->id_programa = $proyecto->id_programa;
+                $data->id_cultivo = $proyecto->id_cultivo;
+                $data->id_especie = $proyecto->id_especie;
+                $data->id_areatematica = $proyecto->id_areatematica;
+                
                 $data->ubigeo = $proyecto->distrito;
                 $data->id_direccion_linea = $proyecto->id_direccion_linea;
                 $data->id_unidad_ejecutora = $proyecto->id_unidad_ejecutora;
@@ -405,14 +412,14 @@ class ProyectoController extends Controller
                 $data->update();
                 
                 
-                $responsable = Responsable::findOne($proyecto->id);
+               /* $responsable = Responsable::findOne($proyecto->id);
                 $responsable->nombres = $proyecto->nombres;
                 $responsable->apellidos = $proyecto->apellidos;
                 $responsable->telefono = $proyecto->telefono;
                 $responsable->celular = $proyecto->celular;
                 $responsable->correo = $proyecto->correo;
                 
-                $responsable->update();
+                $responsable->update();*/
 
  
                 /*colaboradores*/
@@ -421,26 +428,28 @@ class ProyectoController extends Controller
                     //var_dump($proyecto->cronogramas_meses);die;
                     if(isset($proyecto->colaboradores_ids[$i]))
                     {
-                        $Colaborador=Colaborador::findOne($proyecto->colaboradores_ids[$i]);
+                        $Colaborador=Aportante::findOne($proyecto->colaboradores_ids[$i]);
                         $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->nombres=$proyecto->nombresc[$i];
-                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
-                        $Colaborador->funcion=$proyecto->funcionesc[$i];
+                        $Colaborador->colaborador=$proyecto->aportante_colaborador[$i];
+                        $Colaborador->regimen=$proyecto->aportante_regimen[$i];
+                        $Colaborador->tipo_inst=$proyecto->aportante_tipo_inst[$i];
+                        $Colaborador->tipo=3;
                         $Colaborador->update(); 
                     }
                     else
                     {
-                        $Colaborador=new Colaborador;
+                        $Colaborador=new Aportante;
                         $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->nombres=$proyecto->nombresc[$i];
-                        $Colaborador->apellidos=$proyecto->apellidosc[$i];
-                        $Colaborador->funcion=$proyecto->funcionesc[$i];
+                        $Colaborador->colaborador=$proyecto->aportante_colaborador[$i];
+                        $Colaborador->regimen=$proyecto->aportante_regimen[$i];
+                        $Colaborador->tipo_inst=$proyecto->aportante_tipo_inst[$i];
+                        $Colaborador->tipo=3;
                         $Colaborador->save(); 
                     }
                 }
                 
                 /*Instituciones Alianza*/
-                for($i=0;$i<$countAlianzas;$i++)
+               /* for($i=0;$i<$countAlianzas;$i++)
 
                 {
                     if(isset($proyecto->alianzas_ids[$i]))
@@ -467,7 +476,7 @@ class ProyectoController extends Controller
                         $alianza->telefono=$proyecto->alianzas_telefonos[$i];
                         $alianza->save(); 
                     }
-                }
+                }*/
             }
             
             return $this->refresh();
@@ -488,6 +497,7 @@ class ProyectoController extends Controller
                         ->groupBy('department_id')
                         ->orderBy('department')
                         ->all();
+                
                         
             if($proyecto->ubigeo)
             {
@@ -501,14 +511,154 @@ class ProyectoController extends Controller
                             ->where('province_id = :province_id',[':province_id'=>substr($proyecto->ubigeo,0,4)])
                             ->groupBy('district')
                             ->orderBy('district')
-                            ->all();       
+                            ->all();
+                        
             }
+            
+            $cultivo =  CultivoCrianza::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
         }
         
         
-        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos]);
+        $tipoInv = Maestros::find()
+                                ->where('id_padre = 16 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+                                
+        $programa = Maestros::find()
+                                ->where('id_padre = 42 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+        
+        $AccionT =  AccionTransversal::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
+        
+        
+        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo]);
       
     }
+    
+    
+    public function actionObjetivo_indicador()
+    {
+        $this->layout='principal';
+        $flatUpdate = 0;        
+        $proyecto = new Proyecto();
+        $objetivosespecificos = new ObjetivoEspecifico();
+        $session = Yii::$app->session;
+        
+        $existe = Proyecto::find()
+                        ->where('estado = 1 and id =:id',[':id'=>$session['proyecto_id']])
+                        ->count();
+        if($proyecto->load(Yii::$app->request->post()) )
+        {
+            // var_dump($_REQUEST);die;
+             
+            $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
+            $countIndicadores=count(array_filter($proyecto->indicadores_oe_ids));
+            
+            //var_dump($proyecto->indicadores_oe_ids);die;
+            
+            if($existe == 0)
+            {
+                $proyecto->user_propietario = Yii::$app->user->identity->id;
+                $proyecto->estado = 1;
+                $proyecto->save();
+
+            }
+            else
+            {
+                //var_dump($proyecto->id);
+                $data= Proyecto::findOne($proyecto->id);
+                $data->objetivo_general = $proyecto->objetivo_general;
+                $data->update();
+
+
+                /*objetivos*/
+                for($i=0;$i<$countObjetivosEspecificos;$i++)
+
+                {
+                    if(isset($proyecto->objetivos_ids[$i]))
+                    {
+                        $objetivosespecificos=ObjetivoEspecifico::findOne($proyecto->objetivos_ids[$i]);
+                        $objetivosespecificos->id_proyecto=$proyecto->id;
+                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
+                        $objetivosespecificos->peso=$proyecto->objetivos_peso[$i];
+                        $objetivosespecificos->update(); 
+                    }
+                    else
+                    {
+                        $objetivosespecificos=new ObjetivoEspecifico;
+                        $objetivosespecificos->id_proyecto=$proyecto->id;
+                        $objetivosespecificos->descripcion=$proyecto->objetivos_descripciones[$i];
+                        $objetivosespecificos->peso=$proyecto->objetivos_peso[$i];
+                        $objetivosespecificos->save(); 
+                    }
+                }
+                
+                /*indicadores*/
+                for($i=0;$i<$countIndicadores;$i++)
+                {
+                   
+                    
+                    if(isset($proyecto->indicadores_ids[$i]))
+                    {
+                        $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
+                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
+                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
+                        $indicador->peso=$proyecto->indicadores_pesos[$i];
+                        $indicador->unidad_medida=$proyecto->indicadores_unidad_medidas[$i];
+                        $indicador->meta=$proyecto->indicadores_meta[$i];
+                        $indicador->update(); 
+                    }
+                    else
+                    {
+                        
+                        $indicador=new Indicador;
+                        $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
+                        $indicador->descripcion=$proyecto->indicadores_descripciones[$i];
+                        $indicador->peso=$proyecto->indicadores_pesos[$i];
+                        $indicador->unidad_medida=$proyecto->indicadores_unidad_medidas[$i];
+                        $indicador->meta=$proyecto->indicadores_meta[$i];
+                        $indicador->save();
+                        
+                       /* $indicador=new Indicador;
+                        $indicador->id_oe=5;
+                        $indicador->descripcion="123";
+                        $indicador->peso=34;
+                        $indicador->unidad_medida=34;
+                        $indicador->meta="luis";
+                        $indicador->save(); */
+                    }
+                }
+                
+            }
+            
+            return $this->refresh();
+        }
+        
+                        
+        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {
+           $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id',[':id'=>$session['proyecto_id']])
+                        ->one();
+                        
+            $objetivosespecificos=ObjetivoEspecifico::find()
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->all();
+                                
+        }
+        
+        
+        
+        return $this->render('objetivo_indicador',['proyecto'=>$proyecto,'objetivos'=>$objetivosespecificos]);
+      
+    }
+    
+
     
     public function actionAreasclaves()
     {
@@ -736,6 +886,17 @@ class ProyectoController extends Controller
             $proyecto = Proyecto::find()
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                         ->one();
+            
+            $objetivosespecificos=ObjetivoEspecifico::find()
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->all();
+                                
+            $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->all();
                         
            $actividades=Actividad::find()
                                 ->select('actividad.id,actividad.descripcion,actividad.id_ind')
@@ -755,7 +916,7 @@ class ProyectoController extends Controller
         
         
         
-        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades]);
+        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores]);
     }
     
     
@@ -899,6 +1060,10 @@ class ProyectoController extends Controller
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                         ->one();
                         
+            $objetivosespecificos=ObjetivoEspecifico::find()
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->all();
+                                
             $indicadores=Indicador::find()
                                 ->select('indicador.id,indicador.descripcion,indicador.id_oe')
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
@@ -911,7 +1076,7 @@ class ProyectoController extends Controller
         
         
         
-        return $this->render('actividad',['indicadores'=>$indicadores]);
+        return $this->render('actividad',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos]);
       
     }
     
@@ -1077,7 +1242,7 @@ class ProyectoController extends Controller
         //var_dump($validarIndicador);
         //if(isset($validarColaborador))
         //{
-           Colaborador::findOne($id)->delete();
+           Aportante::findOne($id)->delete();
            $mesaje = "Se elimino Colaborador Correctamente";
         //}
         
@@ -1193,7 +1358,7 @@ class ProyectoController extends Controller
             foreach($clasificador as $clasificador2)
             {
                                                 
-             $opcion1 .='<option value="'.$clasificador2->id.'" >'.$clasificador2->descripcion.'></option>';
+             $opcion1 .='<option value="'.$clasificador2->id.'" >'.$clasificador2->descripcion.'</option>';
                                                   
             }
             
@@ -1489,5 +1654,43 @@ class ProyectoController extends Controller
             //$array[] = $re;
             echo json_encode($array);
     }
+    
+    
+    public function actionObtenerindicadores($id)
+    {
+        $opcion1 = '';
+        
+        $indicadores=Indicador::find()
+                                ->where('id_oe=:objetivo_id',[':objetivo_id'=>$id])
+                                ->all();
+        
+        foreach($indicadores as $indicador)
+            {
+                                                
+             $opcion1 .='<option value="'.$indicador->id.'" >'.$indicador->descripcion.'</option>';
+                                                  
+            }
+        
+       echo $opcion1; 
+    }
+    
+    public function actionObteneractividad($id)
+    {
+        $opcion1 = '';
+        
+        $actividades=Actividad::find()
+                                ->where('id_ind=:id_ind',[':id_ind'=>$id])
+                                ->all();
+        
+        foreach($actividades as $actividad)
+            {
+                                                
+             $opcion1 .='<option value="'.$actividad->id.'" >'.$actividad->descripcion.'</option>';
+                                                  
+            }
+        
+       echo $opcion1; 
+    }
+    
 
 }

@@ -53,6 +53,7 @@ class Proyecto extends \yii\db\ActiveRecord
             /*objetivos*/
             public $objetivos_ids;
             public $objetivos_descripciones;
+            public $objetivos_peso;
             /*indicadores*/
             public $indicadores_ids;
             public $indicadores_oe_ids;
@@ -61,6 +62,8 @@ class Proyecto extends \yii\db\ActiveRecord
             public $indicadores_unidad_medidas;
             public $indicadores_programados;
             public $id_indicador;
+            public $indicadores_meta;
+            public $indicadores_numero;
             /*actividades*/
             public $actividades_ids;
             public $actividades_descripciones;
@@ -88,9 +91,10 @@ class Proyecto extends \yii\db\ActiveRecord
             
             /*colaborador*/
             public $colaboradores_ids;
-            public $nombresc;
-            public $apellidosc;
-            public $funcionesc;
+            public $aportante_colaborador;
+            public $aportante_regimen;
+            public $aportante_tipo_inst;
+            public $aportante_numero;
             
             public $ids;
             public $descripciones;
@@ -114,6 +118,7 @@ class Proyecto extends \yii\db\ActiveRecord
             public $recurso_cantidad;
             public $recurso_precioun;
             public $recurso_ids;
+            public $prueba;
     /**
      * @inheritdoc
      */
@@ -128,17 +133,18 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id','vigencia'], 'integer'],
+            [['id_areatematica','id_especie','id_cultivo','id_programa','id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id','vigencia'], 'integer'],
             [['presupuesto'], 'number'],
+            [['prueba'],'safe'],
             [['distrito','nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
               'objetivos_descripciones','actividades_ids','actividades_descripciones',
               'indicadores_ids','indicadores_oe_ids','indicadores_descripciones',
               'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat',
               'alianzas_instituciones','alianzas_descripciones','alianzas_nombres','alianzas_apellidos','alianzas_correos','alianzas_telefonos',
-              'alianzas_ids','colaboradores_ids','nombresc','apellidosc','funcionesc','zona_ids','zona_distrito','zona_departamento',
+              'alianzas_ids','colaboradores_ids','aportante_numero','aportante_colaborador','aportante_regimen','aportante_tipo_inst','zona_ids','zona_distrito','zona_departamento',
               'id_actividad','recurso_clasificador','recurso_descripcion','recurso_unidad','recurso_cantidad','recurso_precioun','recurso_ids',
               'id_indicador','indicadores_pesos','indicadores_unidad_medidas','indicadores_programados',
-              'actividades_indicadorbid','actividades_pesos','actividades_unidad_medidas','actividades_programados','actividades_finicio','actividades_ffin'], 'safe'],
+              'actividades_indicadorbid','actividades_pesos','actividades_unidad_medidas','actividades_programados','actividades_finicio','actividades_ffin','indicadores_meta','objetivos_peso','indicadores_numero'], 'safe'],
 
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],

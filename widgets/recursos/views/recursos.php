@@ -23,6 +23,8 @@
                                 <th class="text-center">
                                     P. Unit.
                                 </th>
+				<th>
+                                </th>
                                 <th>
                                 </th>
                             </tr>
@@ -76,6 +78,11 @@
                                             </div>
                                         </td>
 					<td>
+					    <div>
+					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re]); ?> 
+					    </div>
+					</td>
+					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
 						<input type="hidden" name="Proyecto[recurso_ids][]" value="<?= $recursos2->id ?>" />
 					    </span>
@@ -126,6 +133,11 @@
 					<div class="form-group field-proyecto-recurso_precioun_0 required">
 					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_precioun_0" name="Proyecto[recurso_precioun][]"/>
 					</div>
+				    </td>
+				    <td>
+					    <div>
+					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>'','re'=>'0']); ?> 
+					    </div>
 				    </td>
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">

@@ -1,7 +1,7 @@
-<a href="#" data-toggle="modal" data-target="#colaboradores" id="proyecto-colaboradores" >
+<!--<a href="#" data-toggle="modal" data-target="#colaboradores" id="proyecto-colaboradores" >
         Lista de Colaboradores
 </a>
-<!--Lista de Objetivos Especificos -->
+
 <div class="modal fade bs-example-modal-lg" id="colaboradores" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -10,7 +10,8 @@
                 <h4 class="modal-title" id="myModalLabel">Colaboradores</h4>
             </div>
             <div class="modal-body">
-                <div class="clearfix"></div>
+                <div class="clearfix"></div>-->
+		<div class="clearfix"></br></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
                     <table class="table table-bordered table-hover" id="colaboradores_tabla">
                         <thead>
@@ -19,13 +20,13 @@
                                     #
                                 </th>
                                 <th class="text-center">
-                                    Nombres
+                                    Colaborador
                                 </th>
                                 <th class="text-center">
-                                    Apellidos
+                                    Regimen
                                 </th>
                                 <th class="text-center">
-                                    Función Técnica
+                                    Tipo
                                 </th>
                                 <th>
                                 </th>
@@ -40,21 +41,35 @@
 				    <tr id='colaborador_addr_1_<?= $co ?>'>
 					<td>
 					<?= ($co+1) ?>
+					<input type="hidden" name="Proyecto[aportante_numero][]" id="proyecto-aportante_numero_<?= $co; ?>" value="<?= $co; ?>" />
 					</td>
-					<td>
-					    <div class="form-group field-proyecto-descripciones_<?= $co ?> required">
-						
-						<input type="text" id="proyecto-descripciones_<?= $co ?>" class="form-control" name="Proyecto[nombresc][]" placeholder="Descripción #<?= $co ?>" value="<?= $colaborador2->nombres ?>" />
+					<td class="col-xs-5">
+					    <div class="form-group field-proyecto-aportante_colaborador_<?= $co ?> required">
+						<input type="text" id="proyecto-aportante_colaborador_<?= $co ?>" class="form-control" name="Proyecto[aportante_colaborador][]" placeholder="" value="<?= $colaborador2->colaborador ?>" />
 					    </div>
 					</td>
                                         <td>
-					<div class="form-group field-proyecto-aapellidosc_<?= $co ?> required">
-					    <input type="text" id="proyecto-apellidosc_<?= $co ?>" class="form-control" name="Proyecto[apellidosc][]" placeholder="Apellidos #<?= $co ?>" value="<?= $colaborador2->apellidos ?>" />
+					<div class="form-group field-proyecto-aportante_regimen_<?= $co ?> required">
+					    <select id="proyecto-aportante_regimen_<?= $co ?>" class="form-control " name="Proyecto[aportante_regimen][]">
+							    <?php
+
+								   foreach($regimen as $regimen2)
+								    {?>
+									<option value="<?= $regimen2->id; ?>" <?=($regimen2->id == $colaborador2->regimen)?'selected':'' ?> > <?= $regimen2->descripcion ?></option>
+							    <?php    } ?>
+						</select>
 					</div>
 				    </td>
                                     <td>
-					<div class="form-group field-proyecto-funcionesc_<?= $co ?> required">
-					    <input type="text" id="proyecto-funcionesc_<?= $co ?>" class="form-control" name="Proyecto[funcionesc][]" placeholder="Función #<?= $co ?>"  value="<?= $colaborador2->funcion ?>"/>
+					<div class="form-group field-proyecto-aportante_tipo_inst_<?= $co ?> required">
+					    <select id="proyecto-aportante_tipo_inst_<?= $co ?>" class="form-control " name="Proyecto[aportante_tipo_inst][]">
+							    <?php
+
+								   foreach($tipo_inst as $tipo_inst2)
+								    {?>
+									<option value="<?= $tipo_inst2->id; ?>" <?=($tipo_inst2->id == $colaborador2->tipo_inst)?'selected':'' ?> > <?= $tipo_inst2->descripcion ?></option>
+							    <?php    } ?>
+						</select>
 					</div>
 				    </td>
 					<td>
@@ -70,20 +85,35 @@
 				<tr id='colaborador_addr_1_0'>
 				    <td>
 				    <?= ($co+1) ?>
+				    <input type="hidden" name="Proyecto[aportante_numero][]" id="proyecto-aportante_numero_0" value="0" />
 				    </td>
-				    <td>
-					<div class="form-group field-proyecto-nombresc_0 required">
-					    <input type="text" id="proyecto-nombresc_0" class="form-control" name="Proyecto[nombresc][]" placeholder="Nombres #1"  />
+				    <td class="col-xs-5">
+					<div class="form-group field-proyecto-aportante_colaborador_0 required">
+					    <input type="text" id="proyecto-aportante_colaborador_0" class="form-control" name="Proyecto[aportante_colaborador][]" placeholder=""  />
 					</div>
 				    </td>
                                     <td>
-					<div class="form-group field-proyecto-aapellidosc_0 required">
-					    <input type="text" id="proyecto-apellidosc_0" class="form-control" name="Proyecto[apellidosc][]" placeholder="Apellidos #1"  />
+					<div class="form-group field-proyecto-aportante_regimen_0 required">
+					    <select id="proyecto-aportante_regimen_0" class="form-control " name="Proyecto[aportante_regimen][]">
+							    <?php
+
+								   foreach($regimen as $regimen2)
+								    {?>
+									<option value="<?= $regimen2->id; ?>" > <?= $regimen2->descripcion ?></option>
+							    <?php    } ?>
+						</select>
 					</div>
 				    </td>
                                     <td>
-					<div class="form-group field-proyecto-funcionesc_0 required">
-					    <input type="text" id="proyecto-funcionesc_0" class="form-control" name="Proyecto[funcionesc][]" placeholder="Función #1"  />
+					<div class="form-group field-proyecto-aportante_tipo_inst_0 required">
+					    <select id="proyecto-aportante_tipo_inst_0" class="form-control " name="Proyecto[aportante_tipo_inst][]">
+							    <?php
+
+								   foreach($tipo_inst as $tipo_inst2)
+								    {?>
+									<option value="<?= $tipo_inst2->id; ?>" > <?= $tipo_inst2->descripcion ?></option>
+							    <?php    } ?>
+						</select>
 					</div>
 				    </td>
 				    <td>
@@ -96,10 +126,10 @@
                             <tr id='colaborador_addr_1_<?= $co ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="colcaborador_row_1" class="btn btn-default pull-left" value="1">Agregar</div>
+                    <div id="colcaborador_row_2" class="btn btn-default pull-left" >Agregar Colaborador</div>
                     <br>
                 </div>
-                <div class="clearfix"></div>
+                <!--<div class="clearfix"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
@@ -107,7 +137,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>-->
 
 <?php
     $eliminarColaborador= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarcolaborador');
@@ -150,81 +180,92 @@
     });
     
     
-    $("#colcaborador_row_1").click(function(){
-        console.log(co);
+    $("#colcaborador_row_2").click(function(){
         
-       // var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
+	var error = '';
+        var clasificador=($('select[name=\'Proyecto[aportante_regimen][]\']').length);
+        var valor=($('input[name=\'Proyecto[aportante_numero][]\']').serializeArray());
+        
+        for (var i=0; i<clasificador; i++) {
+            if(($('#proyecto-aportante_colaborador_'+(valor[i].value)).val()=='') || ($.trim($('#proyecto-aportante_regimen_'+(valor[i].value)).val())=='0') || ($.trim($('#proyecto-aportante_tipo_inst_'+(valor[i].value)).val())=='0'))
+            {
+                error=error+'Complete todos los Campos del Colaborador #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
 
-        if(($('#proyecto-nombresc_'+(co-1)).val()!=''))
-        {
-		if (($('#proyecto-apellidosc_'+(co-1)).val()!=''))
-		{
-			if (($('#proyecto-funcionesc_'+(co-1)).val()!=''))
-			{
-				$('#colaborador_addr_1_'+co).html("<td>"+(co+1)+"</td><td><div class='form-group field-proyecto-nombresc_"+co+" required'> <input type='text' id='proyecto-nombresc_"+co+"' class='form-control' name='Proyecto[nombresc][]' placeholder='Nombres #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-aapellidosc_"+co+" required'><input type='text' id='proyecto-apellidosc_"+co+"' class='form-control' name='Proyecto[apellidosc][]' placeholder='Apellidos #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-funcionesc_"+co+" required'><input type='text' id='proyecto-funcionesc_"+co+"' class='form-control' name='Proyecto[funcionesc][]' placeholder='Función #"+(co+1)+"'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
-				$('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
-				co++;			
-			}
-			else
-			{
-				var error='Complete todos los Campos del Colaborador #'+co+' <br>';
-					//$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
-			    
-					$.notify({
-					    message: error 
-					},{
-					    type: 'danger',
-					    z_index: 1000000,
-					    placement: {
-						from: 'top',
-						align: 'right'
-					    },
-					});
-					return false;
-			}
-			
-		}
-		else
-		{
-			var error='Complete todos los Campos del Colaborador #'+co+' <br>';
-			//$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
-	    
-			$.notify({
-			    message: error 
-			},{
-			    type: 'danger',
-			    z_index: 1000000,
-			    placement: {
-				from: 'top',
-				align: 'right'
-                },
-            });
-            return false;	
-		}
-            
-            
         }
-        else
-        {
-           var error='Complete todos los Campos del Colaborador #'+co+' <br>';
-            //$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
-
-            $.notify({
+        
+	
+	if (error != '') {
+	    
+	    $.notify({
                 message: error 
             },{
                 type: 'danger',
                 z_index: 1000000,
                 placement: {
-                    from: 'top',
+                    from: 'bottom',
                     align: 'right'
                 },
             });
             return false;
-            
+	}
+	else
+        {
+		if (co == 3) {
+                error = "Solo se Permite Ingresar 3 Colaboradores como Maximo."
+                $.notify({
+                message: error 
+                },{
+                type: 'danger',
+                z_index: 1000000,
+                placement: {
+                    from: 'bottom',
+                    align: 'right'
+                },
+                });
+                return false;
+            }
+            else{
+				console.log("prueba");
+		$('#colaborador_addr_1_'+co).html(
+								"<td>"+
+										(co+1)+"<input type='hidden' name='Proyecto[aportante_numero][]' id='proyecto-aportante_numero_"+co+"' value='"+co+"' />"+
+								"</td>"+
+								'<td class="col-xs-5">'+
+										'<div class="form-group field-proyecto-aportante_colaborador_'+co+' required">'+
+												'<input type="text" id="proyecto-aportante_colaborador_'+co+'" class="form-control" name="Proyecto[aportante_colaborador][]" placeholder=".."  />'+
+										'</div>'+
+								'</td>'+
+								'<td>'+
+										'<div class="form-group field-proyecto-aportante_regimen_'+co+' required">'+
+												'<select id="proyecto-aportante_regimen_'+co+'" class="form-control " name="Proyecto[aportante_regimen][]">'+
+														<?php foreach($regimen as $regimen2) { ?>
+																'<option value="<?= $regimen2->id; ?>" > <?= $regimen2->descripcion ?></option> '+
+														<?php    } ?>
+												'</select>'+
+										'</div>'+
+								'</td>'+
+								'<td>'+
+										'<div class="form-group field-proyecto-aportante_tipo_inst_'+co+' required">'+
+												'<select id="proyecto-aportante_tipo_inst_'+co+'" class="form-control" name="Proyecto[aportante_tipo_inst][]">'+
+														<?php foreach($tipo_inst as $tipo_inst2){?>
+														'<option value="<?= $tipo_inst2->id; ?>" > <?= $tipo_inst2->descripcion ?></option>'+
+														<?php    } ?>
+												'</select>'+
+										'</div>'+
+								'</td>'+
+								'<td>'+
+										'<span class="eliminar glyphicon glyphicon-minus-sign"></span>'+
+								'</td>');
+		$('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
+		co++;
+		return true;
+	    }
+    
         }
-        
-        
-        return true;
+	
+       
     });
     
     $("#btn_colaboradores").click(function(event){

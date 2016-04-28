@@ -12,15 +12,15 @@ foreach($indicadores as $indicador)
             <div>
                 <div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-		    <h5>Actividades</h5>
-                    <table class="table table-bordered table-hover" id="actividades_tabla">
+		   
+                    <table class="table table-hover" id="actividades_tabla">
                         <thead>
                             <tr>
                                 <th class="text-center">
                                     #
                                 </th>
                                 <th class="text-center">
-                                    Descripción
+                                    Actividad
                                 </th>
 				<th class="text-center">
                                     Id. BID

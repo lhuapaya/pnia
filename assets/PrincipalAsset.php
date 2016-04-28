@@ -35,7 +35,7 @@ class PrincipalAsset extends AssetBundle
                    ];
     public $js = [
                     'js/bootstrap-notify.js',
-                    //'js/angular.js',
+                    'js/jquery.numeric.js',
         //'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js',
           //          'https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js',
                     

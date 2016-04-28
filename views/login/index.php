@@ -9,11 +9,11 @@ use yii\web\JsExpression;
 $this->title ="Login";
 ?>
 <style>
-@import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
+/*@import url("//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");*/
 
 body{
-    background: url(https://unsplash.imgix.net/photo-1415226581130-91cb7f52f078?q=75&fm=jpg&s=859a0a6f863f8eb93a489c98402e687b);
-	background-color: #444;
+   /* background: url(https://unsplash.imgix.net/photo-1415226581130-91cb7f52f078?q=75&fm=jpg&s=859a0a6f863f8eb93a489c98402e687b);
+	background-color: #444;*/
     background-size:   cover;
     background-repeat: no-repeat;
     background-position: center center;  
@@ -25,6 +25,7 @@ body{
     padding-top:100px;
 }
 .login .user-row{
+    background-color: white;
     text-align: center;
     font-size: 30px;
 }
@@ -38,7 +39,7 @@ body{
 
 .login.panel {
     margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.75);
+    background-color: white;
     border: 1px solid transparent;
     border-radius: 4px;
     -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
@@ -60,11 +61,11 @@ body{
     <div class="row vertical-offset-100">
     	<div class="col-md-4 col-md-offset-4">
     		<div class="panel panel-default login">
-			  	<div class="panel-heading">                            
+			  	<div class="panel-heading" style ='background-color: white;'>                            
                     <div class="row-fluid user-row">
-                        <i class="fa fa-eye fa-3x"></i> 
+                        <img src="<?= Yii::$app->homeUrl.'img/logo.jpg';?>" class="img-responsive" width="150" height="120">
                     </div>
-                    <h3 class="panel-title user-row"> VISION System</h3> 
+                    <!--<h3 class="panel-title user-row"> VISION System</h3> -->
 			 	</div>
 			  	<div class="panel-body">
                     <div class="form-group">

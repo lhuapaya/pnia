@@ -20,87 +20,53 @@ use app\models\Maestros;
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
 <div >
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
-    <div ><a name="general" ></a>
-            <div class="clearfix"></div>
-            <div class="clearfix"><h4>Datos Generales</h4></div>
+            <div>
+                
+            <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Datos Generales</span></h3>
+            
+            </div>
             
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-titulo required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
-                <label for="proyecto-titulo">Nombre del Proyecto:</label>
+                <label for="proyecto-titulo">Título del Proyecto:</label>
                 <input class="form-control" type="text" value="<?= $proyecto->titulo?>" placeholder="Nombre del Proyecto" id="proyecto-titulo" name="Proyecto[titulo]"  required/> <!-- required-->
                 </div>
              
                 
             </div>
-            <div class="col-xs-12 col-sm-7 col-md-3" >
+            <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-vigencia required">
                 <label for="proyecto-vigencia">Vigencia (En Meses):</label>
-                <input class="form-control" type="text" id="proyecto-vigencia" value="<?= $proyecto->vigencia?>" placeholder="Vigencia del Proyecto en Meses" name="Proyecto[vigencia]"  required/> <!-- required-->
-            </div>    
+                <input class="form-control entero" type="text" id="proyecto-vigencia" value="<?= $proyecto->vigencia?>" placeholder="Vigencia del Proyecto en Meses" name="Proyecto[vigencia]"  required/> <!-- required-->
+                </div>    
             </div>
-            <div class="col-xs-12 col-sm-7 col-md-3" >
-                <div class="form-group field-proyecto-departamento required">
-                <label for="proyecto-departamento">Departamento:</label>
-                <select class="form-control" onchange="provincia(1)" id="proyecto-departamento" name="Proyecto[departamento][]" style="width:200px;" >
-                                                <option value="0">--Departamento--</option>
-                                                <?php
-                                                       foreach($departamentos as $departamentos2)
-                                                        {
-                                                ?>
-                                                           <option value="<?= $departamentos2->department_id; ?>" <?=($departamentos2->department_id == substr($proyecto->ubigeo,0,2))?'selected':'' ?> > <?= $departamentos2->department ?></option>
-                                                <?php   } ?>
-                            
-                                             
-                            
-                                            </select>
-            </div>    
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-3" >
-                <div class="form-group field-proyecto-provincia required">
-                    <label for="proyecto-provincia">Provincia:</label>
-                    <select class="form-control" onchange="distrito(1)" id="proyecto-provincia" name="Proyecto[provincia]" style="width:200px;">
-                                                <option value="0">--Provincia--</option>
-                    <?php
-                    if ($proyecto->ubigeo) {
-                        
-                        foreach($provincias as $provincias2)
-                        {
-                            echo '<option value="'.$provincias2->province_id.'" '.($provincias2->province_id == substr($proyecto->ubigeo,0,4) ? 'selected="selected"' : '' ).'> '.$provincias2->province .'</option>';
-                        }
-                        
-                    }
+            
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_tipo_proyecto required">
+                    <label for="proyecto-id_tipo_proyecto">Invetigación:</label>
+                <select class="form-control" id="proyecto-id_tipo_proyecto" name="Proyecto[id_tipo_proyecto]" >
+                    <option value="0">--Seleccione--</option>
+                    <?php                    
+                           foreach($tipoInv as $tipoInvs)
+                            {
                     ?>
-                    
-                    </select>
-            </div>    
+                               <option value="<?= $tipoInvs->id; ?>" <?=($tipoInvs->id == $proyecto->id_tipo_proyecto)?'selected':'' ?> > <?= $tipoInvs->descripcion ?></option>;
+                    <?php   } ?>
+
+                 
+
+                </select>
+                </div>    
             </div>
-            <div class="col-xs-12 col-sm-7 col-md-3" >
-                <div class="form-group field-proyecto-distrito required">
-                    <label for="proyecto-distrito">Distrito:</label>
-                    <select class="form-control" id="proyecto-distrito" name="Proyecto[distrito]" style="width:200px;">
-                                                <option value="0">--Provincia--</option>
-                    <?php
-                    if ($proyecto->ubigeo) {
-                        
-                        foreach($distritos as $distritos2)
-                        {
-                            echo '<option value="'.$distritos2->district_id.'" '.($distritos2->district_id == $proyecto->ubigeo ? 'selected="selected"' : '' ).'> '.$distritos2->district .'</option>';
-                        }
-                        
-                    }
-                    ?>
-                    
-                    </select>
-            </div>    
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                
             </div>
             <div class="clearfix"></div>
-            <div class="clearfix"><h4>Dependencia del INIA que Ejecutara el Proyecto</h4></div>
-            
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_direccion_linea required">
                 <label for="proyecto-id_direccion_linea">Dirección en Linea:</label>
-                <select  class="form-control" id="proyecto-id_direccion_linea" name="Proyecto[id_direccion_linea]" style="width:200px;">
+                <select  class="form-control" id="proyecto-id_direccion_linea" name="Proyecto[id_direccion_linea]" >
                     <option value="0">--Seleccione--</option>
                     <?php
                  
@@ -124,7 +90,7 @@ use app\models\Maestros;
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_unidad_ejecutora required">
                 <label for="proyecto-id_unidad_ejecutora">Unidad Ejecutora:</label>
-                <select class="form-control" id="proyecto-id_unidad_ejecutora" name="Proyecto[id_unidad_ejecutora]" style="width:200px;">
+                <select class="form-control" id="proyecto-id_unidad_ejecutora" name="Proyecto[id_unidad_ejecutora]" >
                     <option value="0">--Seleccione--</option>
                     <?php
                  
@@ -149,61 +115,221 @@ use app\models\Maestros;
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_dependencia_inia required">
                 <label for="proyecto-id_dependencia_inia">Dependencia del INIA :</label>
-                <select class="form-control" name="Proyecto[id_dependencia_inia]" id="proyecto-id_dependencia_inia" style="width:200px;">
+                <select class="form-control" name="Proyecto[id_dependencia_inia]" id="proyecto-id_dependencia_inia" >
                     <option value="0">--Seleccione--</option>
 
                 </select>
                 
             </div>    
             </div>
+
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-departamento required">
+                <label for="proyecto-departamento">Departamento:</label>
+                <select class="form-control" onchange="provincia(1)" id="proyecto-departamento" name="Proyecto[departamento][]"  >
+                                                <option value="0">--Departamento--</option>
+                                                <?php
+                                                       foreach($departamentos as $departamentos2)
+                                                        {
+                                                ?>
+                                                           <option value="<?= $departamentos2->department_id; ?>" <?=($departamentos2->department_id == substr($proyecto->ubigeo,0,2))?'selected':'' ?> > <?= $departamentos2->department ?></option>
+                                                <?php   } ?>
+                            
+                                             
+                            
+                                            </select>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-provincia required">
+                    <label for="proyecto-provincia">Provincia:</label>
+                    <select class="form-control" onchange="distrito(1)" id="proyecto-provincia" name="Proyecto[provincia]" >
+                                                <option value="0">--Provincia--</option>
+                    <?php
+                    if ($proyecto->ubigeo) {
+                        
+                        foreach($provincias as $provincias2)
+                        {
+                            echo '<option value="'.$provincias2->province_id.'" '.($provincias2->province_id == substr($proyecto->ubigeo,0,4) ? 'selected="selected"' : '' ).'> '.$provincias2->province .'</option>';
+                        }
+                        
+                    }
+                    ?>
+                    
+                    </select>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-distrito required">
+                    <label for="proyecto-distrito">Distrito:</label>
+                    <select class="form-control" id="proyecto-distrito" name="Proyecto[distrito]" >
+                                                <option value="0">--Distrito--</option>
+                    <?php
+                    if ($proyecto->ubigeo) {
+                        
+                        foreach($distritos as $distritos2)
+                        {
+                            echo '<option value="'.$distritos2->district_id.'" '.($distritos2->district_id == $proyecto->ubigeo ? 'selected="selected"' : '' ).'> '.$distritos2->district .'</option>';
+                        }
+                        
+                    }
+                    ?>
+                    
+                    </select>
+            </div>    
+            </div>
             <div class="clearfix"></div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_programa required">
+                    <label for="proyecto-id_programa">Programa:</label>
+                    <select class="form-control" id="proyecto-distrito" name="Proyecto[id_programa]" >
+                                                <option value="0">--Programa--</option>
+                    <?php
+                    if ($proyecto->ubigeo) {
+                        
+                        foreach($programa as $programa2)
+                        {
+                            echo '<option value="'.$programa2->id.'" '.($programa2->id == $proyecto->id_programa ? 'selected="selected"' : '' ).'> '.$programa2->descripcion .'</option>';
+                        }
+                        
+                    }
+                    ?>
+                    
+                    </select>
+            </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_cultivo required">
+                    
+                 
+                <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
+                <select class="form-control" id="proyecto-id_cultivo" name="Proyecto[id_cultivo]" >
+                 <option value="0">--Seleccione--</option>   
+                 <?php
+                 
+                    $maestro = Maestros::find()
+                                ->where('id_padre = 1 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                           foreach($maestro as $maestros)
+                            {
+                ?>
+                                <option value="<?= $maestros->id; ?>" <?=($maestros->id == $proyecto->id_cultivo)?'selected':'' ?> > <?= $maestros->descripcion ?></option>;
+                    <?php   } ?>
+                      
+                        
+                    
+                 
+                    
+                </select>   
+                    
+                            
+                </div>    
+            </div>
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_especie required">
+                    
+                 
+                <label for="proyecto-id_especie">Especie:</label>
+                <select class="form-control" id="proyecto-id_especie" name="Proyecto[id_especie]" >
+                 <option value="0">--Seleccione--</option>   
+                 <?php
+                 
+                    $especie = Maestros::find()
+                                ->where('id_padre = 45 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                           foreach($especie as $especie2)
+                            {
+                ?>
+                                <option value="<?= $especie2->id; ?>" <?=($especie2->id == $proyecto->id_especie)?'selected':'' ?> > <?= $especie2->descripcion ?></option>;
+                    <?php   } ?>
+                      
+                        
+                    
+                 
+                    
+                </select>   
+                    
+                            
+                </div>    
+            </div>
+            <!--<div class="clearfix"><h4>Dependencia del INIA que Ejecutara el Proyecto</h4></div>
+            
+            
             <div class="clearfix"><h4>Nombres y Apellidos del Responsable Técnico del Proyecto</h4></div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-nombres required">
                 <label for="proyecto-nombres">Nombres:</label>
-                <input class="form-control" type="text" value="<?= $responsable->nombres?>" placeholder="Nombres" id="proyecto-nombres" name="Proyecto[nombres]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->nombres?>" placeholder="Nombres" id="proyecto-nombres" name="Proyecto[nombres]"  required/> 
                 
             </div>    
             </div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-apellidos required">
                 <label for="proyecto-apellidos">Apellidos:</label>
-                <input class="form-control" type="text" value="<?= $responsable->apellidos?>" placeholder="Apellidos" id="proyecto-apellidos" name="Proyecto[apellidos]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->apellidos?>" placeholder="Apellidos" id="proyecto-apellidos" name="Proyecto[apellidos]"  required/> 
                 
             </div>    
             </div>
             <div class="col-xs-12 col-sm-7 col-md-6" >
                 <div class="form-group field-proyecto-telefono required">
                 <label for="proyecto-telefono">Teléfono Fijo:</label>
-                <input class="form-control" type="text" value="<?= $responsable->telefono?>" placeholder="Teléfono Fijo" id="proyecto-telefono" name="Proyecto[telefono]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->telefono?>" placeholder="Teléfono Fijo" id="proyecto-telefono" name="Proyecto[telefono]"  required/>
                 
             </div>    
             </div>
             <div class="col-xs-12 col-sm-7 col-md-6" >
                 <div class="form-group field-proyecto-celular required">
                 <label for="proyecto-celular">Celular:</label>
-                <input class="form-control" type="text" value="<?= $responsable->celular?>" placeholder="Celular" id="proyecto-celular" name="Proyecto[celular]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->celular?>" placeholder="Celular" id="proyecto-celular" name="Proyecto[celular]"  required/> 
                 
             </div>    
             </div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-correo required">
                 <label for="proyecto-correo">Correo Electrónico:</label>
-                <input class="form-control" type="text" value="<?= $responsable->correo?>" placeholder="Correo Electrónico" id="proyecto-correo" name="Proyecto[correo]"  required/> <!-- required-->
+                <input class="form-control" type="text" value="<?= $responsable->correo?>" placeholder="Correo Electrónico" id="proyecto-correo" name="Proyecto[correo]"  required/> 
                 <span class="form_hint">Formato correcto: "nombre@dominio.com"</span>
                 
             </div>    
             </div>
             
             <div class="clearfix"></div>
-            <div class="clearfix"><h4>Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4></div>
+            <div class="clearfix"><h4>Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4></div>-->
+            <div class="col-xs-12 col-sm-7 col-md-12" >
+                <div class="form-group field-proyecto-id_areatematica required">
+                <label for="proyecto-id_areatematica">Área temática:</label>
+                <select class="form-control" id="proyecto-id_areatematica" name="Proyecto[id_areatematica]" >
+                    <option value="0">--Seleccione--</option>
+                <?php
+                 
+                    $accionTrans = Maestros::find()
+                                ->where('id_padre = 10 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+
+                           foreach($accionTrans as $accionTransv)
+                            {
+                ?>
+                                <option value="<?= $accionTransv->id; ?>" <?=($accionTransv->id == $proyecto->id_areatematica)?'selected':'' ?> > <?= $accionTransv->descripcion ?></option>;
+                    <?php    } ?>
+
+                 
+                </select>
+                </div></div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?>   
             </div>
-            <div class="clearfix"></div>
+            <div class="clearfix"></br></div>
+            </br>
+            </br>
+            <!--
             <div class="clearfix"><h4>Alianza Estratégica establecidas para el Proyecto</h4></div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
-                <?= \app\widgets\instituciones\InstitucionesWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
+                <?php // \app\widgets\instituciones\InstitucionesWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
                 
                 
             </div>
@@ -224,9 +350,9 @@ use app\models\Maestros;
                 <textarea class="form-control" type="text" placeholder="..."  rows="10" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
 
             </div>    
-            </div>
+            </div>-->
             <div class="col-xs-12 col-sm-7 col-md-12" >
-            <button type="submit" id="btnproyecto" class="btn btn-primary">Guardar</button>   
+            <button type="submit" id="btnproyecto" class="btn btn-primary pull-right">Guardar</button>   
             </div>
         
     </div>
@@ -326,6 +452,9 @@ function provincia(valor) {
                         provincia.find('option').remove();
                         provincia.append(data);
                         provincia.prop('disabled', false);
+                        distrito.find('option').remove();
+                        distrito.append('<option value="0">--Seleccione--</option>');
+                        distrito.prop('disabled', true);
                     }
                 });
         }
@@ -378,6 +507,29 @@ $("#btnproyecto").click(function( ) {
             $('#proyecto-titulo').addClass('has-error');
             //alert('hola');
         }
+    
+    if($.trim($('#proyecto-vigencia').val())=='')
+        {
+            error=error+'Ingrese la Vigencia del Proyecto<br>';
+            $('#proyecto-vigencia').addClass('has-error');
+            //alert('hola');
+        }
+        
+    if($.trim($('#proyecto-id_tipo_proyecto').val())=='0')
+        {
+            error=error+'Seleccione el Tipo de Investigación<br>';
+            $('#proyecto-id_tipo_proyecto').addClass('has-error');
+            //alert('hola');
+        }
+        
+    if($.trim($('#proyecto-departamento').val())=='0' || $.trim($('#proyecto-provincia').val())=='0' || $.trim($('#proyecto-distrito').val())=='0')
+        {
+            error=error+'Seleccione Ubigeo<br>';
+            $('#proyecto-departamento').addClass('has-error');
+            $('#proyecto-provincia').addClass('has-error');
+            $('#proyecto-distrito').addClass('has-error');
+            //alert('hola');
+        }
         
     if($.trim($('#proyecto-id_direccion_linea').val())=='0')
         {
@@ -400,42 +552,45 @@ $("#btnproyecto").click(function( ) {
             //alert('hola');
         }
     
-    if($.trim($('#proyecto-nombres').val())=='')
+    if($.trim($('#proyecto-id_programa').val())=='0')
         {
-            error=error+'Ingrese Nombres del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Selecciones el Programa<br>';
+            $('#proyecto-id_programa').addClass('has-error');
             //alert('hola');
         }
     
-     if($.trim($('#proyecto-apellidos').val())=='')
+     if($.trim($('#proyecto-id_cultivo').val())=='0')
         {
-            error=error+'Ingrese Apellidos del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Seleccione el Cultivo o Crianza<br>';
+            $('#proyecto-id_cultivo').addClass('has-error');
             //alert('hola');
         }
     
-    if($.trim($('#proyecto-telefono').val())=='')
+    if($.trim($('#proyecto-id_especie').val())=='0')
         {
-            error=error+'Ingrese Nro Teléfonico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Seleccione la Especie<br>';
+            $('#proyecto-id_especie').addClass('has-error');
             //alert('hola');
         }
     
-     if($.trim($('#proyecto-celular').val())=='')
+     if($.trim($('#proyecto-id_areatematica').val())=='0')
         {
-            error=error+'Ingrese Nombre Nro Celular del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
+            error=error+'Selecciones la ÁREA Temática<br>';
+            $('#proyecto-id_areatematica').addClass('has-error');
             //alert('hola');
         }
     
-     if($.trim($('#proyecto-correo').val())=='')
-        {
-            error=error+'Ingrese Correo Electrónico del Responsable<br>';
-            $('#proyecto-titulo').addClass('has-error');
-            //alert('hola');
-        }
-    
-    if($.trim($('#proyecto-resumen_ejecutivo').val())=='')
+     
+   /* var colaborador=$('input[name=\'Proyecto[nombresc][]\']').length;
+        for (var i=0; i<colaborador; i++) {
+            
+            if(($('#proyecto-nombresc_'+i).val()=='') || ($('#proyecto-apellidosc_'+i).val()=='') || ($('#proyecto-funcionesc_'+i).val()==''))
+            {
+                error=error+'Complete todos los Campos del Colaborador #'+(i+1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
+        }*/
+    /*if($.trim($('#proyecto-resumen_ejecutivo').val())=='')
         {
             error=error+'Ingrese el Resumen Ejecutivo<br>';
             $('#proyecto-resumen_ejecutivo').addClass('has-error');
@@ -447,24 +602,7 @@ $("#btnproyecto").click(function( ) {
             error=error+'Ingrese La Relevancia del Proyecto<br>';
             $('#proyecto-relevancia').addClass('has-error');
             //alert('hola');
-        }
-   
-     if($.trim($('#proyecto-vigencia').val())=='')
-        {
-            error=error+'Ingrese la Vigencia del Proyecto<br>';
-            $('#proyecto-vigencia').addClass('has-error');
-            //alert('hola');
-        }
-    
-    if($.trim($('#proyecto-departamento').val())=='0' || $.trim($('#proyecto-provincia').val())=='0' || $.trim($('#proyecto-distrito').val())=='0')
-        {
-            error=error+'Seleccione Ubigeo<br>';
-            $('#proyecto-departamento').addClass('has-error');
-            $('#proyecto-provincia').addClass('has-error');
-            $('#proyecto-distrito').addClass('has-error');
-            //alert('hola');
-        }
-                 
+        }*/      
         
     if(error!='')
         {
@@ -510,34 +648,6 @@ $("#btnproyecto").click(function( ) {
     return true;
 });
 
-/*
-$("#proyecto-colaboradores").click(function( ) {
-    var existe=$.ajax({
-                url: '<?= $urlproyectoExiste ?>',
-                type: 'POST',
-                async: false,
-                //data: {},
-                success: function(data){
-                    
-                }
-            });
-    if(existe.responseText!=1)
-        {
-            $.notify({
-                message: existe.responseText
-            },{
-                type: 'danger',
-                offset: 20,
-                spacing: 10,
-                z_index: 1031,
-                placement: {
-                    from: 'top',
-                    align: 'right'
-                },
-            });
-            return false;
-        }
-});*/
 
 </script>
 
