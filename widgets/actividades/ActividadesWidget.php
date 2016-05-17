@@ -20,6 +20,9 @@ use app\models\Maestros;
 class ActividadesWidget extends Widget
 {
     public $indicador_id;
+    public $id_proyecto;
+    public $evento;
+    
     public function init()
     {
         parent::init();
@@ -51,8 +54,9 @@ class ActividadesWidget extends Widget
                                 ->all();
         
         return $this->render('actividades',['actividades'=>$actividades,
-                                            'indicadorBID'=>$indicadorBID
-                                            //'CountIndicadores'=>$CountIndicadores,
+                                            'indicadorBID'=>$indicadorBID,
+                                            'id_proyecto'=>$this->id_proyecto,
+                                            'event'=>$this->evento
                                             //'indicadores'=>$indicadores
                                             ]);
     }

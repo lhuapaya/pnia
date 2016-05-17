@@ -34,7 +34,7 @@ class Recurso extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['actividad_id', 'clasificador_id', 'cantidad'], 'integer'],
+            [['ejecutado','estado','actividad_id', 'clasificador_id', 'cantidad'], 'integer'],
             [['precio_unit', 'precio_total'], 'number'],
             [['detalle'], 'string', 'max' => 500],
             [['unidad_medida'], 'string', 'max' => 100]
@@ -55,6 +55,8 @@ class Recurso extends \yii\db\ActiveRecord
             'cantidad' => 'Cantidad',
             'precio_unit' => 'Precio Unit',
             'precio_total' => 'Precio Total',
+            'ejecutado' => 'Ejecutado',
+            'estado' => 'Estado',
         ];
     }
 

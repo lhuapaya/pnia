@@ -15,6 +15,7 @@ class ProgramadoWidget extends Widget
 {
     public $recurso_id;
     public $re;
+    public $vigencia;
     public function init()
     {
         parent::init();
@@ -47,6 +48,7 @@ class ProgramadoWidget extends Widget
         
         return $this->render('programado',['programado'=>$programado,
                                             're'=>$this->re,
+                                            'vigencia'=>$this->vigencia,
                                             'recursos'=>$recursos,
                                             'rec_prog_id'=>$this->recurso_id
                                             ]);

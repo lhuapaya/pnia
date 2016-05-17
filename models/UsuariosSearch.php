@@ -19,13 +19,14 @@ class UsuariosSearch extends Usuarios
     /**
      * @inheritdoc
      */
+    public $descripcion;
     public function rules()
     {
         return [
 
 
             [['id', 'estado'], 'integer'],
-            [['Name', 'username', 'password', 'img','id_perfil'], 'safe'],
+            [['Name', 'username', 'password', 'img','id_perfil','descripcion'], 'safe'],
         ];
     }
 
@@ -53,6 +54,7 @@ class UsuariosSearch extends Usuarios
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
+            'pagination' => ['pageSize' => 10],
         ]);
 
         $this->load($params);
@@ -66,13 +68,15 @@ class UsuariosSearch extends Usuarios
         $query->andFilterWhere([
 
             'usuarios.id' => $this->id,
-            'usuarios.estado' => $this->estado,
+            //'usuarios.estado' => $this->estado,
+            
         ]);
 
         $query->andFilterWhere(['like', 'Name', $this->Name])
             ->andFilterWhere(['like', 'perfil.descripcion', $this->id_perfil])
             ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'password', $this->password])
+            //->andFilterWhere(['like', [1=>'Activo',0=>'Inactivo'], $this->estado])
             ->andFilterWhere(['like', 'img', $this->img]);
 
         return $dataProvider;

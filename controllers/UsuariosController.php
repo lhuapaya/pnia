@@ -5,14 +5,16 @@ namespace app\controllers;
 use Yii;
 use app\models\Usuarios;
 use app\models\UsuariosSearch;
-
+use app\models\AuthItem;
 use app\models\Perfil;
 use app\models\AuthAssignment;
+
 
 use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use app\models\Proyecto;
 
 /**
  * UsuariosController implements the CRUD actions for Usuarios model.
@@ -87,14 +89,37 @@ class UsuariosController extends Controller
      */
     public function actionCreate()
     {
-        $model = new Usuarios();
+        $this->layout='principal';
+        $usuarios = new Usuarios();
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
+        if ($usuarios->load(Yii::$app->request->post())) {
+            $usuarios->save();
+            
+            $auth = AuthItem::find()
+                    ->where('type = :type',[':type'=>$usuarios->id_perfil])
+                    ->one();
+            $item = $auth->name;
+            $assigment = new AuthAssignment();
+            $assigment->item_name ="$item";
+            $assigment->user_id ="$usuarios->id";
+            $assigment->save();
+            
+            if($usuarios->id_perfil == 2)
+            {
+              $proyecto = new Proyecto();
+              $proyecto->user_propietario = $usuarios->id;
+              $proyecto->estado = 1;
+              $proyecto->save();
+            }
+            
+            return $this->redirect(['index']);
         } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+            
+            $perfil = Perfil::find()
+                        ->where('estado = 1')
+                        ->all();
+            
+            return $this->render('create', ['perfil'=>$perfil]);
         }
     }
 

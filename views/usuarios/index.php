@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Usuarios', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Nuevo Usuario', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
     <?= GridView::widget([
@@ -25,15 +25,41 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
+            //'id',
             'Name',
             'username',
-            'password',
-            'id_perfil',
+            //'password',
+            //'id_perfil',
+            //'perfil.descripcion',
+            [
+                'label'=>'Perfil',
+                'attribute' => 'id_perfil',
+                'format'=>'raw',
+                'value'=>'perfil.descripcion',
+                //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
+            [
+                'label'=>'Estado',
+                //'attribute' => 'estado',
+                'format'=>'raw',
+                'value'=>function($data) {
+                    if($data->estado == 0 ){return "<span style='color:red;'><strong>Inactivo</strong><span>"; }
+                    if($data->estado == 1 ){return "<span style='color:green;'><strong>Activo</strong><span>"; }
+                            
+                    
+                },
+                //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
             // 'img',
             // 'estado',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+             'template' => '{update}',],
+            
         ],
     ]); ?>
 

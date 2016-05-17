@@ -24,7 +24,13 @@ use app\models\ZonaAccion;
 use app\models\Recurso;
 use app\models\Maestros;
 use app\models\Aportante;
-
+use app\models\ProyectoSearch;
+use app\models\Accesos;
+use app\models\RecursoProgramado;
+use app\models\Desembolso;
+use app\models\NivelAprobacion;
+use app\models\Aprobaciones;
+use app\models\Observaciones;
 class ProyectoController extends Controller
 {
     
@@ -49,16 +55,345 @@ class ProyectoController extends Controller
     
     public function actionIndex()
     {
-        
-        //$model = new Proyecto();
         $this->layout='principal';
-        $model=Proyecto::find()
-                    ->select('proyecto.id, proyecto.titulo, proyecto.presupuesto')
-                    ->where('estado=1')
-                    ->all();
+        $searchModel = new ProyectoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        
+        
+        $menus= Accesos::find()
+                                    ->select('menus.id, menus.descripcion')
+                                    ->innerJoin('menus','menus.id = accesos.id_menu')
+                                    ->where('menus.id_modulo = 1 and accesos.id_pefil=2 and menus.estado=1 and accesos.estado=1 and menus.visible=1')
+                                    ->all();
+                                    
+        
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+            'menus' => $menus
+        ]);
+    }
+
+    /**
+     * Displays a single Proyecto model.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionView($id,$event)
+    {
+        $this->layout='principal';
+        
+        $proyecto = new Proyecto();
+        $responsable = new Responsable();
+        //$departamentos = new Ubigeo();
+        $provincias = new Ubigeo();
+        $distritos = new Ubigeo();
+        //$cultivo = new CultivoCrianza();
+        
+                        
+        if($proyecto->load(Yii::$app->request->post()) )
+        {
+            $nivelApLast = NivelAprobacion::find()
+                            ->where('id_actividad = :id_actividad',[':id_actividad'=>78])
+                            ->orderBy(['orden'=>SORT_DESC])
+                            ->one();
+              
+            $nivelAp = NivelAprobacion::find()
+                            ->where('id_actividad = :id_actividad',[':id_actividad'=>78])
+                            ->orderBy(['orden'=>SORT_ASC])
+                            ->all();
+            
+            foreach($nivelAp as $nivelAp2)
+            {
+                $AprobCount = Aprobaciones::find()
+                                ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
+                                ->count();
+                                
+                if($AprobCount > 0)
+                {
+                    $Aprobaciones = Aprobaciones::find()
+                                ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
+                                ->one();
+                                
+                    if($Aprobaciones->estado == 0)
+                    {
+                        $aprob =Aprobaciones::findOne($Aprobaciones->id);
+                        $aprob->id_proyecto = $proyecto->id;
+                        $aprob->id_nivelaprobacion = $nivelAp2->id;
+                        $aprob->estado = $proyecto->respuesta_aprob;
+                        $aprob->update();
+                         break; 
+                    }
                     
-            //var_dump($countIntituciones);
-        return $this->render('index',['model'=>$model]);
+                }
+                else{
+                    //var_dump((int)$proyecto->id);var_dump((int)$nivelAp2->id);var_dump($proyecto->respuesta_aprob);die;
+                    $aprob =new Aprobaciones();
+                    $aprob->id_proyecto = (int)$proyecto->id;
+                    $aprob->id_nivelaprobacion = (int)$nivelAp2->id;
+                    $aprob->estado = (int)$proyecto->respuesta_aprob;
+                    $aprob->save();
+                    break;
+                }
+            }
+                                
+           if($proyecto->respuesta_aprob == 0)
+                {
+                    $pro = Proyecto::findOne($proyecto->id);
+                    $pro->situacion = 0;
+                    $pro->update();
+                    
+                    $obs = new Observaciones();
+                    $obs->id_aprobaciones = $aprob->id;
+                    $obs->observacion = $proyecto->observacion;
+                    $obs->save();
+                }
+                
+                if($proyecto->respuesta_aprob == 1)
+                {
+                    if(Yii::$app->user->identity->id_perfil == $nivelApLast->id_perfil)
+                    {
+                       $pro = Proyecto::findOne($proyecto->id);
+                        $pro->situacion = 2;
+                        $pro->update();
+                    }    
+                }
+                
+              
+            
+            return $this->redirect('index');
+        }
+        
+                        
+        if(!$proyecto->load(Yii::$app->request->post()))
+        {
+           $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id',[':id'=>$id])
+                        ->one();
+            
+           $responsable = Responsable::find()
+                            ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                            ->one();
+            
+            $departamentos = Ubigeo::find(['department_id', 'department'])
+                        ->groupBy('department_id')
+                        ->orderBy('department')
+                        ->all();
+                
+                        
+            if($proyecto->ubigeo)
+            {
+                $provincias = Ubigeo::find('province_id, province')
+                            ->where('department_id = :department_id',[':department_id'=>substr($proyecto->ubigeo,0,2)])
+                            ->groupBy('province')
+                            ->orderBy('province')
+                            ->all();
+        
+                $distritos = Ubigeo::find('district_id, district')
+                            ->where('province_id = :province_id',[':province_id'=>substr($proyecto->ubigeo,0,4)])
+                            ->groupBy('district')
+                            ->orderBy('district')
+                            ->all();
+                        
+            }
+            
+            $cultivo =  CultivoCrianza::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
+                        
+            /*financiamiento*/
+            $aportante12=Aportante::find()
+                    ->where('tipo <> 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                    ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
+                    ->all();
+            $aportante3=Aportante::find()
+                        ->where('tipo = 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
+                        ->all();
+            
+            $aportante=Aportante::find()
+                        ->where('id_proyecto =:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
+                        ->all();
+                        
+            $desembolsos=Desembolso::find()
+                                    ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                    ->all();
+            $nro_desembolso = Maestros::find()
+                                    ->where('id_padre = 48 and estado = 1')
+                                    ->orderBy('orden')
+                                    ->all();
+            
+            $meses = Maestros::find()
+                                    ->where('id_padre = 57 and estado = 1')
+                                    ->orderBy('orden')
+                                    ->all();
+            
+            /*end financiamiento*/
+            
+            /*objetivos_endicadores*/
+            $objetivosespecificos=ObjetivoEspecifico::find()
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->all();
+            /*end objetivos_endicadores*/
+            
+                                
+                /*actividad*/                
+            $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->all();
+            /*end objetivos_endicadores*/
+            
+                /*recursos*/   
+            $actividades=Actividad::find()
+                                ->select('actividad.id,actividad.descripcion,actividad.id_ind')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->all();
+            /*end recursos*/
+            
+            $nivelAp = NivelAprobacion::find()
+                            ->where('id_actividad = :id_actividad',[':id_actividad'=>78])
+                            ->orderBy(['orden'=>SORT_ASC])
+                            ->all();
+            $nivel = '';
+            foreach($nivelAp as $nivelAp2)
+            {
+                $AprobCount = Aprobaciones::find()
+                                ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
+                                ->count();
+                                
+                if($AprobCount > 0)
+                {
+                    $Aprobaciones = Aprobaciones::find()
+                                ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
+                                ->one();
+                                
+                    if($Aprobaciones->estado == 0)
+                    {
+                       $nivel = $nivelAp2->id_perfil;
+                         break; 
+                    }
+                    
+                }
+                else{
+                    $nivel = $nivelAp2->id_perfil;
+                    break;
+                }
+            }
+            
+            $requiere_aprobar = 0;
+            if(Yii::$app->user->identity->id_perfil == $nivel)
+            {
+               $requiere_aprobar = 1; 
+            }
+            
+            
+        }
+        
+        
+        $tipoInv = Maestros::find()
+                                ->where('id_padre = 16 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+                                
+        $programa = Maestros::find()
+                                ->where('id_padre = 42 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+        
+        $AccionT =  AccionTransversal::find()
+                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                        ->one();
+        
+        $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]);
+        $ver_actividad = Yii::$app->runAction('proyecto/verificar_actividades', ['id'=>$proyecto->id]);
+        $ver_monto_total = Yii::$app->runAction('proyecto/verificar_presupuesto', ['id'=>$proyecto->id]);
+        $ver_recursos = Yii::$app->runAction('proyecto/verificar_recursos', ['id'=>$proyecto->id]);
+        $ver_peso_actividad = Yii::$app->runAction('proyecto/verificar_peso_actividades', ['id'=>$proyecto->id]);
+        $ver_programado = Yii::$app->runAction('proyecto/verificar_programado', ['id'=>$proyecto->id]);
+
+         //'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_programado'=>$ver_programado   
+
+        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'actividades'=>$actividades,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_programado'=>$ver_programado,'requiere_aprobar'=>$requiere_aprobar]);
+      
+        
+        
+        /*return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);*/
+    }
+
+    /**
+     * Creates a new Proyecto model.
+     * If creation is successful, the browser will be redirected to the 'view' page.
+     * @return mixed
+     */
+    public function actionCreate()
+    {
+        $model = new Proyecto();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('create', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Updates an existing Proyecto model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionUpdate($id)
+    {
+        $model = $this->findModel($id);
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        } else {
+            return $this->render('update', [
+                'model' => $model,
+            ]);
+        }
+    }
+
+    /**
+     * Deletes an existing Proyecto model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     */
+    public function actionDelete($id)
+    {
+        $this->findModel($id)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Finds the Proyecto model based on its primary key value.
+     * If the model is not found, a 404 HTTP exception will be thrown.
+     * @param integer $id
+     * @return Proyecto the loaded model
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    protected function findModel($id)
+    {
+        if (($model = Proyecto::findOne($id)) !== null) {
+            return $model;
+        } else {
+            throw new NotFoundHttpException('The requested page does not exist.');
+        }
     }
     
     public function actionMarcologico()
@@ -362,12 +697,17 @@ class ProyectoController extends Controller
     
     public function actionDatosgenerales()
     {
+        //$situacion = $_REQUEST["situation"];
+        $evento = $_REQUEST["event"];
+        
         $this->layout='principal';
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
         $responsable = new Responsable();
+        //$departamentos = new Ubigeo();
         $provincias = new Ubigeo();
         $distritos = new Ubigeo();
+        //$cultivo = new CultivoCrianza();
         
         
         $existe = Proyecto::find()
@@ -489,10 +829,10 @@ class ProyectoController extends Controller
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->one();
             
-           $responsable = Responsable::find()
+           /*$responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
-            
+            */
             $departamentos = Ubigeo::find(['department_id', 'department'])
                         ->groupBy('department_id')
                         ->orderBy('department')
@@ -536,13 +876,16 @@ class ProyectoController extends Controller
                         ->one();
         
         
-        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo]);
+        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'evento'=>$evento]);
       
     }
     
     
     public function actionObjetivo_indicador()
     {
+        $situacion = $_REQUEST["situation"];
+        $evento = $_REQUEST["event"];
+        
         $this->layout='principal';
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
@@ -597,13 +940,13 @@ class ProyectoController extends Controller
                         $objetivosespecificos->save(); 
                     }
                 }
-                
+                //var_dump($proyecto);die;
                 /*indicadores*/
                 for($i=0;$i<$countIndicadores;$i++)
                 {
                    
                     
-                    if(isset($proyecto->indicadores_ids[$i]))
+                    if($proyecto->indicadores_ids[$i] != '')
                     {
                         $indicador=Indicador::findOne($proyecto->indicadores_ids[$i]);
                         $indicador->id_oe=$proyecto->indicadores_oe_ids[$i];
@@ -654,7 +997,7 @@ class ProyectoController extends Controller
         
         
         
-        return $this->render('objetivo_indicador',['proyecto'=>$proyecto,'objetivos'=>$objetivosespecificos]);
+        return $this->render('objetivo_indicador',['proyecto'=>$proyecto,'objetivos'=>$objetivosespecificos,'evento'=>$evento]);
       
     }
     
@@ -821,6 +1164,9 @@ class ProyectoController extends Controller
     
     public function actionRecursos()
     {
+        //$situacion = $_REQUEST["situation"];
+        $evento = $_REQUEST["event"];
+        
         $this->layout='principal';
         $proyecto = new Proyecto();
         $session = Yii::$app->session;
@@ -855,9 +1201,10 @@ class ProyectoController extends Controller
                         $recurso->clasificador_id=$proyecto->recurso_clasificador[$i];
                         $recurso->detalle=$proyecto->recurso_descripcion[$i];
                         $recurso->unidad_medida=$proyecto->recurso_unidad[$i];
-                        $recurso->cantidad=$proyecto->recurso_cantidad[$i];
-                        $recurso->precio_unit=$proyecto->recurso_precioun[$i];
-                        $recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
+                        $recurso->fuente=$proyecto->recurso_fuente[$i];
+                        //$recurso->cantidad=$proyecto->recurso_cantidad[$i];
+                        //$recurso->precio_unit=$proyecto->recurso_precioun[$i];
+                        //$recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
                         $recurso->update(); 
                     }
                     else
@@ -868,14 +1215,26 @@ class ProyectoController extends Controller
                         $recurso->clasificador_id=$proyecto->recurso_clasificador[$i];
                         $recurso->detalle=$proyecto->recurso_descripcion[$i];
                         $recurso->unidad_medida=$proyecto->recurso_unidad[$i];
-                        $recurso->cantidad=$proyecto->recurso_cantidad[$i];
-                        $recurso->precio_unit=$proyecto->recurso_precioun[$i];
-                        $recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
+                        $recurso->fuente=$proyecto->recurso_fuente[$i];
+                        //$recurso->cantidad=$proyecto->recurso_cantidad[$i];
+                        //$recurso->precio_unit=$proyecto->recurso_precioun[$i];
+                        //$recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
                         $recurso->save(); 
                     }
                 }
                 //var_dump($flat);die;
             }
+            
+            if(isset($proyecto->cerrar_recurso))
+             {
+                $proy =  Proyecto::findOne($proyecto->id);
+                $proy->situacion = 1;
+                $proy->update();
+                
+             
+             
+                return $this->redirect('datosgenerales?event='.$evento); 
+             }
             
             return $this->refresh();
         }
@@ -886,7 +1245,7 @@ class ProyectoController extends Controller
             $proyecto = Proyecto::find()
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                         ->one();
-            
+            //var_dump($proyecto);die;
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
                                 ->all();
@@ -909,14 +1268,16 @@ class ProyectoController extends Controller
         }
         
         
+        $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]);
+        $ver_actividad = Yii::$app->runAction('proyecto/verificar_actividades', ['id'=>$proyecto->id]);
+        $ver_monto_total = Yii::$app->runAction('proyecto/verificar_presupuesto', ['id'=>$proyecto->id]);
+        $ver_recursos = Yii::$app->runAction('proyecto/verificar_recursos', ['id'=>$proyecto->id]);
+        $ver_peso_actividad = Yii::$app->runAction('proyecto/verificar_peso_actividades', ['id'=>$proyecto->id]);
+
+        //var_dump($ver_monto_total);die;
         
         
-        
-        
-        
-        
-        
-        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores]);
+        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$evento,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad]);
     }
     
     
@@ -995,6 +1356,9 @@ class ProyectoController extends Controller
     
     public function actionActividad()
     {
+        $situacion = $_REQUEST["situation"];
+        $evento = $_REQUEST["event"];
+        
         $this->layout='principal';
         $flatUpdate = 0;        
         $proyecto = new Proyecto();
@@ -1027,7 +1391,7 @@ class ProyectoController extends Controller
                         $actividad->id_bid=$proyecto->actividades_indicadorbid[$i];
                         $actividad->peso=$proyecto->actividades_pesos[$i];
                         $actividad->unidad_medida=$proyecto->actividades_unidad_medidas[$i];
-                        $actividad->programado=$proyecto->actividades_programados[$i];
+                        $actividad->meta=$proyecto->actividades_metas[$i];
                         $actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
                         $actividad->fecha_fin=$proyecto->actividades_ffin[$i];
                         $actividad->update(); 
@@ -1040,7 +1404,7 @@ class ProyectoController extends Controller
                         $actividad->id_bid=$proyecto->actividades_indicadorbid[$i];
                         $actividad->peso=$proyecto->actividades_pesos[$i];
                         $actividad->unidad_medida=$proyecto->actividades_unidad_medidas[$i];
-                        $actividad->programado=$proyecto->actividades_programados[$i];
+                        $actividad->meta=$proyecto->actividades_metas[$i];
                         $actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
                         $actividad->fecha_fin=$proyecto->actividades_ffin[$i];
                         $actividad->save(); 
@@ -1074,12 +1438,22 @@ class ProyectoController extends Controller
                         
         }
         
+        $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]); //actionVerificar_obj_ind($proyecto->id);
         
-        
-        return $this->render('actividad',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos]);
+        return $this->render('actividad',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos,'evento'=>$evento,'proyecto'=>$proyecto,'ver_obj_ind'=>$ver_obj_ind]);
       
     }
     
+    
+    
+    
+    
+    public function actionModificaractrec()
+    {
+        $this->layout='principal';
+        
+        return $this->render('modificaractrec');
+    }
     
     public function actionExisteproyecto()
     {
@@ -1162,18 +1536,25 @@ class ProyectoController extends Controller
         $mesaje = "";
         $estado = '0';
         $validarrecurso = Recurso::find()->where('actividad_id = :actividad_id',[':actividad_id'=>$id])->all();
-
+        $validarAct = Actividad::find()->where('id = :id',[':id'=>$id])->one();
         if($validarrecurso)
         {
            //ObjetivoEspecifico::findOne($myData->id)->delete();
-           $mesaje = "La Actividad se encuentra asociado Recursos";
+           $mesaje = "<strong>¡Cuidado! </strong>La Actividad se encuentra asociado a Recursos";
 
         }
         else
         {
+            if($validarAct->ejecutado == 0)
+            {
             Actividad::findOne($id)->delete();
             $estado = '1';
             $mesaje = "Se elimino la Actividad Correctamente.";
+            }
+            else
+            {
+             $mesaje = "<strong>¡Cuidado! </strong>La Actividad se encuentra en Ejecución, no puede ser Eliminada";   
+            }
         }
         
         
@@ -1273,30 +1654,44 @@ class ProyectoController extends Controller
     
     public function actionEliminarrecurso($id)
     {
+        
+            RecursoProgramado::deleteAll('id_recurso = :id_recurso',[':id_recurso'=>$id]);
 
-           Recurso::findOne($id)->delete();
-           $mesaje = "Se elimino el Recurso Correctamente.";
+            Recurso::findOne($id)->delete();
+            $mesaje = "Se elimino el Recurso Correctamente.";
         
         echo $mesaje;
 
         
     }
     
-    public function actionRefrescarrecursos($id)
+    public function actionRefrescarrecursos($id, $id_proyecto,$evento)
     {
         $html = '';
+        $opcion2 = '';
         $opcion1 = '';
         $re = 0;
+        $session = Yii::$app->session;
+        
         $recursos=Recurso::find()
                                 ->where('actividad_id=:actividad_id',[':actividad_id'=>$id])
                                 ->all();
-        
+                                
+        $fuentes=Aportante::find()
+                                ->select('id, colaborador')
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$id_proyecto])
+                                ->orderBy('tipo')
+                                ->all();
+                                
         $clasificador = Maestros::find()
                                 ->where('id_padre = 32 and estado = 1')
                                 ->orderBy('orden')
                                 ->all();
         
-
+        $proyecto = Proyecto::find()
+                                ->select('vigencia')
+                                ->where('id =:id',[':id'=>$id_proyecto])
+                                ->one();
         
         if($recursos)
         {
@@ -1311,7 +1706,26 @@ class ProyectoController extends Controller
                      $opcion1 .='<option value="'.$clasificador2->id.'" '.($clasificador2->id == $recursos2->clasificador_id ? 'selected="selected"' : '' ).'>'.$clasificador2->descripcion.'</option>';
                                                           
                     }
-
+                    
+                    foreach($fuentes as $fuentes2)
+                    {
+                                                        
+                     $opcion2 .='<option value="'.$fuentes2->id.'" '.($fuentes2->id == $recursos2->fuente ? 'selected="selected"' : '' ).'>'.$fuentes2->colaborador.'</option>';
+                                                          
+                    }
+                    
+                                            if($evento == 2){
+					    $ejecutado = '<td class="col-xs-1">
+					    <div class="form-group field-proyecto-recurso_ejecutado_'.$re.' required">
+						<input type="text" id="proyecto-recurso_ejecutado_'.$re.'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder="" value="'.$recursos2->ejecutado.'" Disabled>
+					    </div>
+					    </td>';
+                                            }
+                                            else
+                                            {
+                                               $ejecutado = ''; 
+                                            }
+                    
 			$html .= '<tr id="recurso_addr_1_'.$re.'">
 					<td>
 					'.($re+1).'
@@ -1329,6 +1743,14 @@ class ProyectoController extends Controller
                                                 <input class="form-control " value="'.$recursos2->detalle.'" type="text"  placeholder="..." id="proyecto-recurso_descripcion_'.$re.'" name="Proyecto[recurso_descripcion][]"/>
                                             </div>
                                         </td>
+                                        <td>
+                                        <div class="form-group field-proyecto-recurso_fuente_'.$re.' required">
+                                            <select  class="form-control " id="proyecto-recurso_fuente_'.$re.'" name="Proyecto[recurso_fuente][]" >
+                                                <option value="0">--Fuente--</option>'.$opcion2.'
+                                            </select>
+					    
+                                            </div>    
+                                        </td>
                                         <td class="col-xs-3">
                                             <div class="form-group field-proyecto-recurso_unidad_'.$re.' required">
                                                 <input class="form-control " value="'.$recursos2->unidad_medida.'" type="text"  placeholder="..." id="proyecto-recurso_unidad_'.$re.'" name="Proyecto[recurso_unidad][]"/>
@@ -1336,21 +1758,28 @@ class ProyectoController extends Controller
                                         </td>
                                         <td class="col-xs-1">
                                             <div class="form-group field-proyecto-recurso_cantidad_'.$re.' required">
-                                                <input  class="form-control " value="'.$recursos2->cantidad.'" class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'.$re.'" name="Proyecto[recurso_cantidad][]"/>
+                                                <input  class="form-control " value="'.$recursos2->cantidad.'" class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'.$re.'" name="Proyecto[recurso_cantidad][]" Disabled>
+                                            </div>
+                                        </td>'.$ejecutado.'
+                                        <td>
+                                            <div class="form-group field-proyecto-recurso_preciototal_'.$re.' required">
+                                                <input class="form-control " value="'.$recursos2->precio_total.'" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'.$re.'" name="Proyecto[recurso_preciototal][]" Disabled>
                                             </div>
                                         </td>
                                         <td>
-                                            <div class="form-group field-proyecto-recurso_precioun_'.$re.' required">
-                                                <input class="form-control " value="'.$recursos2->precio_unit.'" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_precioun_'.$re.'" name="Proyecto[recurso_precioun][]"/>
-                                            </div>
+					    <div>
+					    '.\app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'vigencia'=>$proyecto->vigencia]).'
+					    </div>
                                         </td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
-						<input type="hidden" name="Proyecto[recurso_ids][]" value="'.$recursos2->id.'" />
+						<input type="hidden" id="proyecto-recurso_ids_'.$re.'" name="Proyecto[recurso_ids][]" value="'.$recursos2->id.'" />
 					    </span>
 					</td>
 				    </tr>';
 				     $re++;
+                    
+                    $opcion2 ='';
 		}
         }
         else
@@ -1362,6 +1791,24 @@ class ProyectoController extends Controller
                                                   
             }
             
+            foreach($fuentes as $fuentes2)
+                    {
+                                                        
+                     $opcion2 .='<option value="'.$fuentes2->id.'" >'.$fuentes2->colaborador.'</option>';
+                                                          
+                    }
+                                    if($evento == 2){
+					    $ejecutado = '<td class="col-xs-1">
+					    <div class="form-group field-proyecto-recurso_ejecutado_0 required">
+						<input type="text" id="proyecto-recurso_ejecutado_0" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>
+					    </div>
+					    </td>';
+                                            }
+                                            else
+                                            {
+                                               $ejecutado = ''; 
+                                            }
+                                            
          $html .='<tr id="recurso_addr_1_0">
 				    <td>
 				    '.($re+1).'
@@ -1379,21 +1826,34 @@ class ProyectoController extends Controller
 					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_0" name="Proyecto[recurso_descripcion][]"/>
 					</div>
 				    </td>
-                                    <td class="col-xs-3">
+                                    <td>
+                                        <div class="form-group field-proyecto-recurso_fuente_0 required">
+                                            <select  class="form-control " id="proyecto-recurso_fuente_0" name="Proyecto[recurso_fuente][]" >
+                                                <option value="0">--Fuente--</option>'.$opcion2.'
+                                            </select>
+					    
+                                            </div>    
+                                    </td>
+                                    <td class="col-xs-2">
 					<div class="form-group field-proyecto-recurso_unidad_0 required">
 					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_0" name="Proyecto[recurso_unidad][]"/>
 					</div>
 				    </td>
                                     <td class="col-xs-1">
 					<div class="form-group field-proyecto-recurso_cantidad_0 required">
-					    <input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_0" name="Proyecto[recurso_cantidad][]"/>
+					    <input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_0" name="Proyecto[recurso_cantidad][]" Disabled>
+					</div>
+				    </td>'.$ejecutado.'
+                                    <td>
+					<div class="form-group field-proyecto-recurso_preciototal_0 required">
+					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_0" name="Proyecto[recurso_preciototal][]" Disabled>
 					</div>
 				    </td>
                                     <td>
-					<div class="form-group field-proyecto-recurso_precioun_0 required">
-					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_precioun_0" name="Proyecto[recurso_precioun][]"/>
-					</div>
-				    </td>
+				    <div>
+				    <button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado0_" id="btn_programado" onclick="cargartitulos(0)">Detalle</button>
+				    </div>
+                                        </td>
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">
 					    
@@ -1402,6 +1862,7 @@ class ProyectoController extends Controller
 				</tr>';
                                 
                                 $re = 1;
+            $opcion2 ='';
         }
         
             $html .='<tr id="recurso_addr_1_'.$re.'"></tr>';
@@ -1514,7 +1975,7 @@ class ProyectoController extends Controller
     
     
     
-    public function actionRefrescaractividades($id)
+    public function actionRefrescaractividades($id,$evento)
     {
         $html = '';
         $opcion1 = '';
@@ -1544,6 +2005,18 @@ class ProyectoController extends Controller
                      $opcion1 .='<option value="'.$indicadorBID2->id.'" '.($indicadorBID2->id == $actividad->id_bid ? 'selected="selected"' : '' ).'>'.$indicadorBID2->descripcion.'</option>';
                                                           
                     }
+                    
+                                            if($evento == 2){
+					    $ejecutado = '<td class="col-xs-1">
+					    <div class="form-group field-proyecto-actividades_ejecutado_'.$act.' required">
+						<input type="text" id="proyecto-actividades_ejecutado_'.$act.'" class="form-control" name="Proyecto[actividades_ejecutado][]" placeholder="" value="'.$actividad->ejecutado.'" Disabled>
+					    </div>
+					    </td>';
+                                            }
+                                            else
+                                            {
+                                               $ejecutado = ''; 
+                                            }
 
 			$html .= '<tr id="actividad_addr_1_'.$act.'">
 					<td>
@@ -1564,7 +2037,7 @@ class ProyectoController extends Controller
                                         </td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_pesos_'.$act.' required">
-						<input type="text" id="proyecto-actividades_pesos_'.$act.'" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="'.$actividad->peso.'" />
+						<input type="text" id="proyecto-actividades_pesos_'.$act.'" class="form-control entero" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="'.$actividad->peso.'" />
 					    </div>
 					</td>
 					<td>
@@ -1573,10 +2046,10 @@ class ProyectoController extends Controller
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-actividades_programados_'.$act.' required">
-						<input type="text" id="proyecto-actividades_programados_'.$act.'" class="form-control" name="Proyecto[actividades_programados][]" placeholder="Cantidad Programada<?= $act ?>" value="'.$actividad->programado.'" />
+					    <div class="form-group field-proyecto-actividades_metas_'.$act.' required">
+						<input type="text" id="proyecto-actividades_metas_'.$act.'" class="form-control entero" name="Proyecto[actividades_metas][]" placeholder="Cantidad Programada<?= $act ?>" value="'.$actividad->meta.'" />
 					    </div>
-					</td>
+					</td>'.$ejecutado.'
 					<td>
 					    <div>
 					    '.\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>$actividad->id,'act'=>$act]).'
@@ -1602,6 +2075,18 @@ class ProyectoController extends Controller
                      $opcion1 .='<option value="'.$indicadorBID2->id.'" >'.$indicadorBID2->descripcion.'</option>';
                                                           
                     }
+                    
+                                            if($evento == 2){
+					    $ejecutado = '<td class="col-xs-1">
+					    <div class="form-group field-proyecto-actividades_ejecutado_0 required">
+						<input type="text" id="proyecto-actividades_ejecutado_0" class="form-control" name="Proyecto[actividades_ejecutado][]" placeholder=""  Disabled>
+					    </div>
+					    </td>';
+                                            }
+                                            else
+                                            {
+                                               $ejecutado = ''; 
+                                            }
             
          $html .='<tr id="actividad_addr_1_0">
 				    <td>
@@ -1622,7 +2107,7 @@ class ProyectoController extends Controller
                                         </td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_pesos_0 required">
-						<input type="text" id="proyecto-actividades_pesos_0" class="form-control" name="Proyecto[actividades_pesos][]" placeholder="" " />
+						<input type="text" id="proyecto-actividades_pesos_0" class="form-control entero" name="Proyecto[actividades_pesos][]" placeholder="" " />
 					    </div>
 					</td>
 					<td>
@@ -1631,10 +2116,10 @@ class ProyectoController extends Controller
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-actividades_programados_0 required">
-						<input type="text" id="proyecto-actividades_programados_0" class="form-control" name="Proyecto[actividades_programados][]" placeholder="" />
+					    <div class="form-group field-proyecto-actividades_metas_0 required">
+						<input type="text" id="proyecto-actividades_metas_0" class="form-control entero" name="Proyecto[actividades_metas][]" placeholder="" />
 					    </div>
-					</td>
+					</td>'.$ejecutado.'
 					<td>
 					    <div>'.\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>'','act'=>$act]).' 
 					    </div>
@@ -1690,6 +2175,415 @@ class ProyectoController extends Controller
             }
         
        echo $opcion1; 
+    }
+    
+    public function actionValorproyecto($proyecto, $accion)
+    {
+        
+        $menus = Menus::find()
+                        ->select('ruta')
+                        ->whre('id = :id and visible = 1 and estado = 1',[':id'=>$accion])
+                        ->one();
+        
+        ignore_user_abort(true);
+set_time_limit(0);
+
+        
+        //echo $proyecto.' '.$accion;
+        if(Yii::app()->request->isAjaxRequest)
+        {
+           return $this->redirect($menus->ruta, ['proyecto_id' => $proyecto,]);
+        }
+        else{
+          return  $this->redirect($menus->ruta, ['proyecto_id' => $proyecto,]);
+        }
+    }
+    
+    
+    public function actionCargarmesesanio($id, $anios, $meses, $id_recurso,$re)
+    {
+        $tds = null;
+        $programado = RecursoProgramado::find()
+                                ->where('anio =:anio and id_recurso = :id_recurso',[':anio'=>$id,':id_recurso'=>$id_recurso])
+                                ->orderBy('mes')
+                                ->all();
+
+        
+        if($programado)
+        {
+                                $mes = [];
+                                $cantidad = [];
+                                $id = [];
+                                
+                                foreach($programado as $programado2)
+                                {
+                                    $mes[] = $programado2->mes;
+                                    $cantidad[] = $programado2->cantidad;
+                                    $id[] = $programado2->id;
+                                }
+                                for($i=1; $i<=count($mes); $i++)
+                                {
+                                  
+                        $tds .=     '<td><label>Mes '.$i.'</label>
+					    <div class="form-group field-proyecto-programado_mes_'.$re.'_'.$i.' required">
+						<input type="text" id="proyecto-programado_cantidad_'.$re.'_'.$i.'" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="'.$cantidad[($i-1)].'"  />
+                                                <input type="hidden" id="proyecto-programado_mes_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="'.$mes[($i-1)].'" />
+                                                <input type="hidden" id="proyecto-programado_id_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_id][]" placeholder="" value="'.$id[($i-1)].'" />
+					    </div>
+                                    </td>';
+                                }
+        }
+        else
+        {
+            if($anios >= $id)$contador = 12; else $contador = $meses;
+				
+                                for($i=1; $i<=$contador; $i++)
+                                {   
+                                $tds .=  '<td><label>Mes '.$i.'</label>
+					    <div class="form-group field-proyecto-programado_mes_'.$re.'_'.$i.' required">
+						<input type="text" id="proyecto-programado_cantidad_'.$re.'_'.$i.'" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="'.$i.'" />
+					    </div>
+                                    </td>';  
+                                }
+        }
+        
+        echo $tds;
+    }
+    //($anio, $id, $mes, $cantidad, $id_recurso, $precio_unit)
+    public function actionGrabarprogramado()
+    {
+        $anio = $_REQUEST["anio"];
+        $id = $_REQUEST["id"];
+        $mes = $_REQUEST["mes"];
+        $cantidad = $_REQUEST["cantidad"];
+        $id_recurso = $_REQUEST["id_recurso"];
+        $precio_unit = $_REQUEST["precio_unit"];
+        
+
+        
+        $count = count($mes);
+
+        
+        /*Grabar RecursoProgramado*/
+        for($i=0;$i<$count;$i++)
+
+                {
+                    if($id[$i] != null)
+                    {
+                        $recursoprogramado=RecursoProgramado::findOne($id[$i]);
+                        $recursoprogramado->id_recurso=$id_recurso;
+                        $recursoprogramado->anio=$anio;
+                        $recursoprogramado->mes=$mes[$i];
+                        $recursoprogramado->cantidad=$cantidad[$i];
+                        $recursoprogramado->update(); 
+                    }
+                    else
+                    {
+                        $recursoprogramado=new RecursoProgramado;
+                        $recursoprogramado->id_recurso=$id_recurso;
+                        $recursoprogramado->anio=$anio;
+                        $recursoprogramado->mes=$mes[$i];
+                        $recursoprogramado->cantidad=$cantidad[$i];
+                        $recursoprogramado->save(); 
+                    }
+                }
+                
+                
+        $sumacantidad = RecursoProgramado::find()
+                                ->where('id_recurso = :id_recurso',[':id_recurso'=>$id_recurso])
+                                ->sum('cantidad');
+        
+        $Recurso = Recurso::findOne($id_recurso);
+        $Recurso->cantidad = $sumacantidad;
+        $Recurso->precio_unit = $precio_unit;
+        $Recurso->precio_total = ($precio_unit * $sumacantidad);
+        $Recurso->update();
+                
+         $mensaje = "Se Grabo la Programación del Recurso";
+         
+         $array = array('cantidad'=>$sumacantidad,'monto'=>($precio_unit * $sumacantidad),'mensaje'=>$mensaje);
+
+            echo json_encode($array);
+    }
+    
+    
+    public function actionVerificar_obj_ind($id)
+    {
+        $existe_ind = [];
+        $w = 0;
+       $proyecto = Proyecto::find()
+                        ->where('id =:id_proyecto',[':id_proyecto'=>$id])
+                        ->one();
+                        
+            $objetivosespecificos=ObjetivoEspecifico::find()
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->all();
+            
+            foreach($objetivosespecificos as $obj)
+            {
+               $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->where('id_oe=:id_oe',[':id_oe'=>$obj->id])
+                                ->all();
+                foreach($indicadores as $ind)
+                {
+                    $w++;
+                }
+                
+                $existe_ind[] = $w;
+                
+                $w = 0;
+                
+            }
+            
+            for($e=0;$e<count($existe_ind);$e++)
+            {
+               if($existe_ind[$e] == 0)
+               {
+                 return 1;
+               }
+            }
+            
+            return 0;
+        
+    }
+    
+    public function actionVerificar_actividades($id)
+    {
+        $existe_ind = [];
+        $w = 0;
+
+                        
+            $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$id])
+                                ->all();
+            
+            foreach($indicadores as $ind)
+            {
+               $actividades=Actividad::find()
+                                ->where('id_ind=:id_ind',[':id_ind'=>$ind->id])
+                                ->all();
+                foreach($actividades as $act)
+                {
+                    $w++;
+                }
+                
+                $existe_ind[] = $w;
+                
+                $w = 0;
+                
+            }
+            
+            for($e=0;$e<count($existe_ind);$e++)
+            {
+               if($existe_ind[$e] == 0)
+               {
+                 return json_encode(array('estado'=>1,'mensaje'=>"<strong>¡Cuidado! <strong>Tiene Indicadores sin Actividades registradas. <br/>"));
+               }
+            }
+            
+            return json_encode(array('estado'=>0,'mensaje'=>""));
+        
+    }
+    
+    
+    public function actionVerificar_presupuesto($id)
+    {
+        $mensaje = '';
+        $w = 0;
+
+        /*    select ap.monetario, sum(r.precio_total) as total from recurso r
+INNER JOIN aportante ap on ap.id = r.fuente
+INNER JOIN actividad a on a.id = r.actividad_id
+INNER JOIN indicador i on i.id = a.id_ind
+INNER JOIN objetivo_especifico o on o.id = i.id_oe
+INNER JOIN proyecto p on p.id = o.id_proyecto
+where p.id = 28
+and ap.tipo = 1*/
+
+            $total_recursos=Recurso::find()
+                                ->innerJoin('aportante','aportante.id=recurso.fuente')
+                                ->innerJoin('actividad','actividad.id=recurso.actividad_id')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id and aportante.tipo = 1',[':proyecto_id'=>$id])
+                                ->sum('recurso.precio_total');
+            
+            $presupuesto_pnia = Aportante::find()
+                                        ->select('monetario')
+                                        ->where('id_proyecto=:id_proyecto and aportante.tipo = 1',[':id_proyecto'=>$id])
+                                        ->one();
+            
+            if($total_recursos == $presupuesto_pnia->monetario)
+            {
+               $w = 1; 
+            }
+            
+            if($total_recursos > $presupuesto_pnia->monetario)
+            {
+                $mensaje = "<strong>¡Cuidado! <strong>La suma de montos de los Recursos supera por ".(floatval($total_recursos) - floatval($presupuesto_pnia->monetario))." el presupuesto asignado por PNIA por favor corregirlo. <br/>";
+               $w = 2; 
+            }
+            
+            if($total_recursos < $presupuesto_pnia->monetario)
+            {
+                $mensaje = "<strong>¡Cuidado! <strong>Tiene aun un saldo disponible de ".(floatval($presupuesto_pnia->monetario) - floatval($total_recursos))." del presupuesto asignado por PNIA por favor completar los Recursos. <br/>";
+               $w = 3; 
+            }
+            
+            $array['estado'] = $w;
+            $array['mensaje'] = $mensaje;
+            
+            return json_encode($array);
+    }
+    
+    public function actionVerificar_recursos($id)
+    {
+        $existe_ind = [];
+        $w = 0;
+
+                        
+            $actividades=Actividad::find()
+                                ->select('actividad.id,actividad.descripcion,actividad.id_ind')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$id])
+                                ->all();
+            
+            foreach($actividades as $act)
+            {
+               $recursos=Recurso::find()
+                                ->where('actividad_id=:actividad_id',[':actividad_id'=>$act->id])
+                                ->all();
+                foreach($recursos as $rec)
+                {
+                    $w++;
+                }
+                
+                $existe_ind[] = $w;
+                
+                $w = 0;
+                
+            }
+            
+            for($e=0;$e<count($existe_ind);$e++)
+            {
+               if($existe_ind[$e] == 0)
+               {
+                return json_encode(array('estado'=>1,'mensaje'=>"<strong>¡Cuidado! <strong>Tiene actividades sin recursos registrados. <br/>"));
+               }
+
+            }
+            
+            return json_encode(array('estado'=>0,'mensaje'=>""));
+        
+    }
+    
+    public function actionVerificar_registros_pendientes()
+    {
+        $proyectoCount = Proyecto::find()
+                        ->where('situacion in(0,1) and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                        ->count();
+                        
+                        
+        if($proyectoCount > 0)
+        {
+            return $proyectoCount;
+        }
+        
+        return 0;
+    }
+    
+    
+    public function actionVerificar_peso_actividades($id)
+    {
+        $existe_ind = [];
+        $w = 0;
+
+            $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$id])
+                                ->all();
+            
+            foreach($indicadores as $ind)
+            {
+               $actividades=Actividad::find()
+                                ->where('id_ind=:id_ind',[':id_ind'=>$ind->id])
+                                ->sum('peso');
+                                
+                if($actividades != 100)
+                {
+                    $w++;
+                }
+                
+                $existe_ind[] = $w;
+                
+                $w = 0;
+                
+            }
+            
+            
+            for($e=0;$e<count($existe_ind);$e++)
+            {
+               if($existe_ind[$e] != 0)
+               {
+                return json_encode(array('estado'=>1,'mensaje'=>"<strong>¡Cuidado! <strong>Revise el peso de las Actividades por Indicador, no se encuentran a su 100%. <br/>"));
+               }
+
+            }
+            
+            return json_encode(array('estado'=>0,'mensaje'=>""));
+        
+    }
+    
+    public function actionVerificar_programado($id)
+    {
+        $existe_ind = [];
+        $w = 0;
+
+            $recursos=Recurso::find()
+                                ->innerJoin('aportante','aportante.id=recurso.fuente')
+                                ->innerJoin('actividad','actividad.id=recurso.actividad_id')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('aportante.tipo = 1 and proyecto.id=:proyecto_id and aportante.tipo = 1',[':proyecto_id'=>$id])
+                                ->all();
+            
+            foreach($recursos as $rec)
+            {
+                                
+                if($rec->cantidad > 0)
+                {
+                    $w++;
+                }
+                
+                $existe_ind[] = $w;
+                
+                $w = 0;
+                
+            }
+            
+            
+            for($e=0;$e<count($existe_ind);$e++)
+            {
+               if($existe_ind[$e] == 0)
+               {
+                return json_encode(array('estado'=>1,'mensaje'=>"<strong>¡Cuidado! <strong>Tiene Recursos no Programados. <br/>"));
+               }
+
+            }
+            
+            return json_encode(array('estado'=>0,'mensaje'=>""));
+        
     }
     
 

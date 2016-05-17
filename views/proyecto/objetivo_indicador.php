@@ -23,14 +23,18 @@ use app\models\Maestros;
 
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
-<div >
+<div id="form1">
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
             <div>
                 
             <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Objetivos e Indicadores</span></h3>
             
             </div>
-            
+	    
+            <div class="alert alert-warning" id="warning">
+	    
+	    </div>
+	    
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-objetivo_general required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
@@ -119,8 +123,22 @@ $(document).ready(function(){
 $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
 }).on('hidden.bs.collapse', function(){
 $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
-}); 
+});
+ 
+var msj_incial = verificar_peso_obj();
+var mensaje_ind = verificar_peso_inds();
 
+if ((msj_incial != '')||(mensaje_ind != '')) {
+   $('#warning').html(msj_incial+mensaje_ind);
+   $('#warning').show();
+}
+else
+{
+   $('#warning').hide();
+}
+
+
+/*
 var inicialdependencia = <?= $proyecto-> id_dependencia_inia;?>;
 if (inicialdependencia != '')
 {
@@ -174,7 +192,28 @@ $("#proyecto-id_unidad_ejecutora").change(function(){
             dependencia.prop('disabled', true);
         }
  });
+*/
+ 
+ 
+ 
+ 
+var situacion_proyecto = <?= $proyecto->situacion; ?>;
+var evento = <?= $evento; ?>;
 
+ if((situacion_proyecto > 0) && (evento == 1))
+ {
+    $('#form1').find('input, textarea, button, select').prop('disabled', true);
+    $('.table  th:eq(5)').hide();
+    $('.table  td:nth-child(6)').hide();
+    $('button').hide(); 
+ }
+ 
+ //   $('#form1').find('input, textarea, button, select').prop('disabled', true);
+ //   $('#form_colaborador').find('input, textarea, button, select').prop('disabled', false);
+
+ 
+ 
+ 
 });
 
 
@@ -298,8 +337,11 @@ $("#btn_obj_ind").click(function(event){
             }
 
         }*/
-	
+	var mensaje = verificar_peso_obj();
+	var mensaje_ind = verificar_peso_inds();
 	if (error!='') {
+	 
+	 
             $.notify({
                 message: error 
             },{
@@ -314,10 +356,69 @@ $("#btn_obj_ind").click(function(event){
         }
         else
         {
+	 
+	   if((mensaje!= '') || (mensaje_ind!=''))
+	   {
+	    $('#warning').html(mensaje+mensaje_ind);
+	    $('#warning').show();
+	    return false;
+	   }
+	   else
+	   {	    
             return true;
+	   }
         }
     });
 
+    
+    function verificar_peso_obj()
+    {
+      var pesos = $('input[name=\'Proyecto[objetivos_peso][]\']').serializeArray();
+      var count = $('input[name=\'Proyecto[objetivos_peso][]\']').length;
+      var total_peso = 0;
+      for(i=0; i<count; i++)
+      {
+	 total_peso = total_peso + parseInt(pesos[i].value);
+      }
+      //alert(total_peso);
+      if (total_peso != 100)
+      {
+	 return "<strong>¬°Cuidado!</strong> La suma de los pesos de los Objetivos no se encuentran al 100% <br/>";
+      }
+      else
+      {
+	 return "";	 
+      }
+    }
+    
+    function verificar_peso_inds()
+    {
+      var rowCount = 0;
+      var total = 0;
+      var resultado = '';
+      var count_tablas=($('table[name=\'Proyecto[indicadores_tabla][]\']').length);
+      
+      
+      
+      for (i=0;i<count_tablas;i++)
+      {
+	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length) -1;
+	 
+	 for (e=0;e<rowCount;e++) {
+	    
+	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+e).val());
+	 }
+	 
+	 if (total != 100){
+	    resultado = resultado+"<strong>¬°Cuidado!</strong> El peso de los Indicadores del Objetivo "+(i+1)+" no suman 100% <br/>";
+	 }
+	 
+	 total = 0;
+      }
+      
+      return resultado;
+    }
+    
 /*$("#btnproyecto").click(function( ) {
     
     var error='';
@@ -337,7 +438,7 @@ $("#btn_obj_ind").click(function(event){
         
     if($.trim($('#proyecto-id_tipo_proyecto').val())=='0')
         {
-            error=error+'Seleccione el Tipo de InvestigaciÛn<br>';
+            error=error+'Seleccione el Tipo de Investigaci√≥n<br>';
             $('#proyecto-id_tipo_proyecto').addClass('has-error');
             //alert('hola');
         }
@@ -353,7 +454,7 @@ $("#btn_obj_ind").click(function(event){
         
     if($.trim($('#proyecto-id_direccion_linea').val())=='0')
         {
-            error=error+'Seleccione la DirecciÛn en Linea<br>';
+            error=error+'Seleccione la Direcci√≥n en Linea<br>';
             $('#proyecto-id_direccion_linea').addClass('has-error');
             //alert('hola');
         }
@@ -395,7 +496,7 @@ $("#btn_obj_ind").click(function(event){
     
      if($.trim($('#proyecto-id_areatematica').val())=='0')
         {
-            error=error+'Selecciones la ¡REA Tem·tica<br>';
+            error=error+'Selecciones la √ÅREA Tem√°tica<br>';
             $('#proyecto-id_areatematica').addClass('has-error');
             //alert('hola');
         }

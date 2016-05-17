@@ -6,7 +6,7 @@ use yii\web\JsExpression;
 ?>
 
 
-<div>
+<div id="form1">
 
 	<?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
             <div>
@@ -352,7 +352,23 @@ use yii\web\JsExpression;
     $eliminaraportante= Yii::$app->getUrlManager()->createUrl('aportante/eliminaraportante');
 ?>
 <script>
+var situacion_proyecto = <?= $proyecto->situacion; ?>;
+var evento = <?= $evento; ?>;    
+    
  var ultimo = <?= $co ?>
+
+
+ $(document).ready(function(){ 
+
+ if((situacion_proyecto > 0) && (evento == 1))
+ {
+    $('#form1').find('input, textarea, select').prop('disabled', true);
+    $('button').hide();
+    
+    
+ }
+ 
+ });
  
 function sumatotal(posicion)
 {

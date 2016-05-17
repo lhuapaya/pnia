@@ -8,12 +8,15 @@ use yii\web\NotFoundHttpException;
 use app\models\Aportante;
 use app\models\Desembolso;
 use app\models\Maestros;
-
+use app\models\Proyecto;
 
 class AportanteController extends Controller
 {
     public function actionIndex()
     {
+        $situacion = $_REQUEST["situation"];
+        $evento = $_REQUEST["event"];
+        
         $this->layout='principal';
         $session = Yii::$app->session;
         $aportante=new Aportante;
@@ -53,6 +56,11 @@ class AportanteController extends Controller
         }
         else
         {
+            
+        $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
+                        ->one();
+                        
         $aportante12=Aportante::find()
                     ->where('tipo <> 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                     ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
@@ -80,7 +88,7 @@ class AportanteController extends Controller
                                 ->all();
         }
         
-        return $this->render('index',['aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$session['proyecto_id'],'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses]);
+        return $this->render('index',['proyecto'=>$proyecto,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$session['proyecto_id'],'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'evento'=>$evento]);
     }
     
     public function actionDesembolso()

@@ -13,8 +13,18 @@ use yii\web\JsExpression;
             <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Recursos</span></h3>
             
             </div>
-        
+        <?php
+	$ver_act = json_decode($ver_actividad);
+	$ver_peso_act = json_decode($ver_peso_actividad);
+	$denegado = 0;
+	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_peso_act->estado == 0) ){
+	   $denegado = 1; 
+	    ?>
+	<div class="alert alert-danger" id="warning">
+	   
+	    </div>
         <div class="col-xs-12 col-sm-7 col-md-1" >
+	    <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Obejetivo Especifico:</h5>
@@ -42,7 +52,7 @@ use yii\web\JsExpression;
             <select class="form-control" name="Proyecto[id_indicador]" id="proyecto-id_indicador">
 		<?php
                         $array2 = [];
-                        $i = 0;
+                       // $i = 0;
                            foreach($indicadores as $indicadores2)
                             {
                                 
@@ -50,10 +60,10 @@ use yii\web\JsExpression;
 				{
                     ?>
                                <option value="<?= $indicadores2->id; ?>" > <?= $indicadores2->descripcion ?></option>;
-                    <?php  $array2[$i] = $indicadores2->id;
+                    <?php  $array2[] = $indicadores2->id;
 		    
 				}
-				$i++;
+				//$i++;
 			    } ?>    
 		</select>    
         </div>
@@ -69,7 +79,7 @@ use yii\web\JsExpression;
             <select class="form-control" name="Proyecto[id_actividad]" id="proyecto-id_actividad">
 		<?php
                         $array = [];
-                        $i = 0;
+                        //$i = 0;
                            foreach($actividades as $actividades2)
                             {
                                 
@@ -78,20 +88,31 @@ use yii\web\JsExpression;
                     ?>
                                <option value="<?= $actividades2->id; ?>" > <?= $actividades2->descripcion ?></option>;
                     <?php
-			    $array[$i] = $actividades2->id;
+			    $array[] = $actividades2->id;
 			    }
-			    $i++; } ?>    
+			   // $i++;
+			   } ?>    
 		</select>    
         </div>
 	<div class="col-xs-12 col-sm-7 col-md-1" >
 	</div>
         <div class="clearfix"></div><br/><br/>
-	<div class="col-xs-12 col-sm-7 col-md-12" >
-        <?= \app\widgets\recursos\RecursosWidget::widget(['actividad_id'=>$array[0]]); ?> 
+	<div class="col-xs-12 col-sm-7 col-md-12" id="form1">
+        <?= \app\widgets\recursos\RecursosWidget::widget(['actividad_id'=>$array[0],'vigencia'=>$proyecto->vigencia,'id_proyecto'=>$proyecto->id,'evento'=>$evento]); ?> 
         
         
         </div>
-  
+	<?php if($proyecto->situacion == 0) {?>
+	<div class="clearfix"><br/>
+        <div class="col-xs-12 col-sm-7 col-md-12 checkbox">
+            <label><input type="checkbox" name="Proyecto[cerrar_recurso]" id="proyecto-cerrar_recurso" ><strong>Doy por completo el registro de mi proyecto y Autorizo su revisión.</strong></label>
+        </div>
+	<?php } }else{   ?>
+	    <div class="alert alert-warning" id="warning">
+		<?= $ver_act->mensaje.$ver_peso_act->mensaje ?>
+		<!--<strong>¡Error!</strong> Verificar los Indicadores y Actividades para continuar.-->
+	    </div>
+	<?php } ?>
  <?php ActiveForm::end(); ?>
 </div>      
   <?php
@@ -99,11 +120,98 @@ use yii\web\JsExpression;
     $obteneractividad = Yii::$app->getUrlManager()->createUrl('proyecto/obteneractividad');
     $refrescaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/refrescaractividades');
     $refrescarrecurso = Yii::$app->getUrlManager()->createUrl('proyecto/refrescarrecursos');
+    $verf_presupuesto = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_presupuesto');
     
 ?>
   
-  <script>
+<script>
 
+var situacion_proyecto = <?= $proyecto->situacion; ?>;
+var evento = <?= $evento; ?>;
+
+ $(document).ready(function(){ 
+
+ if((situacion_proyecto > 0) && (evento == 1))
+ {
+    $('#form1').find('input, textarea, select').prop('disabled', true);
+    $('.table  th:eq(8)').hide();
+    $('.table  td:nth-child(9)').hide();
+    $('#btn_recursos').hide();
+    $('.btn_hide').hide();
+    
+    
+ }
+ 
+ <?php
+	if($denegado == 1)
+	{
+	$valor = json_decode($ver_monto_total);
+	$valor_recursos = json_decode($ver_recursos);
+	
+    ?>
+    var ver_prog = verificar_programado(<?= $proyecto->id; ?>);
+    var estado_monto = <?= $valor->estado; ?>;
+    var mensaje_monto = "<?= $valor->mensaje; ?>";
+    var estado_recurso = "<?= $valor_recursos->estado; ?>";
+    var mensaje_recurso = "<?= $valor_recursos->mensaje; ?>";
+ 
+ if ((estado_monto > 1) || (estado_recurso > 0) || (ver_prog[0] != 0)) {
+	   $('#warning').html(mensaje_monto+mensaje_recurso+ver_prog[1]);
+	   $('#warning').show();
+	}
+	else
+	{
+	   $('#warning').hide();
+	}
+ <?php } ?>
+ 
+ 
+ $('#proyecto-cerrar_recurso').change(function() {
+        if($(this).is(":checked")) {
+            var ver_saldo = verificar_saldo(<?= $proyecto->id; ?>);
+            var ver_recursos = verificar_recursos(<?= $proyecto->id; ?>);
+            var ver_prog = verificar_programado(<?= $proyecto->id; ?>);
+            
+            if ((ver_saldo[0] > 1) || (ver_recursos[0] != 0) || (ver_prog[0] != 0)) {
+               $.notify({
+                message: ver_saldo[1]+ver_recursos[1]+ver_prog[1]
+                },{
+                type: 'danger',
+                z_index: 1000000,
+                placement: {
+                    from: 'bottom',
+                    align: 'right'
+                },
+            });
+               $(this).attr("checked", false);
+            }
+            else
+            {
+               
+               var returnVal = confirm("Esta seguro de dar por concluido el registro del Proyecto?");
+                if (returnVal == true)
+                {
+                    $("#btn_recursos").html('Finalizar');  
+                }
+                else
+                {
+                    $(this).attr("checked", false);
+                }
+            }   
+        
+            
+        }
+        else
+        {
+          $("#btn_recursos").html('Guardar');    
+        }
+      
+    });
+ 
+ 
+ 
+ });
+ 
   $("#proyecto-id_objetivo").change(function(){
     
      var indicador = $("#proyecto-id_indicador");
@@ -141,12 +249,24 @@ use yii\web\JsExpression;
 					    url: '<?= $refrescarrecurso ?>',
 					    type: 'GET',
 					    async: true,
-					    data: {id:id_actividad},
+					    data: {id:id_actividad,id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
 					    success: function(data){
 						var valor = jQuery.parseJSON(data);
 						$('#recurso_tabla').append(valor.html);
 					       re = valor.contador;
 					       console.log(re);
+					       
+					       
+					       if((situacion_proyecto > 0) && (evento == 1))
+						{
+						   $('#form1').find('input, textarea, select').prop('disabled', true);
+						   $('.table  th:eq(8)').hide();
+						   $('.table  td:nth-child(9)').hide();
+						   $('#btn_recursos').hide();
+						   $('.btn_hide').hide();
+						   
+						   
+						}
 					    }
 				    });
 			    
@@ -185,12 +305,23 @@ $("#proyecto-id_indicador").change(function(){
 					    url: '<?= $refrescarrecurso ?>',
 					    type: 'GET',
 					    async: true,
-					    data: {id:id_actividad},
+					    data: {id:id_actividad,id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
 					    success: function(data){
 						var valor = jQuery.parseJSON(data);
 						$('#recurso_tabla').append(valor.html);
 					       re = valor.contador;
 					       console.log(re);
+					       
+					       if((situacion_proyecto > 0) && (evento == 1))
+						{
+						   $('#form1').find('input, textarea, select').prop('disabled', true);
+						   $('.table  th:eq(8)').hide();
+						   $('.table  td:nth-child(9)').hide();
+						   $('#btn_recursos').hide();
+						   $('.btn_hide').hide();
+						   
+						   
+						}
 					    }
 				    });
 			    
@@ -201,6 +332,57 @@ $("#proyecto-id_indicador").change(function(){
         }
  });
 
+$( "#proyecto-id_actividad" ).change(function() {
+    
+  var id_actividad = $(this).val();
+  $('#recurso_tabla > tbody > tr').remove();
+        
+        $.ajax({
+                    url: '<?= $refrescarrecurso ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {id:id_actividad,id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+                        $('#recurso_tabla').append(valor.html);
+                       re = valor.contador;
+                       console.log(re);
+		       
+		       
+		       if((situacion_proyecto > 0) && (evento == 1))
+						{
+						   $('#form1').find('input, textarea, select').prop('disabled', true);
+						   $('.table  th:eq(8)').hide();
+						   $('.table  td:nth-child(9)').hide();
+						   $('#btn_recursos').hide();
+						   $('.btn_hide').hide();
+						   
+						   
+						}
+                    }
+                });
+  
+  
+  
+});
 
+function monto_presupuesto(id)
+{
+    var array = [];
+   $.ajax({
+                    url: '<?= $verf_presupuesto ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id:id},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+		        array[0] = valor.estado;
+			array[1] = valor.mensaje;
+			
+			;
+                    }
+                });
+   return array
+}
  
   </script>

@@ -13,12 +13,15 @@ use yii\web\JsExpression;
             <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Actividades</span></h3>
             
             </div>
-        
+        <?php if($ver_obj_ind == 0){ ?>
+	<div class="alert alert-warning" id="warning">
+	    
+	    </div>
         <div class="col-xs-12 col-sm-7 col-md-1" >
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Obejetivo Especifico:</h5>
-                <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
+                <!--<label for="proyecto-objetivo_general">SeÃ±ale Objeto General:</label>-->
             <select class="form-control" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo">
 		<?php
                         $array1 = [];
@@ -28,7 +31,10 @@ use yii\web\JsExpression;
                                 $array1[$i] = $objetivoespecifico->id;
                     ?>
                                <option value="<?= $objetivoespecifico->id; ?>" > <?= $objetivoespecifico->descripcion ?></option>;
-                    <?php  $i++; } ?>    
+                    <?php  $i++; }
+		    echo '<script>
+    console.log('.json_encode($array1).');</script>';
+		    ?>    
 		</select>    
         </div>
 	<div class="col-xs-12 col-sm-7 col-md-1" >
@@ -38,40 +44,65 @@ use yii\web\JsExpression;
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Indicador:</h5>
-                <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
+                <!--<label for="proyecto-objetivo_general">SeÃ±ale Objeto General:</label>-->
             <select class="form-control" name="Proyecto[id_indicador]" id="proyecto-id_indicador">
 		<?php
-                        $array = [];
-                        $i = 0;
+                        $array2 = [];
+                        //$e = 0;
                            foreach($indicadores as $indicadores2)
                             {
                                 
 				if($indicadores2->id_oe == $array1[0])
 				{
+				    $array2[] = $indicadores2->id;
                     ?>
                                <option value="<?= $indicadores2->id; ?>" > <?= $indicadores2->descripcion ?></option>;
-                    <?php  $array[$i] = $indicadores2->id;
-		    
+                    <?php  
+				
 				}
-				$i++;
-			    } ?>    
+				//$e++;
+			    }
+			    
+			    ?>  
 		</select>    
         </div>
 	<div class="col-xs-12 col-sm-7 col-md-1" >
 	</div>
 	<div class="clearfix"></div><br/><br/>
-        <div class="col-xs-12 col-sm-7 col-md-12" >
-        <?= \app\widgets\actividades\ActividadesWidget::widget(['indicador_id'=>$array[0]]); ?> 
+        <div class="col-xs-12 col-sm-7 col-md-12" id="form1">
+    
+        <?= \app\widgets\actividades\ActividadesWidget::widget(['indicador_id'=>$array2[0],'id_proyecto'=>$proyecto->id,'evento'=>$evento]); ?>
         </div>
+	<?php }else{?>
+	    <div class="alert alert-warning" id="warning">
+		<strong>Â¡Error!</strong> Hay Objetivos sin Indicadores no puede continuar.
+	    </div>
+	<?php } ?>
          <?php ActiveForm::end(); ?>
    
  </div>       
 <?php
   $obtenerindicadores = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerindicadores');
   $refrescaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/refrescaractividades');
+  $verificar_obj_ind= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_obj_ind');
 ?>
   <script>
+ var situacion_proyecto = <?= $proyecto->situacion; ?>;
+var evento = <?= $evento; ?>;
 
+ $(document).ready(function(){ 
+
+ if((situacion_proyecto > 0) && (evento == 1))
+ {
+    $('#form1').find('input, textarea, select').prop('disabled', true);
+    $('.table  th:eq(7)').hide();
+    $('.table  td:nth-child(8)').hide();
+    $('.btn_hide').hide();  
+ }
+ 
+
+ 
+ });
 $("#proyecto-id_objetivo").change(function(){
     
      var indicador = $("#proyecto-id_indicador");
@@ -82,7 +113,7 @@ $("#proyecto-id_objetivo").change(function(){
         $.ajax({
                     url: '<?= $obtenerindicadores ?>',
                     type: 'GET',
-                    async: true,
+                    async: false,
                     data: {id:objetivo.val()},
                     success: function(data){
                         indicador.find('option').remove();
@@ -96,13 +127,22 @@ $("#proyecto-id_objetivo").change(function(){
 			$.ajax({
 				    url: '<?= $refrescaractividad ?>',
 				    type: 'GET',
-				    async: true,
-				    data: {id:id_indicador},
+				    async: false,
+				    data: {id:id_indicador,evento:<?= $evento; ?>},
 				    success: function(data){
 					var valor = jQuery.parseJSON(data);
 					$('#actividades_tabla').append(valor.html);
 				       act = valor.contador;
-				       console.log(act);
+				       console.log(situacion_proyecto);
+				       avisos2();
+				       
+				    if((situacion_proyecto > 0) && (evento == 1))
+					{
+					   $('#actividades_tabla').find('input, textarea, select').prop('disabled', true);
+					   $('#actividades_tabla  th:eq(7)').hide();
+					   $('#actividades_tabla  td:nth-child(8)').hide();
+					   $('.btn_hide').hide(); 
+					}   
 				    }
 				});
 			
@@ -112,6 +152,40 @@ $("#proyecto-id_objetivo").change(function(){
                     }
                 });
         }
+	
+ejecutar_numeric();
  });
+
+ $( "#proyecto-id_indicador" ).change(function() {
+    
+  var id_indicador = $(this).val();
+  $('#actividades_tabla > tbody > tr').remove();
+        
+        $.ajax({
+                    url: '<?= $refrescaractividad ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id:id_indicador,evento:<?= $evento; ?>},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+                        $('#actividades_tabla').append(valor.html);
+                       act = valor.contador;
+                       console.log(act);
+		       avisos2();
+		       if((situacion_proyecto > 0) && (evento == 1))
+					{
+					   $('#actividades_tabla').find('input, textarea, select').prop('disabled', true);
+					   $('#actividades_tabla  th:eq(7)').hide();
+					   $('#actividades_tabla  td:nth-child(8)').hide();
+					   $('.btn_hide').hide(); 
+					}
+                    }
+                });
+  
+  
+  ejecutar_numeric();
+});
+
+
     
   </script>

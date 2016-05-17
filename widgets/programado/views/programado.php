@@ -1,7 +1,7 @@
 
-
+<?php if($recursos){ ?>
 <button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#programado<?= $re ?>_" id="btn_programado" onclick="cargartitulos(<?= $re ?>)">Detalle</button>
-<!--Lista de Objetivos Especificos -->
+
 <div class="modal fade bs-example-modal-lg" id="programado<?= $re ?>_" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -23,37 +23,66 @@
                 <div class="clearfix"></div><br/>
                 <div class="col-xs-12 col-sm-7 col-md-3">
                     <label>Año</label>
-                    <select id="proyecto-anio_<?= $re ?>" class="form-control" name="Proyecto[anio]">
-                        <option value="1" selected>Primer Año</option>
-                        <option value="1">Segundo Año</option>
-                        <option value="1">Primer Año</option>
+		    <?php
+			if(fmod($vigencia,12) == 0)
+			    {
+				$años[$re] = (int)($vigencia/12);
+				$meses[$re] = 12;
+			    }
+			    else
+			    {
+				$años[$re] = intval(($vigencia/12));
+				
+				$meses[$re] = $vigencia -($años[$re]*12);
+			    }
+		    ?>
+                    <select onchange="cargaranio(<?= $re ?>,<?= $años[$re] ?>,<?= $meses[$re] ?>)" id="proyecto-programa_anio_<?= $re ?>" class="form-control" name="Proyecto[programa_anio]">
+		    <?php
+			    
+			if($años[$re] > 0)
+			{
+			for($i=1;$i<=$años[$re];$i++)
+			{
+			    switch ($i) {
+					    case 1:
+						echo '<option value="1" selected>Primer Año</option>';
+						break;
+					    case 2:
+						echo '<option value="2" >Segundo Año</option>';
+						break;
+					    case 3:
+						echo '<option value="3" >Tercer Año</option>';
+						break;
+					}
+
+			}
+			    if($meses[$re] != 12)
+			    {
+				echo '<option value="'.$i.'" >'.($i == 2 ? 'Segundo' : 'Tercero' ).' Año</option>';
+			    }
+			
+			}
+			else
+			{	
+			  echo '<option value="1" selected>Primer Año</option>';
+			}
+		    
+		    ?>
+
+		    
                     </select>
                 </div>
                 <div class="col-xs-12 col-sm-7 col-md-3">
                     <label>Precio Unitario</label>
-                    <input type="text" id="proyecto-precio_unit_<?= $re ?>" class="form-control" name="Proyecto[precio_unit]" placeholder="" value="<?= $recursos->precio_unit ?>" />
+                    <input type="text" id="proyecto-precio_unit_<?= $re ?>" class="form-control decimal" name="Proyecto[precio_unit]" placeholder="" value="<?= $recursos->precio_unit; ?>" />
                 </div>
                 <div class="clearfix"></div><br/
                 <div class="col-xs-12 col-sm-7 col-md-12">
                  <input type="hidden" id="proyecto-id_recurso_<?= $re ?>" class="form-control" name="Proyecto[id_recurso_prog]" placeholder="" value="<?= $rec_prog_id ?>" />   
                     <table class="table table-bordered table-hover" id="programado_tabla_<?= $re ?>">
-                        <!--<thead>
-                            <tr>
-                                <th class="text-center">
-                                    
-                                </th>
-                                <th class="text-center">
-                                    
-                                </th>
-				<th class="text-center">
-                                    
-                                </th>
-                                <th>
-                                </th>
-                            </tr>
-                        </thead>-->
+
                         <tbody>
-                            <tr>
+                            <tr id ="registro_meses_<?= $re ?>">
 			    <?php if($programado){
                                 $mes = [];
                                 $cantidad = [];
@@ -65,31 +94,35 @@
                                     $cantidad[] = $programado2->cantidad;
                                     $id[] = $programado2->id;
                                 }
-                                for($i=1; $i<=12; $i++)
+                                for($i=1; $i<=count($mes); $i++)
                                 {
                             ?>        
-                                  <td>
+                                  <td><label>Mes <?= $i; ?></label>
 					    <div class="form-group field-proyecto-programado_mes_<?= $re ?>_<?= $i; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $re ?>_<?= $i; ?> " class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" <?=($mes[$i] == $i)?'value="'.$cantidad[$i].'"':'' ?>  />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $re ?>_<?= $i; ?> " class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $i ?>" />
-                                                <input type="hidden" id="proyecto-programado_id_<?= $re ?>_<?= $i; ?> " class="form-control" name="Proyecto[programado_id][]" placeholder="" value="<?= $id[$i] ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $re ?>_<?= $i; ?>" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="<?= $cantidad[($i-1)]; ?>"  />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $mes[($i-1)] ?>" />
+                                                <input type="hidden" id="proyecto-programado_id_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_id][]" placeholder="" value="<?= $id[($i-1)] ?>" />
 					    </div>
                                     </td>  
                             <?php
                                 }
                             }else{
                                 
-                                for($i=1; $i<=12; $i++)
+				if($años[$re] > 0)$contador = 12; else $contador = $meses;
+				
+                                for($i=1; $i<=$contador; $i++)
                                 {
                             ?>        
-                                  <td>
+                                  <td><label>Mes <?= $i; ?></label>
 					    <div class="form-group field-proyecto-programado_mes_<?= $re ?>_<?= $i; ?> required">
 						<input type="text" id="proyecto-programado_cantidad_<?= $re ?>_<?= $i; ?>" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
                                                 <input type="hidden" id="proyecto-programado_mes_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
                                     </td>  
                             <?php
-                                }}
+                                }
+
+				}
                             ?>
 				
 				</tr>
@@ -103,27 +136,11 @@
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-                <button  onclick="grabar(<?= $re ?>)" type="button" id="btn_colaboradores" class="btn btn-primary" data-dismiss="modal">Guardar</button>
+                <button  onclick="grabarrecurso(<?= $re ?>,<?= $i ?>)" type="button" id="btn_grabar" class="btn btn-primary btn_hide" data-dismiss="modal">Guardar</button>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-
-    
-function cargartitulos(re) {
-                                   
-   $("#obj_programado_"+re).html($("#proyecto-id_objetivo option:selected").html());
-   $("#ind_programado_"+re).html($("#proyecto-id_indicador option:selected").html());
-   $("#act_programado_"+re).html($("#proyecto-id_actividad option:selected").html()); 
-}
-
-function grabar(valor) {
-    
-    
-    
-}
-
-
-</script>
+<?php }else{ ?>
+<button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado<?= $re ?>_" id="btn_programado" onclick="cargartitulos(<?= $re ?>)">Detalle</button>
+<?php } ?>

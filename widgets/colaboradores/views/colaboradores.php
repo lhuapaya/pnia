@@ -12,7 +12,7 @@
             <div class="modal-body">
                 <div class="clearfix"></div>-->
 		<div class="clearfix"></br></div>
-                <div class="col-xs-12 col-sm-7 col-md-12">
+                <div class="col-xs-12 col-sm-7 col-md-12" id="form_colaborador">
                     <table class="table table-bordered table-hover" id="colaboradores_tabla">
                         <thead>
                             <tr>
@@ -126,7 +126,9 @@
                             <tr id='colaborador_addr_1_<?= $co ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="colcaborador_row_2" class="btn btn-default pull-left" >Agregar Colaborador</div>
+                    <div>
+					<button type="button" class="btn btn-default pull-left" id="colcaborador_row_2">Agregar Colaborador</button>
+					</div>
                     <br>
                 </div>
                 <!--<div class="clearfix"></div>
@@ -143,6 +145,9 @@
     $eliminarColaborador= Yii::$app->getUrlManager()->createUrl('proyecto/eliminarcolaborador');
 ?>
 <script>
+		
+ 
+		
     var co = <?= $co ?>;
     
     $("#colaboradores_tabla").on('click','.eliminar',function(){

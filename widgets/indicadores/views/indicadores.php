@@ -4,7 +4,7 @@
             <div>
 		<div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-                    <table class="table borderless table-hover" name="Proyecto[indicadores_tabla][]" id="indicadores_tabla_<?= $correlativo; ?>" border="0">
+                    <table class="table borderless table-hover tb_indicador" name="Proyecto[indicadores_tabla][]" id="indicadores_tabla_<?= $correlativo; ?>" border="0">
                         <thead>
                             <tr>
                                 <th class="text-center">
@@ -47,7 +47,7 @@
 					</td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-indicadores_pesos_<?= $correlativo; ?>_<?= $ind ?>  required">
-						<input type="text" id="proyecto-indicadores_pesos_<?= $correlativo; ?>_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso" value="<?= $indicador->peso ?>" />
+						<input type="text" id="proyecto-indicadores_pesos_<?= $correlativo; ?>_<?= $ind ?>" class="form-control entero"  name="Proyecto[indicadores_pesos][]" placeholder="Peso" value="<?= $indicador->peso ?>" />
 					    </div>
 					</td>
 					<td>
@@ -57,12 +57,12 @@
 					</td>
 					<td>
 					    <div class="form-group field-proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?> required">
-						<input type="text" id="proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta" value="<?= $indicador->meta ?>" />
+						<input type="text" id="proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?>" class="form-control entero" name="Proyecto[indicadores_meta][]" placeholder="Meta" value="<?= $indicador->meta ?>" />
 					    </div>
 					</td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,<?= $ind ?>)">
-						<input type="hidden" id="indicadores_ids_<?= $ind ?>" name="Proyecto[indicadores_ids][]" value="<?= $indicador->id ?>" />
+						<input type="hidden" id="indicadores_ids_<?= $correlativo; ?>_<?= $ind ?>" name="Proyecto[indicadores_ids][]" value="<?= $indicador->id ?>" />
 					    </span>
 					</td>
 				    </tr>
@@ -72,31 +72,33 @@
 				<tr id='indicador_addr_0_0'>
 				    <td>
 					<?= ($ind+1) ?>
+					<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_<?= $ind; ?>" value="<?= $objetivosind; ?>" />
 					<input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_0" value="<?= $ind; ?>" />
 					</td>
 
 					<td class="col-xs-6">
-					    <div class="form-group field-proyecto-indicadores_descripciones_0_0  required ">
-						<input type="text" id="proyecto-indicadores_descripciones_0_0" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>"  />
+					    <div class="form-group field-proyecto-indicadores_descripciones_<?= $correlativo; ?>_0  required ">
+						<input type="text" id="proyecto-indicadores_descripciones_<?= $correlativo; ?>_0" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #<?= ($ind+1) ?>"  />
 					    </div>
 					</td>
 					<td class="col-xs-1">
-					    <div class="form-group field-proyecto-indicadores_pesos_0_0  required">
-						<input type="text" id="proyecto-indicadores_pesos_0_0" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  />
+					    <div class="form-group field-proyecto-indicadores_pesos_<?= $correlativo; ?>_0  required">
+						<input type="text" id="proyecto-indicadores_pesos_<?= $correlativo; ?>_0" class="form-control entero" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  />
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_unidad_medidas_0_0 required">
-						<input type="text" id="proyecto-indicadores_unidad_medidas_0_0" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  />
+					    <div class="form-group field-proyecto-indicadores_unidad_medidas_<?= $correlativo; ?>_0 required">
+						<input type="text" id="proyecto-indicadores_unidad_medidas_<?= $correlativo; ?>_0" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  />
 					    </div>
 					</td>
 					<td>
-					    <div class="form-group field-proyecto-indicadores_meta_0_0 required">
-						<input type="text" id="proyecto-indicadores_meta_0_0" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta"  />
+					    <div class="form-group field-proyecto-indicadores_meta_<?= $correlativo; ?>_0 required">
+						<input type="text" id="proyecto-indicadores_meta_<?= $correlativo; ?>_0" class="form-control entero" name="Proyecto[indicadores_meta][]" placeholder="Meta"  />
 					    </div>
 					</td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,<?= $ind ?>)">
+					    <input type="hidden" id="indicadores_ids_<?= $correlativo; ?>_0" name="Proyecto[indicadores_ids][]" value="" />
 					    </span>
 					</td>
 				</tr>
@@ -105,7 +107,7 @@
                             <tr id='indicador_addr_<?= $correlativo; ?>_<?= $ind ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="indicadores_row_1" onclick="agregarind(<?= $correlativo; ?>,<?= $ind ?>,<?= $objetivosind; ?>)" class="btn btn-default pull-left" value="1">Agregar</div>
+                    <div id="indicadores_row_1" onclick="agregarind(<?= $correlativo; ?>,<?= $ind ?>,<?= $objetivosind; ?>)" class="btn btn-default pull-left btn_hide" value="1">Agregar</div>
                     <br>
                 </div>
                 <div class="clearfix"><br/><br/></div>
@@ -206,7 +208,7 @@
 	var valor = null;
         if (r == true)
 	{
-            id= $('#indicadores_tabla_'+ntabla).find('#indicadores_ids_'+ntr).val();
+            id= $('#indicadores_tabla_'+ntabla).find('#indicadores_ids_'+ntabla+'_'+ntr).val();
             if (id) {
 		$.ajax({
                     url: '<?= $eliminarindicador ?>',
@@ -289,7 +291,7 @@
         }
         else
         {
-            $('#indicador_addr_'+ntabla+'_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_'+ind+'" value="'+obj+'" /><input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"><div class="form-group field-proyecto-indicadores_descripciones_'+ntabla+'_'+ind+' required "><input type="text" id="proyecto-indicadores_descripciones_'+ntabla+'_'+ind+'" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'+(ind+1)+'"  /></div></td><td class="col-xs-1"><div class="form-group field-proyecto-indicadores_pesos_'+ntabla+'_'+ind+'  required"><input type="text" id="proyecto-indicadores_pesos_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  /></div></td><td><div class="form-group field-proyecto-indicadores_unidad_medidas_'+ntabla+'_'+ind+' required"><input type="text" id="proyecto-indicadores_unidad_medidas_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  /></div></td><td><div class="form-group field-proyecto-indicadores_meta_'+ntabla+'_'+ind+' required"><input type="text" id="proyecto-indicadores_meta_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta"  /></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
+            $('#indicador_addr_'+ntabla+'_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_'+ind+'" value="'+obj+'" /><input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"><div class="form-group field-proyecto-indicadores_descripciones_'+ntabla+'_'+ind+' required "><input type="text" id="proyecto-indicadores_descripciones_'+ntabla+'_'+ind+'" class="form-control " name="Proyecto[indicadores_descripciones][]" placeholder="Indicador #'+(ind+1)+'"  /></div></td><td class="col-xs-1"><div class="form-group field-proyecto-indicadores_pesos_'+ntabla+'_'+ind+'  required"><input type="text" id="proyecto-indicadores_pesos_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_pesos][]" placeholder="Peso"  /></div></td><td><div class="form-group field-proyecto-indicadores_unidad_medidas_'+ntabla+'_'+ind+' required"><input type="text" id="proyecto-indicadores_unidad_medidas_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_unidad_medidas][]" placeholder="Unidad de Medida "  /></div></td><td><div class="form-group field-proyecto-indicadores_meta_'+ntabla+'_'+ind+' required"><input type="text" id="proyecto-indicadores_meta_'+ntabla+'_'+ind+'" class="form-control" name="Proyecto[indicadores_meta][]" placeholder="Meta"  /></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"><input type="hidden" id="indicadores_ids_'+ntabla+'_'+ind+'" name="Proyecto[indicadores_ids][]" value="" /></span></td>');
             //$('#indicador_addr_'+ntabla+'_'+ind).html('<td>'+(ind+1)+'<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_'+ind+'" value="'+obj+'" /><input type="hidden" name="Proyecto[indicadores_numero][]" id="proyecto-indicadores_numero_'+ind+'" value="'+ind+'" /></td><td class="col-xs-6"></td><td class="col-xs-1"></td><td></td><td></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
 	    $('#indicadores_tabla_'+ntabla).append('<tr id="indicador_addr_'+ntabla+'_'+(ind+1)+'"></tr>');
         }

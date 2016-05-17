@@ -8,10 +8,14 @@ use yii\helpers\Html;
 use app\models\Usuario;
 use app\models\Recurso;
 use app\models\Maestros;
+use app\models\Aportante;
 
 class RecursosWidget extends Widget
 {
     public $actividad_id;
+    public $vigencia;
+    public $id_proyecto;
+    public $evento;
     public function init()
     {
         parent::init();
@@ -24,6 +28,12 @@ class RecursosWidget extends Widget
         $recursos=Recurso::find()
                                 ->where('actividad_id=:actividad_id',[':actividad_id'=>$this->actividad_id])
                                 ->all();
+        
+        $fuentes=Aportante::find()
+                                ->select('id, colaborador')
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$this->id_proyecto])
+                                ->orderBy('tipo')
+                                ->all();
                                 
         $clasificador = Maestros::find()
                                 ->where('id_padre = 32 and estado = 1')
@@ -35,7 +45,7 @@ class RecursosWidget extends Widget
             //1return \Yii::$app->getResponse()->refresh();
         //}
         
-        return $this->render('recursos',['recursos'=>$recursos,'clasificador'=>$clasificador]
+        return $this->render('recursos',['recursos'=>$recursos,'clasificador'=>$clasificador,'vigencia'=>$this->vigencia,'fuentes'=>$fuentes,'id_proyecto'=>$this->id_proyecto,'event'=>$this->evento]
                              );
     }
 }

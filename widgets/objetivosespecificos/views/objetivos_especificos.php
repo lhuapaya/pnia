@@ -6,23 +6,28 @@
 		    <!--<div class="col-md-1" >
 			<?= ($correlativo+1); ?>
 		    </div>-->
-		    <div class="col-xs-12 col-sm-9 col-md-10" >
+		    <div class="col-md-1" >
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $correlativo; ?>">
+			     <span style="color:black" class="glyphicon <?=($correlativo == 0)?'glyphicon-minus':'glyphicon-plus' ?> "></span>
+			</a>
+			</div>
+		    <div class="col-xs-10 col-sm-10 col-md-9" >
 			<div class="form-group field-proyecto-objetivos_descripciones_<?= $correlativo; ?> required">
 			    <!--<label for="proyecto-obj_descripcion_<?= $correlativo; ?>">Descripción:</label>-->
 			    <input class="form-control" type="text" value="<?= $objetivoespecifico->descripcion;?>" placeholder="" id="proyecto-objetivos_descripciones_<?= $correlativo; ?>" name="Proyecto[objetivos_descripciones][]"  required/>
 			</div> 
 		    </div>
-		    <div class="col-xs-12 col-sm-9 col-md-1" >
+		    <div class="col-xs-12 col-sm-9 col-md-2" >
 			<div class="form-group field-proyecto-objetivos_peso_<?= $correlativo; ?> required">
 			    <!--<label for="proyecto-obj_peso_<?= $correlativo; ?>">Descripción:</label>-->
-			    <input class="form-control" type="text" value="<?= $objetivoespecifico->peso;?>" placeholder="" id="proyecto-objetivos_peso_<?= $correlativo; ?>" name="Proyecto[objetivos_peso][]"  required/>
+			    <input class="form-control entero" type="text" value="<?= $objetivoespecifico->peso;?>" placeholder="" id="proyecto-objetivos_peso_<?= $correlativo; ?>" name="Proyecto[objetivos_peso][]"  required/>
 			</div>    
 		    </div>
-		    <div >
+		    <!--<div >
 			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $correlativo; ?>">
 			     <span style="color:black" class="glyphicon <?=($correlativo == 0)?'glyphicon-minus':'glyphicon-plus' ?> "></span>
 			</a>
-		    </div>
+		    </div>-->
                     
                     <br>
                 </div>

@@ -19,7 +19,7 @@
                 <textarea class="form-control" type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 100%; height: 40px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]" ng-model="adatos.objetivo_general" required>{{adatos.objetivo_general}}</textarea>
         </div>
         
-        <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
+        <?php // \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
         <div id="control_boton">
                 <button type="submit" ng-click="grabaroe()" id="btn_objetivos_especificos" class="btn btn-primary" ng-disabled="!formObjetivos.$valid" >Guardar</button>
         </div>

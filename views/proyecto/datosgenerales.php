@@ -18,7 +18,7 @@ use app\models\Maestros;
 
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
-<div >
+<div id="form1" >
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
             <div>
                 
@@ -256,49 +256,7 @@ use app\models\Maestros;
                             
                 </div>    
             </div>
-            <!--<div class="clearfix"><h4>Dependencia del INIA que Ejecutara el Proyecto</h4></div>
             
-            
-            <div class="clearfix"><h4>Nombres y Apellidos del Responsable Técnico del Proyecto</h4></div>
-            <div class="col-xs-12 col-sm-7 col-md-12" >
-                <div class="form-group field-proyecto-nombres required">
-                <label for="proyecto-nombres">Nombres:</label>
-                <input class="form-control" type="text" value="<?= $responsable->nombres?>" placeholder="Nombres" id="proyecto-nombres" name="Proyecto[nombres]"  required/> 
-                
-            </div>    
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-12" >
-                <div class="form-group field-proyecto-apellidos required">
-                <label for="proyecto-apellidos">Apellidos:</label>
-                <input class="form-control" type="text" value="<?= $responsable->apellidos?>" placeholder="Apellidos" id="proyecto-apellidos" name="Proyecto[apellidos]"  required/> 
-                
-            </div>    
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-6" >
-                <div class="form-group field-proyecto-telefono required">
-                <label for="proyecto-telefono">Teléfono Fijo:</label>
-                <input class="form-control" type="text" value="<?= $responsable->telefono?>" placeholder="Teléfono Fijo" id="proyecto-telefono" name="Proyecto[telefono]"  required/>
-                
-            </div>    
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-6" >
-                <div class="form-group field-proyecto-celular required">
-                <label for="proyecto-celular">Celular:</label>
-                <input class="form-control" type="text" value="<?= $responsable->celular?>" placeholder="Celular" id="proyecto-celular" name="Proyecto[celular]"  required/> 
-                
-            </div>    
-            </div>
-            <div class="col-xs-12 col-sm-7 col-md-12" >
-                <div class="form-group field-proyecto-correo required">
-                <label for="proyecto-correo">Correo Electrónico:</label>
-                <input class="form-control" type="text" value="<?= $responsable->correo?>" placeholder="Correo Electrónico" id="proyecto-correo" name="Proyecto[correo]"  required/> 
-                <span class="form_hint">Formato correcto: "nombre@dominio.com"</span>
-                
-            </div>    
-            </div>
-            
-            <div class="clearfix"></div>
-            <div class="clearfix"><h4>Lista de Nombres y Colaboradores Técnicos del Proyecto y Función Técnica</h4></div>-->
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-id_areatematica required">
                 <label for="proyecto-id_areatematica">Área temática:</label>
@@ -323,41 +281,15 @@ use app\models\Maestros;
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <?= \app\widgets\colaboradores\ColaboradoresWidget::widget(['id'=>$proyecto->id]); ?>   
             </div>
-            <div class="clearfix"></br></div>
-            </br>
-            </br>
-            <!--
-            <div class="clearfix"><h4>Alianza Estratégica establecidas para el Proyecto</h4></div>
-            <div class="col-xs-12 col-sm-7 col-md-12" >
-                <?php // \app\widgets\instituciones\InstitucionesWidget::widget(['proyecto_id'=>$proyecto->id]); ?> 
-                
-                
-            </div>
             <div class="clearfix"></div>
-            <div class="clearfix"><h4>Resumen Ejecutivo del Proyecto</h4></div>
-            <div class="col-xs-12 col-sm-7 col-md-12" >
-                <div class="form-group field-proyecto-resumen_ejecutivo required">
-                <label for="proyecto-resumen_ejecutivo">Descripción:</label>
-                <textarea class="form-control" type="text"  placeholder="..."  rows="10"  id="proyecto-resumen_ejecutivo" name="Proyecto[resumen_ejecutivo]"  required><?= $proyecto->resumen_ejecutivo?></textarea>
+            <br/>
+            <br/>
 
-            </div>    
-            </div>
-            <div class="clearfix"></div>
-            <div class="clearfix"><h4>Relevancia del Proyecto y Referencias a Resultados Obtenidos en INIA u otras Instituciones</h4></div>
-            <div class="col-xs-12 col-sm-7 col-md-12" >
-                <div class="form-group field-proyecto-relevancia required">
-                <label for="proyecto-relevancia">Descripción:</label>
-                <textarea class="form-control" type="text" placeholder="..."  rows="10" id="proyecto-relevancia" name="Proyecto[relevancia]"  required><?= $proyecto->relevancia?></textarea>
-
-            </div>    
-            </div>-->
             <div class="col-xs-12 col-sm-7 col-md-12" >
             <button type="submit" id="btnproyecto" class="btn btn-primary pull-right">Guardar</button>   
             </div>
         
-    </div>
-    
-    
+
     
     
  <?php ActiveForm::end(); ?>
@@ -376,6 +308,8 @@ use app\models\Maestros;
 <script type="text/javascript">
     
 $(document).ready(function(){
+    
+
 
 var inicialdependencia = <?= $proyecto-> id_dependencia_inia;?>;
 if (inicialdependencia != '')
@@ -394,7 +328,7 @@ if (inicialdependencia != '')
                         dependencia.find('option').remove();
                         dependencia.append(data);
                         $("#proyecto-id_dependencia_inia option[value="+inicialdependencia+"]").attr('selected','selected');
-                        dependencia.prop('disabled', false);
+                        //dependencia.prop('disabled', false);
                     }
                 });
         }
@@ -404,6 +338,23 @@ else
 $("#proyecto-id_dependencia_inia").prop('disabled', true);
 }
     
+var situacion_proyecto = <?= $proyecto->situacion; ?>;
+var evento = <?= $evento; ?>;
+
+ if((situacion_proyecto > 0) && (evento == 1))
+ {
+    $('#form1').find('input, textarea, button, select').prop('disabled', true);
+    $('#colaboradores_tabla  th:eq(4)').hide();
+    $('#colaboradores_tabla  td:nth-child(5)').hide();
+    $('#btnproyecto').hide();
+    $('#colcaborador_row_2').hide(); 
+ }
+ 
+ //   $('#form1').find('input, textarea, button, select').prop('disabled', true);
+ //   $('#form_colaborador').find('input, textarea, button, select').prop('disabled', false);
+});
+
+
 $("#proyecto-id_unidad_ejecutora").change(function(){
     
      var dependencia = $("#proyecto-id_dependencia_inia");
@@ -430,10 +381,6 @@ $("#proyecto-id_unidad_ejecutora").change(function(){
             dependencia.prop('disabled', true);
         }
  });
-
-});
-
-
 
 function provincia(valor) {
 	

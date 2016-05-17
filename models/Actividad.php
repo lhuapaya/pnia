@@ -39,7 +39,7 @@ class Actividad extends \yii\db\ActiveRecord
     {
         return [
             [['id_ind'], 'required'],
-            [['id_ind', 'id_bid', 'peso', 'programado'], 'integer'],
+            [['ejecutado','estado','id_ind', 'id_bid', 'peso'], 'integer'],
             [['descripcion'], 'string', 'max' => 3000],
             [['unidad_medida'], 'string', 'max' => 100],
             [['meta'], 'string', 'max' => 200],
@@ -60,9 +60,10 @@ class Actividad extends \yii\db\ActiveRecord
             'peso' => 'Peso',
             'unidad_medida' => 'Unidad Medida',
             'meta' => 'Meta',
-            'programado' => 'Programado',
             'fecha_inicio' => 'Fecha Inicio',
             'fecha_fin' => 'Fecha Fin',
+            'ejecutado' => 'Ejecutado',
+            'estado' => 'Estado',
         ];
     }
 

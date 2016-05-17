@@ -18,6 +18,7 @@ use Yii;
  * @property string $total
  *
  * @property Proyecto $idProyecto
+ * @property Recurso[] $recursos
  */
 class Aportante extends \yii\db\ActiveRecord
 {
@@ -77,5 +78,13 @@ class Aportante extends \yii\db\ActiveRecord
     public function getIdProyecto()
     {
         return $this->hasOne(Proyecto::className(), ['id' => 'id_proyecto']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRecursos()
+    {
+        return $this->hasMany(Recurso::className(), ['fuente' => 'id']);
     }
 }
