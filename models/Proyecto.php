@@ -126,8 +126,11 @@ class Proyecto extends \yii\db\ActiveRecord
             
             public $cerrar_actividad;
             public $cerrar_recurso;
+            public $cerrar_modificacion;
             public $respuesta_aprob;
             public $observacion;
+            
+            public $opcion;
     /**
      * @inheritdoc
      */
@@ -146,8 +149,8 @@ class Proyecto extends \yii\db\ActiveRecord
             [['presupuesto'], 'number'],
             [['prueba'],'safe'],
             [['distrito','nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
-              'objetivos_descripciones','actividades_ids','actividades_descripciones',
-              'indicadores_ids','indicadores_oe_ids','indicadores_descripciones','descripcion','observacion',
+              'objetivos_descripciones','actividades_ids','actividades_descripciones','opcion',
+              'indicadores_ids','indicadores_oe_ids','indicadores_descripciones','descripcion','observacion','cerrar_modificacion',
               'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat','respuesta_aprob',
               'alianzas_instituciones','alianzas_descripciones','alianzas_nombres','alianzas_apellidos','alianzas_correos','alianzas_telefonos',
               'alianzas_ids','colaboradores_ids','aportante_numero','aportante_colaborador','aportante_regimen','aportante_tipo_inst','zona_ids','zona_distrito','zona_departamento',

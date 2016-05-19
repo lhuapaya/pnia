@@ -10,7 +10,10 @@ use app\models\Actividad;
 
 class ObservacionWidget extends Widget
 {
-
+    public $maestro; //parametro golbal para el controller
+    public $titulo; //titulo de popup
+    public $tipo; //0:modificacion,1:aprobaciones
+    
     public function init()
     {
         parent::init();
@@ -22,7 +25,9 @@ class ObservacionWidget extends Widget
     
         
         return $this->render('observacion',[//'actividades'=>$actividades,
-                                            //'act'=>$this->act
+                                            'maestro'=>$this->maestro,
+                                            'titulo'=>$this->titulo,
+                                            'tipo'=>$this->tipo,
                                             //'indicadores'=>$indicadores
                                             ]);
     }

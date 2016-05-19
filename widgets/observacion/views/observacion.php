@@ -8,17 +8,17 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Observación</h4>
+                <h4 class="modal-title" id="myModalLabel"><?= $titulo; ?></h4>
             </div>
             <div class="modal-body">
                 <div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-                 <label>Describir el Motivo por el cual Observa el Proyecto.</label>   
+                 <label>Por favor indicar una breve descripción:</label>   
                 </div>
                 <div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
-                    <div class="form-group field-proyecto-observacion required">
-                        <textarea class="form-control" id="proyecto-observacion" name="Proyecto[observacion]" rows="10" requered></textarea>  
+                    <div class="form-group field-<?= strtolower($maestro); ?>-observacion required">
+                        <textarea class="form-control" id="<?= strtolower($maestro); ?>-observacion" name="<?= $maestro; ?>[observacion]" rows="10" requered></textarea>  
                     </div>
                 </div>
                 <div id="mensajeobs" ></div>
@@ -30,3 +30,33 @@
         </div>
     </div>
 </div>
+
+<script>
+ var tipo = <?= $tipo; ?>;
+ var maestro = "<?= strtolower($maestro); ?>";
+ 
+ $("#btn_observacion").click(function( ) {
+   
+   if($.trim($("#"+maestro+"-observacion").val()) != '') {
+        var respuesta = confirm('Esta seguro de realizar esta Acción?');
+        
+        if (respuesta == true) {
+            
+            if (tipo == 1) {
+                
+                $('#'+maestro+'-respuesta_aprob').val(0);
+            }
+          
+          jsShowWindowLoad('Procesando...');
+          
+          return true;
+        }
+    }
+    else
+    {
+      $("#mensajeobs").html("<label style='color:red;'>Por favor ingrese la Descripción.</label>"); 
+    }
+    return false;
+});   
+    
+</script>

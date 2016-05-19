@@ -34,7 +34,9 @@ class Aportante extends \yii\db\ActiveRecord
     public $desembolsos_anio;
     public $desembolsos_montos;
     public $desembolsos_porcentaje;
-
+    public $cerrar_modificacion;
+    public $observacion;
+    
     public static function tableName()
     {
         return 'aportante';
@@ -48,8 +50,8 @@ class Aportante extends \yii\db\ActiveRecord
         return [
             [['id_proyecto', 'regimen', 'tipo_inst', 'tipo'], 'integer'],
             [['monetario', 'no_monetario', 'total'], 'number'],
-            [['aportante_ids','proyecto_id','aporte_colaborador','aporte_nomonetario','aporte_monetario','aporte_tipo',
-              'desembolsos_ids','desembolsos_nro','desembolsos_mes','desembolsos_anio','desembolsos_montos','desembolsos_porcentaje'],'safe'],
+            [['aportante_ids','proyecto_id','aporte_colaborador','aporte_nomonetario','aporte_monetario','aporte_tipo','observacion',
+              'desembolsos_ids','desembolsos_nro','desembolsos_mes','desembolsos_anio','desembolsos_montos','desembolsos_porcentaje','cerrar_modificacion'],'safe'],
             [['colaborador'], 'string', 'max' => 200]
         ];
     }

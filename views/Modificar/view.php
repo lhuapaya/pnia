@@ -6,6 +6,8 @@ use kartik\date\DatePicker;
 use yii\web\JsExpression;
 use yii\widgets\Pjax;
 use app\models\Maestros;
+use app\models\Usuarios;
+use app\models\Perfil;
 
 //use kartik\select2\Select2;
 /* @var $this yii\web\View */
@@ -20,14 +22,16 @@ use app\models\Maestros;
 </style>
 <div id="form1" >
 <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
-<?= \app\widgets\observacion\ObservacionWidget::widget(); ?>   
+<?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Motivo de la Observación:','tipo'=>'1']); ?>  
 <ul class="tabs" >
     <li><a href="#tab1">Datos Generales</a></li>
     <li><a href="#tab2">Financiamiento</a></li>
     <li><a href="#tab3">Objetivos e Indicadores</a></li>
     <li><a href="#tab4">Actividades</a></li>
     <li><a href="#tab5">Recursos</a></li>
-    <li><a href="#tab6">Observaciones</a></li>
+    <?php if($observaciones){ ?>
+    <li><a href="#tab6" >Observaciones</a></li>
+    <?php } ?>
   </ul>
   <div class="clr"></div>
   <section class="block">
@@ -808,25 +812,33 @@ use app\models\Maestros;
         
     </article>
     <article id="tab6">
-      <?php foreach($flow_obs as $flow_obs2) { ?>
-      <div class="col-md-2"></div>
-      <div class="user-panel col-md-6" id="success">
-         <div class="pull-left image">
-              <img src='<?= Yii::$app->homeUrl; ?>img/<?= $flow_obs2->img; ?>' class="img-circle" alt="User Image">
-            </div>
-            <div class="pull-left info">
-              <p><?= $flow_obs2->name; ?></p>
-              <a href="#"><i class="fa fa-circle text-success"></i> <?= $flow_obs2->username; ?></a>
-            </div>
-      </div>
-      <div class="col-md-4"></div>
-      <div class="clearfix"></div><br/>
-      <div class="col-md-2"></div>
-      <div class="alert alert-info col-md-8" id="info">
-	   <?= $flow_obs2->descripcion; ?>
-      </div>
-      <div class="col-md-2"></div>
-      <?php }?>
+      <?php
+        if($observaciones){
+        foreach($observaciones as $obs)
+        {
+            $datos_user = Usuarios::find()
+                            ->select('usuarios.Name,perfil.descripcion,usuarios.id_perfil')
+                                ->innerJoin('perfil','perfil.id=usuarios.id_perfil')
+                                ->where('usuarios.id=:id_user',[':id_user'=>$obs->id_user])
+                                ->one();
+            ?>
+        <div class="col-xs-12 col-sm-7 col-md-2" ></div>
+        <div class="col-xs-12 col-sm-7 col-md-8" >
+                <div class="panel panel-<?= ($datos_user->id_perfil == 2) ? 'info':'danger' ?>">
+                    
+                    <div class="panel-heading">
+                      <h4 class="panel-title"><?= $datos_user->Name; ?>(<?= $datos_user->descripcion; ?>) - <?= $obs->fecha; ?></h4>
+                    </div>
+                    
+                    <div class="panel-body">
+                     <?= $obs->observacion; ?>
+                    </div>
+                    
+                </div>  
+        </div>
+        <div class="col-xs-12 col-sm-7 col-md-2" ></div>
+        <div class="clearfix"></div>
+        <?php }} ?>
     </article>
  
   </section>
@@ -1198,7 +1210,7 @@ $("#btnaceptar").click(function( ) {
     return false;
 });
 
-
+/*
 $("#btn_observacion").click(function( ) {
    
    if($.trim($("#proyecto-observacion").val()) != '') {
@@ -1215,7 +1227,7 @@ $("#btn_observacion").click(function( ) {
       $("#mensajeobs").html("<label style='color:red;'>Por favor ingrese el Motivo de la Observación</label>"); 
     }
     return false;
-});
+});*/
 
 function monto_presupuesto(id)
 {

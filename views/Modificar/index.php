@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
             {
                 ?>
     <p>
-        <?= Html::a(Yii::t('app', 'Nuevo Cambio'), ['modificardatosgen?id=0&event=0'], ['class' => 'btn btn-success','id'=>'nuevo_cambio']) ?>
+        <?= Html::a(Yii::t('app', 'Nuevo Cambio'), ['accion'], ['class' => 'btn btn-success','id'=>'nuevo_cambio']) ?>
     </p>
     <?php }?>
     <?= GridView::widget([
@@ -107,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         $url .= '&event='.$valor; 
                         return Html::a('<span class="glyphicon '.$icon.'"><input type="hidden" value="'.$model->situacion.'" id="situacion" /></span>', $url, 
                         [
-                            'title' => Yii::t('app', 'Change today\'s lists'),
+                            'title' => '',
                             'class'=>'ver',
                         ]);
                 },

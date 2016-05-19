@@ -8,28 +8,22 @@ use yii\web\JsExpression;
 
 
 <div id="form1">
-    
-<div class="alert alert-danger" id="warning">
-	   
-</div>
+
 <ul class="tabs">
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/modificardatosgen?id='.$proyecto->id.'&event='.$evento.'') ?>">Datos Generales</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Datos Generales</a></li>
     <li><a href="#tab2" >Financiamiento</a></li>
-    <!--<li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Objetivos e Indicadores</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Objetivos e Indicadores</a></li>
     <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Actividades</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Recursos</a></li>-->
-    <?php if($observaciones > 0){ ?>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/observaciones?id='.$proyecto->id.'&event='.$evento.'') ?>" >Observaciones</a></li>
-    <?php } ?>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Recursos</a></li>
 </ul>
   <div class="clr"></div>
   <section class="block">
     
     <article id="tab2">
        <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>    
-	<?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Aportante','titulo'=>'Descripcion de la Modificación:','tipo'=>'0']); ?> 	
+		
                 <div class="col-xs-12 col-sm-7 col-md-12">
-                    <input type="hidden" id ="aportante-id" name="Aportante[proyecto_id]" value="<?= $proyecto->id; ?>" />
+                    <input type="hidden" id ="proyecto-id" name="Aportante[proyecto_id]" value="<?= $proyecto_id; ?>" />
                     <table class="table table-hover" id="aportante_tabla">
                         <thead>
                             <tr>
@@ -264,9 +258,9 @@ use yii\web\JsExpression;
                     <br>
                 </div>
                 <div class="col-xs-12 col-sm-7 col-md-12" >
-            <button type="submit" id="btnguardar" class="btn btn-primary pull-right">Guardar</button>   
-            <button style="" type="button" id="btnobservar" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modalobs_">Finalizar</button>
-		</div>
+            <button type="submit" id="btnproyecto" class="btn btn-primary pull-right">Guardar y Continuar >></button>   
+            </div>
+                <div class="clearfix"></div><br/><br/>
     
     <!--
     <div>
@@ -357,10 +351,6 @@ use yii\web\JsExpression;
 		</div>
                 <div class="clearfix"></div>
                 </div>-->
-	<div class="clearfix"></div>
-        <div class="col-xs-12 col-sm-7 col-md-12 checkbox text-right" style="">
-            <input type="checkbox" name="Aportante[cerrar_modificacion]" id="aportante-cerrar_modificacion" class="pull-right"><label><strong>He terminado de realizar mis cambios.</strong></label>
-        </div>
     <?php ActiveForm::end(); ?>
     </article>
     
@@ -372,21 +362,16 @@ use yii\web\JsExpression;
 
 <?php
     $eliminaraportante= Yii::$app->getUrlManager()->createUrl('aportante/eliminaraportante');
-    $ver_aportes = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_colaborador_aporte');
 ?>
 <script>
- 
- $("#btnobservar").hide();   
 var situacion_proyecto = <?= $proyecto->situacion; ?>;
 var evento = <?= $evento; ?>;    
     
  var ultimo = <?= $co ?>
 
 
- $(document).ready(function(){
-    
-    avisos_dg(<?= $proyecto->id; ?>);
-    
+ $(document).ready(function(){ 
+
  $('ul.tabs li:nth-child(2)').addClass('active');
   $('.block article').hide();
   $('.block article:first').show();
@@ -401,23 +386,21 @@ var evento = <?= $evento; ?>;
   
     var valor = '';
     $('#form1').find('input, textarea, select').prop('disabled', true);
-   // $('.aportante_ids').prop('disabled', false);
-    $('#aportante-cerrar_modificacion').prop('disabled', false);
-    $('#aportante-observacion').prop('disabled', false);
+    $('.aportante_ids').prop('disabled', false);
+    
     var esnull =''
     $("#aportante_tabla tbody tr").each(function () {
         
          esnull = $(this).find('td:eq(3)').children().children('input').val();
         
-        if (esnull == 0)
+        if (esnull == '')
         {
             
             $(this).find('td:eq(1)').children().children('input').prop('disabled', false);
             $(this).find('td:eq(2)').children().children('input').prop('disabled', false);
-	    $(this).find('td:eq(4)').children('input').prop('disabled', false);
         }
     });
-    $('#aportante-id').prop('disabled', false);
+    $('#proyecto-id').prop('disabled', false);
     /*var rowCount= parseInt($('#aportante_tabla > tbody >tr').length) -1;
     alert(rowCount);
     for (e=1;e<=rowCount;e++) {
@@ -596,32 +579,69 @@ function sumavertical()
         }
     });
    
- function avisos_dg(id)
-{
-  var ver_aportes = verificar_aportes(id,"<?= $ver_aportes; ?>");
-  if(ver_aportes[0] != 0){
     
-	$('#warning').html(ver_aportes[1]);
-	$('#warning').show();
-    }
-    else
-    {
-	$('#warning').hide();
-    }
+ /*    $("#colcaborador_row_1").click(function(){
+        console.log(co);
+        
+       // var objetivo=$('input[name=\'Proyecto[descripciones][]\']').length;
 
-}
+        if(($('#proyecto-nombresc_'+(co-1)).val()!=''))
+        {
+		if (($('#proyecto-apellidosc_'+(co-1)).val()!=''))
+		{
+			if (($('#proyecto-funcionesc_'+(co-1)).val()!=''))
+			{
+				$('#colaborador_addr_1_'+co).html("<td>"+(co+1)+"</td><td><div class='form-group field-proyecto-nombresc_"+co+" required'> <input type='text' id='proyecto-nombresc_"+co+"' class='form-control' name='Proyecto[nombresc][]' placeholder='Nombres #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-aapellidosc_"+co+" required'><input type='text' id='proyecto-apellidosc_"+co+"' class='form-control' name='Proyecto[apellidosc][]' placeholder='Apellidos #"+(co+1)+"'  /></div></td><td><div class='form-group field-proyecto-funcionesc_"+co+" required'><input type='text' id='proyecto-funcionesc_"+co+"' class='form-control' name='Proyecto[funcionesc][]' placeholder='Función #"+(co+1)+"'  /></div></td><td><span class='eliminar glyphicon glyphicon-minus-sign'></span></td>");
+				$('#colaboradores_tabla').append('<tr id="colaborador_addr_1_'+(co+1)+'"></tr>');
+				co++;			
+			}
+			else
+			{
+				var error='Complete todos los Campos del Colaborador #'+co+' <br>';
+					//$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
+			    
+					$.notify({
+					    message: error 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
+					return false;
+			}
+			
+		}
+		else
+		{
+			var error='Complete todos los Campos del Colaborador #'+co+' <br>';
+			//$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
+	    
+			$.notify({
+			    message: error 
+			},{
+			    type: 'danger',
+			    z_index: 1000000,
+			    placement: {
+				from: 'top',
+				align: 'right'
+                },
+            });
+            return false;	
+		}
+            
+            
+        }
+        else
+        {
+           var error='Complete todos los Campos del Colaborador #'+co+' <br>';
+            //$('.field-proyecto-objetivos_descripciones_'+(oe-1)).addClass('has-error');
 
-
-$('#aportante-cerrar_modificacion').change(function() {
-        if($(this).is(":checked")) {
-            
-            var ver_aportes = verificar_aportes(<?= $proyecto->id; ?>,"<?= $ver_aportes; ?>");
-            
-            
-            if ((ver_aportes[0] != 0)) {
-               $.notify({
-                message: ver_aportes[1]
-                },{
+            $.notify({
+                message: error 
+            },{
                 type: 'danger',
                 z_index: 1000000,
                 placement: {
@@ -629,61 +649,11 @@ $('#aportante-cerrar_modificacion').change(function() {
                     align: 'right'
                 },
             });
-               $(this).attr("checked", false);
-            }
-            else
-            {
-               
-               var returnVal = confirm("Esta seguro de Finalizar con el Formulario?");
-                if (returnVal == true)
-                {
-                    $("#btnguardar").hide();
-		    $("#btnobservar").show();  
-		    
-                }
-                else
-                {
-                    $(this).attr("checked", false);
-                }
-            }   
-        
+            return false;
             
         }
-        else
-        {
-          $("#btnguardar").show();
-	    $("#btnobservar").hide();   
-        }
-      
-    });
-
-    $("#btnguardar").click(function(){
-	
-	var error = '';
-        var count = $('input[name=\'Aportante[aporte_total][]\']').length;
         
-	for (var i=0; i<count; i++)
-	{
-	  if($('#aportante-aporte_total_'+i).val()==0)
-	     {
-		error = error+"<strong>¡Cuidado! </strong> El aportante <strong>"+$("#aportante-aporte_colaborador_"+i).val()+" </strong>no tiene asignado ningún aporte.<br/>";
-	     }
-	}
-	
-	if (error!='') {
-            $.notify({
-                message: error 
-            },{
-                type: 'danger',
-                z_index: 1000000,
-                placement: {
-                    from: 'bottom',
-                    align: 'left'
-                },
-            });
-            return false;
-        }
-	jsShowWindowLoad('Procesando nueva Modificación...');
+        
         return true;
     });
 /*    

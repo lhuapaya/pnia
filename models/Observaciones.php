@@ -8,10 +8,13 @@ use Yii;
  * This is the model class for table "observaciones".
  *
  * @property integer $id
- * @property integer $id_aprobaciones
+ * @property integer $id_proyecto
  * @property string $observacion
+ * @property integer $id_user
+ * @property string $fecha
  *
- * @property Aprobaciones $idAprobaciones
+ * @property Proyecto $idProyecto
+ * @property Usuarios $idUser
  */
 class Observaciones extends \yii\db\ActiveRecord
 {
@@ -29,8 +32,9 @@ class Observaciones extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_aprobaciones'], 'integer'],
-            [['observacion'], 'string']
+            [['id_proyecto', 'id_user'], 'integer'],
+            [['observacion'], 'string', 'max' => 7000],
+            [['fecha'], 'string', 'max' => 20]
         ];
     }
 
@@ -41,16 +45,26 @@ class Observaciones extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'id_aprobaciones' => 'Id Aprobaciones',
+            'id_proyecto' => 'Id Proyecto',
             'observacion' => 'Observacion',
+            'id_user' => 'Id User',
+            'fecha' => 'Fecha',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getIdAprobaciones()
+    public function getIdProyecto()
     {
-        return $this->hasOne(Aprobaciones::className(), ['id' => 'id_aprobaciones']);
+        return $this->hasOne(Proyecto::className(), ['id' => 'id_proyecto']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getIdUser()
+    {
+        return $this->hasOne(Usuarios::className(), ['id' => 'id_user']);
     }
 }

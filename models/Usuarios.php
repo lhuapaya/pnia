@@ -21,6 +21,9 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public $descripcion;
     public $mid;
     public $ruta;
+    public $titulo;
+    public $id_perfil2;
+    public $nuevo_proyecto;
     
     public static function tableName()
     {
@@ -35,7 +38,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             //[['id'], 'required'],
             [['id','id_perfil','estado'], 'integer'],
-	    [['descripcion'], 'safe'],
+	    [['descripcion','titulo','id_perfil2','nuevo_proyecto'], 'safe'],
             [['Name', 'username', 'password','img'], 'string', 'max' => 50]
         ];
     }

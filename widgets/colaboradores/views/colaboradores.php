@@ -188,6 +188,7 @@
     $("#colcaborador_row_2").click(function(){
         
 	var error = '';
+		var count=$('input[name=\'Proyecto[aportante_numero][]\']').length;
         var clasificador=($('select[name=\'Proyecto[aportante_regimen][]\']').length);
         var valor=($('input[name=\'Proyecto[aportante_numero][]\']').serializeArray());
         
@@ -217,7 +218,7 @@
 	}
 	else
         {
-		if (co == 3) {
+		if (count == 3) {
                 error = "Solo se Permite Ingresar 3 Colaboradores como Maximo."
                 $.notify({
                 message: error 
@@ -273,7 +274,7 @@
        
     });
     
-    $("#btn_colaboradores").click(function(event){
+    /*$("#btn_colaboradores").click(function(event){
 	var error='';
         var objetivo1=$('input[name=\'Proyecto[nombresc][]\']').length;
         for (var i=0; i<objetivo1; i++) {
@@ -307,7 +308,7 @@
             $( "#w0" ).submit();
             return true;
         }
-    });
+    });*/
     
     
     $("#proyecto-colaboradores").click(function( ) {

@@ -17,26 +17,20 @@ use app\models\Maestros;
 
 
 <div id="form1">
-    
-<div class="alert alert-danger" id="warning">
-	   
-</div>
+
 <ul class="tabs">
     <li><a href="#tab1">Datos Generales</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/modificarfinanciamiento?id='.$proyecto->id.'&event='.$evento.'') ?>" >Financiamiento</a></li>
-    <!--<li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Objetivos e Indicadores</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/modificarfinanciamiento') ?>" >Financiamiento</a></li>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Objetivos e Indicadores</a></li>
     <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Actividades</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Recursos</a></li>-->
-    <?php if($observaciones > 0){ ?>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/observaciones?id='.$proyecto->id.'&event='.$evento.'') ?>" >Observaciones</a></li>
-    <?php } ?>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Recursos</a></li>
 </ul>
   <div class="clr"></div>
   <section class="block">
     
     <article id="tab1">
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
-    <?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Descripcion de la Modificación:','tipo'=>'0']); ?> 
+
             
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-titulo required">
@@ -306,13 +300,9 @@ use app\models\Maestros;
             <br/>
 
             <div class="col-xs-12 col-sm-7 col-md-12" >
-            <button type="submit" id="btnguardar" class="btn btn-primary pull-right" >Guardar</button>   
-            <button style="" type="button" id="btnobservar" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modalobs_">Finalizar</button>
+            <button type="submit" id="btnproyecto" class="btn btn-primary pull-right">Guardar y Continuar >></button>   
             </div>
-        <div class="clearfix"></div>
-        <div class="col-xs-12 col-sm-7 col-md-12 checkbox text-right" style="">
-            <input type="checkbox" name="Proyecto[cerrar_modificacion]" id="proyecto-cerrar_modificacion" class="pull-right"><label><strong>He terminado de realizar mis cambios.</strong></label>
-        </div>
+        
 
     
     
@@ -330,15 +320,12 @@ use app\models\Maestros;
     $urlDependencia= Yii::$app->getUrlManager()->createUrl('maestros/dependencia');
     $obtenerprovincia = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerprovincia');
     $obtenerdistrito = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerdistrito');
-    $ver_aportes = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_colaborador_aporte');
 ?>
 
 
 <script type="text/javascript">
-    $("#btnobservar").hide(); 
+    
 $(document).ready(function(){
-
-avisos_dg(<?= $proyecto->id; ?>);
     
 $('ul.tabs li:nth-child(1)').addClass('active');
   $('.block article').hide();
@@ -388,8 +375,6 @@ var evento = <?= $evento; ?>;
     $('#colaboradores_tabla  td:nth-child(5)').hide();
     $('#div_colaboradores').find('input, textarea,button, select').prop('disabled', false);
     $('#proyecto-id').prop('disabled', false);
-    $('#proyecto-observacion').prop('disabled', false);
-     $('#proyecto-cerrar_modificacion').prop('disabled', false);
     
     //$('#btnproyecto').hide();
     //$('#colcaborador_row_2').hide(); 
@@ -490,7 +475,7 @@ function distrito(identificador) {
     }
 
 
-$("#btnguardar").click(function( ) {
+$("#btnproyecto").click(function( ) {
     
     var error='';
     if($.trim($('#proyecto-titulo').val())=='')
@@ -572,16 +557,6 @@ $("#btnguardar").click(function( ) {
             //alert('hola');
         }
     
-    var objetivo1=$('input[name=\'Proyecto[aportante_numero][]\']').length;
-    var valor=($('input[name=\'Proyecto[aportante_numero][]\']').serializeArray());
-
-        for (var i=0; i<objetivo1; i++) {
-            if(($('#proyecto-aportante_colaborador_'+(valor[i].value)).val()==''))
-            {
-                error=error+'Complete todos los Campos del Colaborador #'+(parseInt(valor[i].value)+1)+' <br/>';
-               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
-            }
-        }
      
    /* var colaborador=$('input[name=\'Proyecto[nombresc][]\']').length;
         for (var i=0; i<colaborador; i++) {
@@ -650,66 +625,6 @@ $("#btnguardar").click(function( ) {
     return true;
 });
 
-
-function avisos_dg(id)
-{
-  var ver_aportes = verificar_aportes(id,"<?= $ver_aportes; ?>");
-  if(ver_aportes[0] != 0){
-    
-	$('#warning').html(ver_aportes[1]);
-	$('#warning').show();
-    }
-    else
-    {
-	$('#warning').hide();
-    }
-
-}
-
-$('#proyecto-cerrar_modificacion').change(function() {
-        if($(this).is(":checked")) {
-            
-            var ver_aportes = verificar_aportes(<?= $proyecto->id; ?>,"<?= $ver_aportes; ?>");
-            
-            
-            if ((ver_aportes[0] != 0)) {
-               $.notify({
-                message: ver_aportes[1]
-                },{
-                type: 'danger',
-                z_index: 1000000,
-                placement: {
-                    from: 'top',
-                    align: 'right'
-                },
-            });
-               $(this).attr("checked", false);
-            }
-            else
-            {
-               
-               var returnVal = confirm("Esta seguro de Finalizar con el Formulario?");
-                if (returnVal == true)
-                {
-                    $("#btnguardar").hide();
-		    $("#btnobservar").show();  
-		    
-                }
-                else
-                {
-                    $(this).attr("checked", false);
-                }
-            }   
-        
-            
-        }
-        else
-        {
-          $("#btnguardar").show();
-	    $("#btnobservar").hide();   
-        }
-      
-    });
 
 </script>
 

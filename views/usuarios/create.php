@@ -60,6 +60,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 <input class="form-control" type="text" id="usuarios-img" " placeholder="Nombre y extensión de Imagen para Perfil" name="Usuarios[img]"  /> <!-- required-->
                 </div>    
     </div>
+    <div class="clearfix"></div><br/>
+    <div class="col-xs-12 col-sm-7 col-md-12" id="titulo-proyecto">
+                <div class="form-group field-usuarios-titulo required">
+                <label for="usuarios-titulo">Titulo del Proyecto:</label>
+                <input class="form-control" type="text" id="usuarios-titulo" " placeholder="Nombre completo de la Persona" name="Usuarios[titulo]"  required/> <!-- required-->
+                </div>    
+    </div>
     <div class="clearfix"></div><br/><br/>
     <div class="col-xs-12 col-sm-7 col-md-12 col-centered" > 
         <button type="submit" id="btnaceptar" class="btn btn-success">Crear Usuario</button>   
@@ -76,3 +83,29 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 -->
+
+<script>
+ 
+ $(document).ready(function(){
+    
+    $("#titulo-proyecto").hide();
+    $("#usuarios-titulo").prop("disabled",true);
+});
+ 
+ $('#usuarios-id_perfil').change(function(){
+    
+   var valor = $(this).val();
+   
+    if(valor == 2)
+    {
+       $("#titulo-proyecto").show();
+       $("#usuarios-titulo").prop("disabled",false);
+    }
+    else
+    {
+      $("#titulo-proyecto").hide();
+      $("#usuarios-titulo").prop("disabled",true);
+    }
+});
+    
+</script>

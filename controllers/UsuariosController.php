@@ -107,6 +107,7 @@ class UsuariosController extends Controller
             if($usuarios->id_perfil == 2)
             {
               $proyecto = new Proyecto();
+              $proyecto->titulo = $usuarios->titulo;
               $proyecto->user_propietario = $usuarios->id;
               $proyecto->estado = 1;
               $proyecto->save();
@@ -133,21 +134,82 @@ class UsuariosController extends Controller
     {
 
         $this->layout='principal';
-        $model = $this->findModel($id);
-        $perfiles=Perfil::find()->all();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            $assigment=AuthAssignment::find()->where("user_id='".$model->id."'")->one();
-            $assigment->user_id="$model->id";
-            $assigment->item_name="$model->id_perfil";
-            $assigment->update();
+        $usuarios = $this->findModel($id);
+
+        if ($usuarios->load(Yii::$app->request->post())) {
             
-            return $this->redirect(['index', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-                'perfiles'=>$perfiles
-            ]);
+            $auth = AuthItem::find()
+                    ->where('type = :type',[':type'=>$usuarios->id_perfil])
+                    ->one();
+            
+            if($usuarios->id_perfil2 != 2)
+            {
+                $usuarios->save();
+                   
+                $assigment = AuthAssignment::find()->where('user_id = :user_id',[':user_id'=>$usuarios->id])->one();
+                $assigment->item_name =$auth->name;
+                $assigment->user_id ="$usuarios->id";
+                $assigment->save();
+            }
+            else
+            {
+                if($usuarios->nuevo_proyecto == 1)
+                {
+                    $proyecto = new Proyecto();
+                    $proyecto->titulo = $usuarios->titulo;
+                    $proyecto->user_propietario = $usuarios->id;
+                    $proyecto->estado = 1;
+                    $proyecto->save();
+                    
+                    $assigment = AuthAssignment::find()->where('user_id = :user_id',[':user_id'=>$usuarios->id])->one();
+                    $assigment->item_name =$auth->name;
+                    $assigment->user_id ="$usuarios->id";
+                    $assigment->save();
+                }
+                //$usuario = Usuarios::findOne($usuarios->id);
+                $usuarios->id_perfil = $usuarios->id_perfil2;
+                $usuarios->save();
+                
+                
+            }
+            
+            
+            return $this->redirect(['index']);
         }
+        
+        else
+        
+        {
+            $perfil = Perfil::find()
+                        ->where('estado = 1')
+                        ->all();
+                        
+            $usuarios = Usuarios::findOne($id);
+            
+            if($usuarios->id_perfil == 2)
+            {
+                $proyecto = Proyecto::find()
+                                ->select('id, titulo')
+                                ->where('estado = 1 and user_propietario = :user_propietario',[':user_propietario'=>$usuarios->id])
+                                ->one();
+                $id_proyecto = $proyecto->id;
+                $titulo_proyecto = $proyecto->titulo;
+            }
+            else
+            {
+                $id_proyecto = null;
+                $titulo_proyecto = null; 
+            }
+            
+            
+        }
+            return $this->render('update', [
+                'usuarios' => $usuarios,
+                'perfil'=>$perfil,
+                'id_proyecto'=>$id_proyecto,
+                'titulo_proyecto'=>$titulo_proyecto
+            ]);
+        
     }
 
     /**

@@ -14,7 +14,6 @@ use Yii;
  *
  * @property NivelAprobacion $idNivelaprobacion
  * @property Proyecto $idProyecto
- * @property Observaciones[] $observaciones
  */
 class Aprobaciones extends \yii\db\ActiveRecord
 {
@@ -63,13 +62,5 @@ class Aprobaciones extends \yii\db\ActiveRecord
     public function getIdProyecto()
     {
         return $this->hasOne(Proyecto::className(), ['id' => 'id_proyecto']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getObservaciones()
-    {
-        return $this->hasMany(Observaciones::className(), ['id_aprobaciones' => 'id']);
     }
 }

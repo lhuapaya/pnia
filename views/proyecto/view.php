@@ -1219,7 +1219,7 @@ $("#btnaceptar").click(function( ) {
     return false;
 });
 
-
+/*
 $("#btn_observacion").click(function( ) {
    
    if($.trim($("#proyecto-observacion").val()) != '') {
@@ -1237,7 +1237,7 @@ $("#btn_observacion").click(function( ) {
     }
     return false;
 });
-
+*/
 function monto_presupuesto(id)
 {
     var array = [];

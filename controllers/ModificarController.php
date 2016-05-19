@@ -93,7 +93,7 @@ class ModificarController extends Controller
         //$cultivo = new CultivoCrianza();
         
         $flowEstado = FlowChange::find()
-                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto and estado = 0',[':id_nuevo_proyecto'=>$id])
+                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto ',[':id_nuevo_proyecto'=>$id])
                         ->one();
                         
         if($proyecto->load(Yii::$app->request->post()) )
@@ -148,10 +148,19 @@ class ModificarController extends Controller
                     $pro->situacion = 0;
                     $pro->update();
                     
-                    $obs = new Observaciones();
-                    $obs->id_aprobaciones = $aprob->id;
+                    $hoy = getdate();
+                
+                    $obs = new Observaciones;
+                    $obs->id_proyecto = $proyecto->id;
                     $obs->observacion = $proyecto->observacion;
+                    $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                    $obs->id_user = Yii::$app->user->identity->id;
                     $obs->save();
+                    
+                    $flow =  FlowChange::findOne($flowEstado->id);
+                    $flow->estado_flujo = 0;
+                    $flow->update();
+                    
                 }
                 
                 if($proyecto->respuesta_aprob == 1)
@@ -170,6 +179,10 @@ class ModificarController extends Controller
                         $pro3 = Proyecto::findOne($pro2->id);
                         $pro3->estado = 0;
                         $pro3->update();
+                        
+                        $flow =  FlowChange::findOne($flowEstado->id);
+                        $flow->estado = 1;
+                        $flow->update();
                     }    
                 }
                 
@@ -212,6 +225,8 @@ class ModificarController extends Controller
                             ->groupBy('district')
                             ->orderBy('district')
                             ->all();
+                
+                
                         
             }
             
@@ -316,6 +331,12 @@ class ModificarController extends Controller
             {
                $requiere_aprobar = 1; 
             }
+            
+            
+            
+            $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->all();
         }
         
         
@@ -334,7 +355,7 @@ class ModificarController extends Controller
                         ->one();
         
         
-        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>2,'actividades'=>$actividades,'flow_obs'=>$flow_obs,'requiere_aprobar'=>$requiere_aprobar]);
+        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>2,'actividades'=>$actividades,'flow_obs'=>$flow_obs,'requiere_aprobar'=>$requiere_aprobar,'observaciones'=>$observaciones]);
       
         
     }
@@ -412,6 +433,12 @@ class ModificarController extends Controller
         //$evento = $_REQUEST["event"];
         $this->layout='principal';
         
+        $existe_proyecto = Yii::$app->runAction('proyecto/pertnece_proyecto_user', ['id'=>$id]);
+        
+        if($existe_proyecto == 0)
+        {
+            return $this->redirect('../dashboard/index');     
+        }
         
         
         $flatUpdate = 0;        
@@ -421,12 +448,7 @@ class ModificarController extends Controller
         //$departamentos = new Ubigeo();
         $provincias = new Ubigeo();
         $distritos = new Ubigeo();
-        //$cultivo = new CultivoCrianza();
         
-        //Yii::$app->controller->enableCsrfValidation = false;
-        $existe = Proyecto::find()
-                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
-                        ->count();
         
         $proy = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
@@ -434,226 +456,31 @@ class ModificarController extends Controller
         
         
         $flowEstado = FlowChange::find()
-                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto and estado = 0',[':id_nuevo_proyecto'=>$id])
+                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto ',[':id_nuevo_proyecto'=>$id])
                         ->one();
          $flowCount = FlowChange::find()
-                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto and estado = 0',[':id_nuevo_proyecto'=>$id])
+                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto ',[':id_nuevo_proyecto'=>$id])
                         ->count();
         if($flowCount > 0)
-        {               
-        //var_dump($flowEstado);die;                
-        if($flowEstado->next_url != 'modificardatosgen')
-        {
-          return $this->redirect($flowEstado->next_url.'?id='.$id.'&event='.$event);     
-        }
+        {                       
+            if($flowEstado->estado_flujo > 0)
+                {
+                  return $this->redirect('view?id='.$id.'&event='.$event);     
+                }
         }
         
         $proy_ant = $proy->id;                
-        if($model->load(Yii::$app->request->post()))
+        if($proyecto->load(Yii::$app->request->post()))
         {
-            
-            /*die;
-            echo '<script>
-    console.log('.json_encode($proy).');
-</script>';*/
-            
-            $countColaboradores = count(array_filter($model->aportante_colaborador));
-           // $countAlianzas=count(array_filter($proyecto->alianzas_instituciones));
-            if($existe == 0)
-            {
-               // $proyecto->user_propietario = Yii::$app->user->identity->id;
-               // $proyecto->estado = 1;
-               // $proyecto->save();
-               /* $responsable->id_proyecto = $proyecto->id;
-                $responsable->nombres = $proyecto->nombres;
-                $responsable->apellidos = $proyecto->apellidos;
-                $responsable->telefono = $proyecto->telefono;
-                $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;
-                $responsable->save();*/
 
-            }
-            else
-            {
-                
-                //var_dump($model->id);die;
-                //var_dump($proy);die;
-                if($model->id == 0)
-                {
-                    $array = [];
-                unset($proy['id']);
-                
-                $proyecto=new Proyecto($proy);
-                $proyecto->save();
-                
-                $hoy = getdate();
-                
-                $data = Proyecto::findOne($proyecto->id);
-                $data->tipo_registro = 1;
-                $data->situacion = 0;
-                $data->estado = 0;
-                $data->date_create = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
-                $data->update();
-                
-                /*colaboradores*/
-                $colaboradores = Aportante::find()
-                                    ->where('tipo in (1,2) and id_proyecto = :id_proyecto',[':id_proyecto'=>$proy_ant])
-                                    ->all();
-                 $w=0;                   
-                foreach($colaboradores as $colaboradores2)
-                {
-                   $col_ant = $colaboradores2->id; 
-                   $colaboradores2->id_proyecto = $proyecto->id;
-                   unset($colaboradores2['id']);
-                   $col=new Aportante($colaboradores2);
-                    $col->save();
-                    
-                    $array[$w] = array($col_ant, $col->id);
-                    
-                    $w++;
-                }
-                
-                
-                for($i=0;$i<$countColaboradores;$i++)
-                {                    
-                if(isset($model->colaboradores_ids[$i]))
-                    {
-                        $colab = Aportante::find()
-                                    ->where('id =:id and id_proyecto = :id_proyecto',[':id'=>$model->colaboradores_ids[$i],':id_proyecto'=>$proy_ant])
-                                    ->one();
-                                    
-                        $Colaborador=new Aportante;
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->colaborador=$model->aportante_colaborador[$i];
-                        $Colaborador->regimen=$model->aportante_regimen[$i];
-                        $Colaborador->tipo_inst=$model->aportante_tipo_inst[$i];
-                        $Colaborador->monetario=$colab->monetario;
-                        $Colaborador->no_monetario=$colab->no_monetario;
-                        $Colaborador->total=$colab->total;
-                        $Colaborador->tipo=3;
-                        $Colaborador->save(); 
-                    }
-                    else
-                    {
-                        $Colaborador=new Aportante;
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->colaborador=$model->aportante_colaborador[$i];
-                        $Colaborador->regimen=$model->aportante_regimen[$i];
-                        $Colaborador->tipo_inst=$model->aportante_tipo_inst[$i];
-                        $Colaborador->tipo=3;
-                        $Colaborador->save(); 
-                    }
-                }    
-                 
-                $objetivosE = ObjetivoEspecifico::find()
-                                ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proy_ant])
-                                ->all();
-                
-                foreach($objetivosE as $objetivosE2)
-                {
-                  $idObj =   $objetivosE2->id;
-                  $objetivosE2->id_proyecto = $proyecto->id;
-                  
-                  unset($objetivosE2['id']);
-                   $obj=new ObjetivoEspecifico($objetivosE2);
-                    $obj->save();
-                    
-                    $indicador = Indicador::find()
-                                ->where('id_oe = :id_oe',[':id_oe'=>$idObj])
-                                ->all();
-                                
-                        foreach($indicador as $indicador2)
-                        {
-                            $idInd =   $indicador2->id;
-                            $indicador2->id_oe = $obj->id;
-                            
-                            unset($indicador2['id']);
-                            $ind=new Indicador($indicador2);
-                            $ind->save();
-                            
-                            $actividad = Actividad::find()
-                                ->where('id_ind = :id_ind',[':id_ind'=>$idInd])
-                                ->all();
-                                
-                                    foreach($actividad as $actividad2)
-                                    {
-                                        $idAct =   $actividad2->id;
-                                        $actividad2->id_ind = $ind->id;
-                                        
-                                        unset($actividad2['id']);
-                                        $act=new Actividad($actividad2);
-                                        $act->save();
-                                        
-                                        $recurso = Recurso::find()
-                                            ->where('actividad_id = :actividad_id',[':actividad_id'=>$idAct])
-                                            ->all();
-                                            
-                                                foreach($recurso as $recurso2)
-                                                {
-                                                    $idRec =   $recurso2->id;
-                                                    $recurso2->actividad_id = $act->id;
-                                                    
-                                                    for($x=0;$x<count($array);$x++)
-                                                    {
-                                                        if($array[$x][0] == $recurso2->fuente)
-                                                        {
-                                                           $recurso2->fuente = $array[$x][1];
-                                                        }
-                                                    }
-                                                    
-                                                    unset($recurso2['id']);
-                                                    $rec=new Recurso($recurso2);
-                                                    $rec->save();
-                                                    
-                                                    $recursoProg = RecursoProgramado::find()
-                                                        ->where('id_recurso = :id_recurso',[':id_recurso'=>$idRec])
-                                                        ->all();
-                                                            
-                                                            foreach($recursoProg as $recursoProg2)
-                                                            {
-                                                                
-                                                                $recursoProg2->id_recurso = $rec->id;
-                                                                
-                                                                unset($recursoProg2['id']);
-                                                                $RPr=new RecursoProgramado($recursoProg2);
-                                                                $RPr->save();  
-                                                            }
-                                                }
-                                                
-                                    }
-                                    
-                            
-                        }
-                    
-                }    
-                    
-                 $flow = new FlowChange;
-                 $flow->id_nuevo_proyecto = $proyecto->id;
-                 $flow->id_ant_proyecto = $proy_ant;
-                $flow->estado_flujo = 1;
-                $flow->estado = 0;
-                $flow->next_url = 'modificarfinanciamiento';
-                $flow->save();
-                }
-                else
-                {
-                    
-                }
-                
-               /* $responsable = Responsable::findOne($proyecto->id);
-                $responsable->nombres = $proyecto->nombres;
-                $responsable->apellidos = $proyecto->apellidos;
-                $responsable->telefono = $proyecto->telefono;
-                $responsable->celular = $proyecto->celular;
-                $responsable->correo = $proyecto->correo;
-                
-                $responsable->update();*/
+            
+            $countColaboradores = count(array_filter($proyecto->aportante_colaborador));
+
 
  
                 /*colaboradores*/
-              /*  for($i=0;$i<$countColaboradores;$i++)
+                for($i=0;$i<$countColaboradores;$i++)
                 {
-                    //var_dump($proyecto->cronogramas_meses);die;
                     if(isset($proyecto->colaboradores_ids[$i]))
                     {
                         $Colaborador=Aportante::findOne($proyecto->colaboradores_ids[$i]);
@@ -674,45 +501,38 @@ class ModificarController extends Controller
                         $Colaborador->tipo=3;
                         $Colaborador->save(); 
                     }
-                }*/
+                }
                 
-                /*Instituciones Alianza*/
-               /* for($i=0;$i<$countAlianzas;$i++)
-
-                {
-                    if(isset($proyecto->alianzas_ids[$i]))
-                    {
-                        $alianza=AlianzaEstrategica::findOne($proyecto->alianzas_ids[$i]);
-                        $alianza->id_proyecto=$proyecto->id;
-                        $alianza->institucion=$proyecto->alianzas_instituciones[$i];
-                        $alianza->descripcion=$proyecto->alianzas_descripciones[$i];
-                        $alianza->nombres=$proyecto->alianzas_nombres[$i];
-                        $alianza->apellidos=$proyecto->alianzas_apellidos[$i];
-                        $alianza->correo=$proyecto->alianzas_correos[$i];
-                        $alianza->telefono=$proyecto->alianzas_telefonos[$i];
-                        $alianza->update(); 
-                    }
-                    else
-                    {
-                        $alianza=new AlianzaEstrategica;
-                        $alianza->id_proyecto=$proyecto->id;
-                        $alianza->institucion=$proyecto->alianzas_instituciones[$i];
-                        $alianza->descripcion=$proyecto->alianzas_descripciones[$i];
-                        $alianza->nombres=$proyecto->alianzas_nombres[$i];
-                        $alianza->apellidos=$proyecto->alianzas_apellidos[$i];
-                        $alianza->correo=$proyecto->alianzas_correos[$i];
-                        $alianza->telefono=$proyecto->alianzas_telefonos[$i];
-                        $alianza->save(); 
-                    }
-                }*/
-            }
+            if(isset($proyecto->cerrar_modificacion))
+             {
+                
+                $flow =  FlowChange::findOne($flowEstado->id);
+                $flow->estado_flujo = 1;
+                $flow->update();
+                
+                $pro = Proyecto::findOne($proyecto->id);
+                $pro->situacion = 1;
+                $pro->update();
+                
+                $hoy = getdate();
+                
+                $obs = new Observaciones;
+                $obs->id_proyecto = $proyecto->id;
+                $obs->observacion = $proyecto->observacion;
+                $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                $obs->id_user = Yii::$app->user->identity->id;
+                $obs->save();
+                
+                return $this->redirect('index'); 
+             }
             
-            return $this->redirect('modificarfinanciamiento?id='.$proyecto->id.'&event=2');   
+            
+            return $this->refresh(); 
         }
 
         if(!$model->load(Yii::$app->request->post()))
         {
-            if($id == 0)
+           /* if($id == 0)
             {
                 $ver_reg_pendiente = Yii::$app->runAction('proyecto/verificar_registros_pendientes');
                 
@@ -726,12 +546,16 @@ class ModificarController extends Controller
                         ->one();
             }
             else
-            {
+            {*/
                 $proyecto = Proyecto::find()
                         ->where('id =:id',[':id'=>$id])
                         ->one();
-                
-            }
+      
+                if(!isset($proyecto))
+                {
+                 return $this->redirect('index');     
+                }
+            //}
            /*$responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();*/
@@ -761,6 +585,10 @@ class ModificarController extends Controller
             $cultivo =  CultivoCrianza::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                         ->one();
+            
+            $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->count();
         }
          
         
@@ -777,9 +605,9 @@ class ModificarController extends Controller
         $AccionT =  AccionTransversal::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                         ->one();
+                        
         
-        
-        return $this->render('modificardatosgen',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'evento'=>$event,'id'=>$id]);
+        return $this->render('modificardatosgen',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'evento'=>$event,'id'=>$id,'observaciones'=>$observaciones]);
        
     }
     
@@ -788,57 +616,76 @@ class ModificarController extends Controller
         $evento = $_REQUEST["event"];
         
         $this->layout='principal';
+        
+        $existe_proyecto = Yii::$app->runAction('proyecto/pertnece_proyecto_user', ['id'=>$id]);
+        
+        if($existe_proyecto == 0)
+        {
+            return $this->redirect('../dashboard/index');     
+        }
+        
         $session = Yii::$app->session;
         $aportante=new Aportante;
         
         $flowEstado = FlowChange::find()
-                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto and estado = 0',[':id_nuevo_proyecto'=>$id])
+                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto',[':id_nuevo_proyecto'=>$id])
                         ->one();
         $flowCount = FlowChange::find()
-                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto and estado = 0',[':id_nuevo_proyecto'=>$id])
+                        ->where('id_nuevo_proyecto = :id_nuevo_proyecto',[':id_nuevo_proyecto'=>$id])
                         ->count();
-        if($flowCount == 0)
-        {
-          return $this->redirect('index');     
-        }
         
-        if($flowEstado->next_url == 'modificarfinanciamiento')
-        {
-          $ExisteAporte = Aportante::find()
-                            ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$flowEstado->id_nuevo_proyecto])
-                            ->count();  
-        }
-        else
-        {
-          return $this->redirect($flowEstado->next_url.'?id='.$id.'&event='.$event);     
+        if($flowCount > 0)
+        {                       
+            if($flowEstado->estado_flujo > 0)
+                {
+                  return $this->redirect('view?id='.$id.'&event='.$event);     
+                }
         }
         
         
         if($aportante->load(Yii::$app->request->post()) )
         {
-            /*$countAportantess=count(array_filter($aportante->aporte_nomonetario));           
-            
-            for($i=0;$i<$countAportantess;$i++)
-                {
-
-
+            if(isset($aportante->aporte_nomonetario))
+            {
+                $countAportantess=count(array_filter($aportante->aporte_nomonetario));           
+                for($i=0;$i<$countAportantess;$i++)
+                {  
+                    if(!empty($aportante->aportante_ids[$i]))
+                    {
                         $aportanteupdate=Aportante::findOne($aportante->aportante_ids[$i]);
                         $aportanteupdate->monetario=$aportante->aporte_monetario[$i];
                         $aportanteupdate->no_monetario=$aportante->aporte_nomonetario[$i];
                         $aportanteupdate->total=($aportante->aporte_monetario[$i] + $aportante->aporte_nomonetario[$i]);
                         $aportanteupdate->update(); 
-
+                    }
                 }
-                */
-                
+            }
+                if(isset($aportante->cerrar_modificacion))
+                {
+                    
                 $flow =  FlowChange::findOne($flowEstado->id);
-                $flow->estado_flujo = 2;
-                $flow->next_url = 'modificarobjind';
+                $flow->estado_flujo = 1;
                 $flow->update();
                 
+                $pro = Proyecto::findOne($aportante->proyecto_id);
+                $pro->situacion = 1;
+                $pro->update();
+                
+                $hoy = getdate();
+                
+                $obs = new Observaciones;
+                $obs->id_proyecto = $aportante->proyecto_id;
+                $obs->observacion = $aportante->observacion;
+                $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                $obs->id_user = Yii::$app->user->identity->id;
+                $obs->save();
+
+                return $this->redirect('index'); 
+                }
+                
              
              
-             return $this->redirect('modificarobjind?id='.$id.'&event='.$event);    
+             return $this->refresh();    
           /*  $countAportantess=count(array_filter($aportante->aporte_tipo));
 
                 for($i=0;$i<$countAportantess;$i++)
@@ -871,38 +718,28 @@ class ModificarController extends Controller
         }
         else
         {
-            
-        
-        if($ExisteAporte == 0)
-        {
-          $id_proyecto =   $proyecto->id;
-        }
-        else
-        {
-          $id_proyecto =   $flowEstado->id_nuevo_proyecto;  
-        }
         
         $proyecto = Proyecto::find()
                         ->where('id =:id_proyecto',[':id_proyecto'=>$id])
                         ->one();
         
         $aportante12=Aportante::find()
-                    ->where('tipo <> 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$id_proyecto])
+                    ->where('tipo <> 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$proyecto->id])
                     ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
                     ->all();
         
                     
         $aportante3=Aportante::find()
-                    ->where('tipo = 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$id_proyecto])
+                    ->where('tipo = 3 and id_proyecto =:id_proyecto',[':id_proyecto'=>$proyecto->id])
                     ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
                     ->all();
         
         $aportante=Aportante::find()
-                    ->where('id_proyecto =:id_proyecto',[':id_proyecto'=>$id_proyecto])
+                    ->where('id_proyecto =:id_proyecto',[':id_proyecto'=>$proyecto->id])
                     ->orderBy(['tipo' => SORT_ASC,'id' => SORT_ASC,])
                     ->all();
         $desembolsos=Desembolso::find()
-                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$id_proyecto])
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
                                 ->all();
         $nro_desembolso = Maestros::find()
                                 ->where('id_padre = 48 and estado = 1')
@@ -913,9 +750,14 @@ class ModificarController extends Controller
                                 ->where('id_padre = 57 and estado = 1')
                                 ->orderBy('orden')
                                 ->all();
+        
+        $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->count();
+        
         }
         
-        return $this->render('modificarfinanciamiento',['proyecto'=>$proyecto,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$session['proyecto_id'],'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'evento'=>$evento]);
+        return $this->render('modificarfinanciamiento',['proyecto'=>$proyecto,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'evento'=>$evento,'observaciones'=>$observaciones]);
     
     }
     
@@ -1319,5 +1161,227 @@ class ModificarController extends Controller
         }
         
         return $this->render('modificarobs',['id_proyecto'=>$id]);
+    }
+    
+    public function actionObservaciones($id,$event)
+    {
+        $this->layout='principal';
+        
+        $proyecto = Proyecto::findOne($id);
+        
+        $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->all();
+
+        return $this->render('observaciones',['proyecto'=>$proyecto,'observaciones'=>$observaciones,'evento'=>$event]);
+    }
+    
+    public function actionAccion()
+    {
+        $this->layout='principal';
+        
+        $ver_pendientes = Yii::$app->runAction('proyecto/verificar_registros_pendientes');
+        
+        if($ver_pendientes != 0)
+        {
+          return $this->redirect('index');  
+        }
+        
+        $proyecto = new Proyecto();
+        
+        if($proyecto->load(Yii::$app->request->post()))
+        {
+            $id = Yii::$app->runAction('modificar/copiar_proyecto', ['opcion'=>$proyecto->opcion]);
+            switch($proyecto->opcion)
+            {
+                
+            case 1:
+                return $this->redirect('modificardatosgen?id='.$id.'&event=2'); 
+                break;
+            case 2:
+                return $this->redirect('modificardatosgen?id='.$id.'&event=2');  
+                break;
+            case 3:
+                return $this->redirect('modificardatosgen?id='.$id.'&event='.$event); 
+                break;
+            case 4:
+                return $this->redirect('modificardatosgen?id='.$id.'&event='.$event); 
+                break;
+            case 5:
+                return $this->redirect('modificardatosgen?id='.$id.'&event='.$event); 
+                break;
+            }
+            
+        }
+
+
+        return $this->render('accion',[]);
+    }
+    
+    public function actionCopiar_proyecto($opcion)
+    {
+        $proy = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                        ->one();
+                        
+        $proy_ant = $proy->id;
+        
+                $array = [];
+                unset($proy['id']);
+                
+                $proyecto=new Proyecto($proy);
+                $proyecto->save();
+                
+                $hoy = getdate();
+                
+                $data = Proyecto::findOne($proyecto->id);
+                $data->tipo_registro = 1;
+                $data->situacion = 0;
+                $data->estado = 0;
+                $data->date_create = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                $data->update();
+                
+                /*colaboradores*/
+                $colaboradores = Aportante::find()
+                                    ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proy_ant])
+                                    ->all();
+                 $w=0;                   
+                foreach($colaboradores as $colaboradores2)
+                {
+                   $col_ant = $colaboradores2->id; 
+                   $colaboradores2->id_proyecto = $proyecto->id;
+                   unset($colaboradores2['id']);
+                   $col=new Aportante($colaboradores2);
+                    $col->save();
+                    
+                    $array[$w] = array($col_ant, $col->id);
+                    
+                    $w++;
+                }
+                
+                /*
+                for($i=0;$i<$countColaboradores;$i++)
+                {                    
+                if(isset($model->colaboradores_ids[$i]))
+                    {
+                        $colab = Aportante::find()
+                                    ->where('id =:id and id_proyecto = :id_proyecto',[':id'=>$model->colaboradores_ids[$i],':id_proyecto'=>$proy_ant])
+                                    ->one();
+                                    
+                        $Colaborador=new Aportante;
+                        $Colaborador->id_proyecto=$proyecto->id;
+                        $Colaborador->colaborador=$model->aportante_colaborador[$i];
+                        $Colaborador->regimen=$model->aportante_regimen[$i];
+                        $Colaborador->tipo_inst=$model->aportante_tipo_inst[$i];
+                        $Colaborador->monetario=$colab->monetario;
+                        $Colaborador->no_monetario=$colab->no_monetario;
+                        $Colaborador->total=$colab->total;
+                        $Colaborador->tipo=3;
+                        $Colaborador->save(); 
+                    }
+                    else
+                    {
+                        $Colaborador=new Aportante;
+                        $Colaborador->id_proyecto=$proyecto->id;
+                        $Colaborador->colaborador=$model->aportante_colaborador[$i];
+                        $Colaborador->regimen=$model->aportante_regimen[$i];
+                        $Colaborador->tipo_inst=$model->aportante_tipo_inst[$i];
+                        $Colaborador->tipo=3;
+                        $Colaborador->save(); 
+                    }
+                }*/    
+                 
+                $objetivosE = ObjetivoEspecifico::find()
+                                ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proy_ant])
+                                ->all();
+                
+                foreach($objetivosE as $objetivosE2)
+                {
+                  $idObj =   $objetivosE2->id;
+                  $objetivosE2->id_proyecto = $proyecto->id;
+                  
+                  unset($objetivosE2['id']);
+                   $obj=new ObjetivoEspecifico($objetivosE2);
+                    $obj->save();
+                    
+                    $indicador = Indicador::find()
+                                ->where('id_oe = :id_oe',[':id_oe'=>$idObj])
+                                ->all();
+                                
+                        foreach($indicador as $indicador2)
+                        {
+                            $idInd =   $indicador2->id;
+                            $indicador2->id_oe = $obj->id;
+                            
+                            unset($indicador2['id']);
+                            $ind=new Indicador($indicador2);
+                            $ind->save();
+                            
+                            $actividad = Actividad::find()
+                                ->where('id_ind = :id_ind',[':id_ind'=>$idInd])
+                                ->all();
+                                
+                                    foreach($actividad as $actividad2)
+                                    {
+                                        $idAct =   $actividad2->id;
+                                        $actividad2->id_ind = $ind->id;
+                                        
+                                        unset($actividad2['id']);
+                                        $act=new Actividad($actividad2);
+                                        $act->save();
+                                        
+                                        $recurso = Recurso::find()
+                                            ->where('actividad_id = :actividad_id',[':actividad_id'=>$idAct])
+                                            ->all();
+                                            
+                                                foreach($recurso as $recurso2)
+                                                {
+                                                    $idRec =   $recurso2->id;
+                                                    $recurso2->actividad_id = $act->id;
+                                                    
+                                                    for($x=0;$x<count($array);$x++)
+                                                    {
+                                                        if($array[$x][0] == $recurso2->fuente)
+                                                        {
+                                                           $recurso2->fuente = $array[$x][1];
+                                                        }
+                                                    }
+                                                    
+                                                    unset($recurso2['id']);
+                                                    $rec=new Recurso($recurso2);
+                                                    $rec->save();
+                                                    
+                                                    $recursoProg = RecursoProgramado::find()
+                                                        ->where('id_recurso = :id_recurso',[':id_recurso'=>$idRec])
+                                                        ->all();
+                                                            
+                                                            foreach($recursoProg as $recursoProg2)
+                                                            {
+                                                                
+                                                                $recursoProg2->id_recurso = $rec->id;
+                                                                
+                                                                unset($recursoProg2['id']);
+                                                                $RPr=new RecursoProgramado($recursoProg2);
+                                                                $RPr->save();  
+                                                            }
+                                                }
+                                                
+                                    }
+                                    
+                            
+                        }
+                    
+                }
+                
+                
+                $flow = new FlowChange;
+                $flow->id_nuevo_proyecto = $proyecto->id;
+                $flow->id_ant_proyecto = $proy_ant;
+                $flow->estado_flujo = 0;
+                $flow->estado = 0;
+                $flow->tipo_modificacion = $opcion;
+                $flow->save();
+                
+       return $proyecto->id; 
     }
 }
