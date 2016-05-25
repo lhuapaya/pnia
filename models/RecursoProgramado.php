@@ -12,6 +12,8 @@ use Yii;
  * @property integer $anio
  * @property integer $mes
  * @property integer $cantidad
+ * @property integer $cant_rendida
+ * @property integer $estado
  *
  * @property Recurso $idRecurso
  */
@@ -20,6 +22,10 @@ class RecursoProgramado extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    
+    public $cantidad2;
+    public $solicita;
+    
     public static function tableName()
     {
         return 'recurso_programado';
@@ -31,7 +37,8 @@ class RecursoProgramado extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_recurso', 'anio', 'mes', 'cantidad'], 'integer']
+            [['id_recurso', 'anio', 'mes', 'cantidad', 'cant_rendida', 'estado'], 'integer'],
+            [['cantidad2','solicita'],'safe'],
         ];
     }
 
@@ -46,6 +53,8 @@ class RecursoProgramado extends \yii\db\ActiveRecord
             'anio' => 'Anio',
             'mes' => 'Mes',
             'cantidad' => 'Cantidad',
+            'cant_rendida' => 'Cant Rendida',
+            'estado' => 'Estado',
         ];
     }
 

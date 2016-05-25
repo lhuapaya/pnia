@@ -311,6 +311,51 @@ $baseUrl = $Asset->baseUrl;
                 }
             }
             
+            else if(\Yii::$app->user->can('unidad_ejecutora'))
+            {
+                $modulos=Usuarios::find()
+                                    ->select('modulo.id mid,modulo.descripcion')
+                                    ->innerJoin('perfil','perfil.id = usuarios.id_perfil')
+                                    ->innerJoin('accesos','accesos.id_pefil = perfil.id')
+                                    ->innerJoin('menus','menus.id = accesos.id_menu')
+                                    ->innerJoin('modulo','modulo.id = menus.id_modulo')
+                                    ->where('usuarios.id=:user_id and accesos.estado=1 and  modulo.estado=1 and menus.visible=1',[':user_id'=>Yii::$app->user->identity->id])
+                                    ->groupBy('modulo.id,modulo.descripcion')
+                                    ->all();
+                                    
+                foreach($modulos as $modulo)
+                {
+                    echo '
+              <a href="#">
+                <span>'.$modulo->descripcion.'</span>
+              </a>
+              <ul class="treeview-menu">';
+                
+               // var_dump($modulo->descripcion);die;
+                
+                $menus= Usuarios::find()
+                                    ->select('menus.descripcion, menus.ruta')
+                                    ->innerJoin('perfil','perfil.id = usuarios.id_perfil')
+                                    ->innerJoin('accesos','accesos.id_pefil = perfil.id')
+                                    ->innerJoin('menus','menus.id = accesos.id_menu')
+                                    ->where('usuarios.id=:user_id and menus.estado=1 and accesos.estado=1 and menus.id_modulo=:id_modulo and menus.visible=1',[':user_id'=>Yii::$app->user->identity->id,':id_modulo'=>$modulo->mid])
+                                    ->all();
+                
+                
+                    foreach($menus as $menu)
+                    {
+                        echo Html::a( $menu->descripcion,[$menu->ruta],['options' => ['class' => '','id'=>'','name'=>'' ]]).'</br>';
+                        /*echo Html::a( 'Datos Generales',[$menu->ruta.'#general'],['class'=>'']).'</br>';
+                        echo Html::a( 'Áreas Claves',[$menu->ruta.'#areas'],['class'=>'']).'</br>';
+                        echo Html::a( 'Marco Lógico',[$menu->ruta.'#logico'],['class'=>'']).'</br>';
+                        echo Html::a( 'Otros',[$menu->ruta.'#otros'],['class'=>'']).'</br>';*/
+                    }
+                    
+                    echo '</ul>';
+                
+                }
+            }
+            
             ?>
 
 </div>

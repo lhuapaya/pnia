@@ -23,9 +23,25 @@ class AportanteController extends Controller
         
         if($aportante->load(Yii::$app->request->post()) )
         {
+            
+            if(isset($aportante->aporte_nomonetario))
+            {
+                $countAportantess=count(array_filter($aportante->aporte_nomonetario));           
+                for($i=0;$i<$countAportantess;$i++)
+                {  
+                    if(!empty($aportante->aportante_ids[$i]))
+                    {
+                        $aportanteupdate=Aportante::findOne($aportante->aportante_ids[$i]);
+                        $aportanteupdate->monetario=$aportante->aporte_monetario[$i];
+                        $aportanteupdate->no_monetario=$aportante->aporte_nomonetario[$i];
+                        $aportanteupdate->total=($aportante->aporte_monetario[$i] + $aportante->aporte_nomonetario[$i]);
+                        $aportanteupdate->update(); 
+                    }
+                }
+            }
+            
+            /*
             $countAportantess=count(array_filter($aportante->aporte_tipo));
-            //var_dump($countAportantess); die;
-             /*aportantes*/
                 for($i=0;$i<$countAportantess;$i++)
                 {
 
@@ -51,7 +67,7 @@ class AportanteController extends Controller
                         $aportantecreate->total=($aportante->aporte_monetario[$i] + $aportante->aporte_nomonetario[$i]);
                         $aportantecreate->save(); 
                     }
-                }
+                }*/
             return $this->refresh();
         }
         else

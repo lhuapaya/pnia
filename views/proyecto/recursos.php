@@ -16,8 +16,10 @@ use yii\web\JsExpression;
         <?php
 	$ver_act = json_decode($ver_actividad);
 	$ver_peso_act = json_decode($ver_peso_actividad);
+	$ver_co_apor = json_decode($ver_co_aporte);
+	
 	$denegado = 0;
-	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_peso_act->estado == 0) ){
+	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_peso_act->estado == 0) && ($ver_co_apor->estado == 0) ){
 	   $denegado = 1; 
 	    ?>
 	<div class="alert alert-danger" id="warning">
@@ -109,7 +111,7 @@ use yii\web\JsExpression;
         </div>
 	<?php } }else{   ?>
 	    <div class="alert alert-warning" id="warning">
-		<?= $ver_act->mensaje.$ver_peso_act->mensaje ?>
+		<?= $ver_act->mensaje.$ver_peso_act->mensaje.$ver_co_apor->mensaje ?>
 		<!--<strong>¡Error!</strong> Verificar los Indicadores y Actividades para continuar.-->
 	    </div>
 	<?php } ?>

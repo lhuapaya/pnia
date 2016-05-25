@@ -20,7 +20,7 @@ use app\models\Maestros;
 </style>
 <div id="form1" >
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
-    <?= \app\widgets\observacion\ObservacionWidget::widget(); ?>   
+    <?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Motivo de la Observación:','tipo'=>'1']); ?>   
 <div class="alert alert-danger" id="warning">
 	   
 	    </div>
@@ -813,7 +813,7 @@ use app\models\Maestros;
  
   </section>
     <div class="col-xs-12 col-sm-7 col-md-12 col-centered" >
-        <button style="" type="button" id="btnobservar" class="btn btn-primary " data-toggle="modal" data-target="#modalobs_">Observar</button>  
+       <!-- <button style="" type="button" id="btnobservar" class="btn btn-primary " data-toggle="modal" data-target="#modalobs_">Observar</button>  -->
         <button type="submit" id="btnaceptar" class="btn btn-primary ">Aceptar</button>   
     </div>
     <?php ActiveForm::end(); ?>

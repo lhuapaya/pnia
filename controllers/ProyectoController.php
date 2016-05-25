@@ -1273,11 +1273,12 @@ class ProyectoController extends Controller
         $ver_monto_total = Yii::$app->runAction('proyecto/verificar_presupuesto', ['id'=>$proyecto->id]);
         $ver_recursos = Yii::$app->runAction('proyecto/verificar_recursos', ['id'=>$proyecto->id]);
         $ver_peso_actividad = Yii::$app->runAction('proyecto/verificar_peso_actividades', ['id'=>$proyecto->id]);
+        $ver_co_aporte = Yii::$app->runAction('proyecto/verificar_colaborador_aporte', ['id'=>$proyecto->id]);
 
         //var_dump($ver_monto_total);die;
         
         
-        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$evento,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad]);
+        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$evento,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_co_aporte'=>$ver_co_aporte]);
     }
     
     
@@ -1618,25 +1619,22 @@ class ProyectoController extends Controller
     {
         //$mesaje = "No existe el Identificador del Colaborador";
         
-       // $validarColaborador = Colaborador::find()->where('id = :id_co',[':id_co'=>$colaborador])->all();
+        $validarAportante = Recurso::find()->where('fuente = :fuente',[':fuente'=>$id])->all();
         
-        //var_dump($validarIndicador);
-        //if(isset($validarColaborador))
-        //{
-           Aportante::findOne($id)->delete();
-           $mesaje = "Se elimino Colaborador Correctamente";
-        //}
         
-        echo $mesaje;
-        
-        /*if(ObjetivoEspecifico::findOne($myData->id)->delete())
+        if($validarAportante)
         {
-            
+           //ObjetivoEspecifico::findOne($myData->id)->delete();
+           $mesaje = "El Colaborador se encuentra Asociado a Recursos.";
+
         }
         else
         {
-            echo "El Objetivo se encuentra asociado a un Indicador";
-        }*/
+            Aportante::findOne($id)->delete();
+           $mesaje = "Se elimino Colaborador Correctamente";
+        }
+        //var_dump($mesaje);die;
+        echo $mesaje;
         
         
     }

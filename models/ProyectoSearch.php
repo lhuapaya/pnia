@@ -50,7 +50,7 @@ class ProyectoSearch extends Proyecto
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 10],
+            'pagination' => ['pageSize' => 12],
         ]);
 
         $this->load($params);

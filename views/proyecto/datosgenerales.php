@@ -25,7 +25,9 @@ use app\models\Maestros;
             <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Datos Generales</span></h3>
             
             </div>
-            
+            <div class="alert alert-danger" id="warning">
+	   
+            </div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-titulo required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
@@ -302,14 +304,18 @@ use app\models\Maestros;
     $urlDependencia= Yii::$app->getUrlManager()->createUrl('maestros/dependencia');
     $obtenerprovincia = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerprovincia');
     $obtenerdistrito = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerdistrito');
+    $ver_aportes = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_colaborador_aporte');
 ?>
 
 
 <script type="text/javascript">
-    
+  
+  
+
+
 $(document).ready(function(){
     
-
+avisos_dg(<?= $proyecto->id; ?>);
 
 var inicialdependencia = <?= $proyecto-> id_dependencia_inia;?>;
 if (inicialdependencia != '')
@@ -382,6 +388,23 @@ $("#proyecto-id_unidad_ejecutora").change(function(){
         }
  });
 
+ 
+function avisos_dg(id)
+{
+  var ver_aportes = verificar_aportes(id,"<?= $ver_aportes; ?>");
+  
+  if(ver_aportes[0] != 0){
+    
+	$('#warning').html(ver_aportes[1]);
+	$('#warning').show();
+    }
+    else
+    {
+	$('#warning').hide();
+    }
+
+}
+ 
 function provincia(valor) {
 	
 	var departamento = $('#proyecto-departamento');
@@ -527,7 +550,16 @@ $("#btnproyecto").click(function( ) {
             //alert('hola');
         }
     
-     
+    var objetivo1=$('input[name=\'Proyecto[aportante_numero][]\']').length;
+    var valor=($('input[name=\'Proyecto[aportante_numero][]\']').serializeArray());
+
+        for (var i=0; i<objetivo1; i++) {
+            if(($('#proyecto-aportante_colaborador_'+(valor[i].value)).val()==''))
+            {
+                error=error+'Complete todos los Campos del Colaborador #'+(parseInt(valor[i].value)+1)+' <br/>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
+        } 
    /* var colaborador=$('input[name=\'Proyecto[nombresc][]\']').length;
         for (var i=0; i<colaborador; i++) {
             
