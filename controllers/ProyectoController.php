@@ -2274,6 +2274,7 @@ set_time_limit(0);
                         $recursoprogramado->anio=$anio;
                         $recursoprogramado->mes=$mes[$i];
                         $recursoprogramado->cantidad=$cantidad[$i];
+                        $recursoprogramado->precio_unit=$precio_unit;
                         $recursoprogramado->update(); 
                     }
                     else
@@ -2283,6 +2284,7 @@ set_time_limit(0);
                         $recursoprogramado->anio=$anio;
                         $recursoprogramado->mes=$mes[$i];
                         $recursoprogramado->cantidad=$cantidad[$i];
+                        $recursoprogramado->precio_unit=$precio_unit;
                         $recursoprogramado->save(); 
                     }
                 }

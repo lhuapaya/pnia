@@ -155,7 +155,13 @@ article {
     border: none;
 }
 
+.table select {
+font-size: 10px;
+}
 
+.table input {
+font-size: 10px;
+}
 
 *:focus { outline: none; }
 

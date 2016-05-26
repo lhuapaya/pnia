@@ -25,6 +25,10 @@ class RecursoProgramado extends \yii\db\ActiveRecord
     
     public $cantidad2;
     public $solicita;
+    public $clasificador_id;
+    public $descripcion;
+    public $detalle;
+    public $id_clasificador;
     
     public static function tableName()
     {
@@ -38,7 +42,8 @@ class RecursoProgramado extends \yii\db\ActiveRecord
     {
         return [
             [['id_recurso', 'anio', 'mes', 'cantidad', 'cant_rendida', 'estado'], 'integer'],
-            [['cantidad2','solicita'],'safe'],
+            [['precio_unit', 'precio_unit_rendido'], 'number'],
+            [['id_clasificador','detalle','cantidad2','solicita','clasificador_id','descripcion'],'safe'],
         ];
     }
 
