@@ -598,12 +598,10 @@ $baseUrl = $Asset->baseUrl;
 
 
 
-<div class="content-wrapper" style="background: #fff; height: auto; display: inline-block;">
-<section class="content">
-<div class="row">
+<div class="content-wrapper" style="background: #fff; height: auto; display: inline-block; min-width: 1024px; padding-left: 2cm;">
+
 <?= $content ?>
-</div>
-</section> 
+
 </div>
 
 <!--

@@ -10,6 +10,7 @@ use yii\grid\GridView;
 $this->title = 'Lista de Proyectos';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
+<section class="block">
 <div class="proyecto-index">
 
    <!-- <h1><?= Html::encode($this->title) ?></h1>-->
@@ -118,6 +119,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
 </div>
+</section>
 <?php
 $ValorProyecto= Yii::$app->getUrlManager()->createUrl('proyecto/valorproyecto');
 ?>
