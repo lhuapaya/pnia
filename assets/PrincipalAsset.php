@@ -25,7 +25,7 @@ class PrincipalAsset extends AssetBundle
                    'distlte/css/AdminLTE.min.css',
                    'distlte/css/skins/_all-skins.min.css',
                    //'https://cdn.rawgit.com/esvit/ng-table/v1.0.0/dist/ng-table.min.css',
-                   //'css/principal.css',
+                   'css/principal.css',
                    //'plugins/iCheck/flat/blue.css',
                    //'plugins/morris/morris.css',
                    //'plugins/jvectormap/jquery-jvectormap-1.2.2.css',

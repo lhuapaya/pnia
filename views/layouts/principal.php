@@ -341,7 +341,8 @@ $baseUrl = $Asset->baseUrl;
             <li class="header">PANEL DE NAVEGACION</li>
             
             <?php
-            
+            if(\Yii::$app->user->can('investigador'))
+            {
             $proyecto = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                         ->one();
@@ -399,6 +400,55 @@ $baseUrl = $Asset->baseUrl;
                     echo '</ul></li>';
                 
                 }
+            }
+            else if(!\Yii::$app->user->can('investigador'))
+            {
+                $modulos=Usuarios::find()
+                                    ->select('modulo.id mid,modulo.descripcion')
+                                    ->innerJoin('perfil','perfil.id = usuarios.id_perfil')
+                                    ->innerJoin('accesos','accesos.id_pefil = perfil.id')
+                                    ->innerJoin('menus','menus.id = accesos.id_menu')
+                                    ->innerJoin('modulo','modulo.id = menus.id_modulo')
+                                    ->where('usuarios.id=:user_id and accesos.estado=1 and  modulo.estado=1 and menus.visible=1',[':user_id'=>Yii::$app->user->identity->id])
+                                    ->groupBy('modulo.id,modulo.descripcion')
+                                    ->all();
+                                    
+                foreach($modulos as $modulo)
+                {
+                    echo '
+              <li class="treeview">
+              <a href="#">
+                <i class="fa fa-edit"></i> <span>'.$modulo->descripcion.'</span>
+                <i class="fa fa-angle-left pull-right"></i>
+              </a>
+              
+              
+              <ul class="treeview-menu">';
+                
+               // var_dump($modulo->descripcion);die;
+                
+                $menus= Usuarios::find()
+                                    ->select('menus.descripcion, menus.ruta')
+                                    ->innerJoin('perfil','perfil.id = usuarios.id_perfil')
+                                    ->innerJoin('accesos','accesos.id_pefil = perfil.id')
+                                    ->innerJoin('menus','menus.id = accesos.id_menu')
+                                    ->where('usuarios.id=:user_id and menus.estado=1 and accesos.estado=1 and menus.id_modulo=:id_modulo and menus.visible=1',[':user_id'=>Yii::$app->user->identity->id,':id_modulo'=>$modulo->mid])
+                                    ->all();
+                
+                
+                    foreach($menus as $menu)
+                    {
+                        echo '<li>'.Html::a( '<i class="fa fa-circle-o text-aqua"></i> '.$menu->descripcion,[$menu->ruta],['options' => ['class' => '','id'=>'','name'=>'' ]]).'</li>';
+                        /*echo Html::a( 'Datos Generales',[$menu->ruta.'#general'],['class'=>'']).'</br>';
+                        echo Html::a( 'Áreas Claves',[$menu->ruta.'#areas'],['class'=>'']).'</br>';
+                        echo Html::a( 'Marco Lógico',[$menu->ruta.'#logico'],['class'=>'']).'</br>';
+                        echo Html::a( 'Otros',[$menu->ruta.'#otros'],['class'=>'']).'</br>';*/
+                    }
+                    
+                    echo '</ul></li>';
+                
+                }
+            }
             
             ?>
             
