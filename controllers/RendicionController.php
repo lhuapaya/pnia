@@ -4,7 +4,9 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Rendicion;
+use app\models\Recurso;
 use app\models\SolicitudDesembolso;
+use app\models\Maestros;
 use app\models\RendicionSearch;
 use app\models\DetalleRendicion;
 use app\models\RecursoProgramado;
@@ -36,8 +38,24 @@ class RendicionController extends Controller
     public function actionIndex()
     {
         $this->layout='principal';
+        
+
+        if(!empty($_REQUEST["id"]))
+        {
+            $id=$_REQUEST["id"];
+            
+
+        }
+        else
+        {
+            $id = 'no';
+        }
+        
+        if($id){$user = $id;}
+        
+        $id = 0;
         $searchModel = new RendicionSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id,$user);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -52,9 +70,117 @@ class RendicionController extends Controller
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $this->layout='principal';
+        
+        $totales = 0;
+        
+        $model = new DetalleRendicion();
+        
+        //svar_dump($model->load(Yii::$app->request->post()));
+        if ($model->load(Yii::$app->request->post()))
+        {
+            $countregistros = count(array_filter($model->clasificador_id));
+            
+            //var_dump($countregistros);die;
+            
+            $hoy = getdate();
+            
+            $desembolsos = SolicitudDesembolso::find()
+                            ->where('estado = 1 and id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->one();
+           // var_dump($desembolsos->id);die;
+           
+                        /*$rendicion=new Rendicion();
+                        $rendicion->id_user= Yii::$app->user->identity->id;
+                        $rendicion->fecha= $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                        $rendicion->id_solicitud = $desembolsos->id;
+                        $rendicion->save();*/
+            
+                    /*if($model->detalle_ids[$i] != '')
+                    {
+                        $Colaborador=Aportante::findOne($proyecto->colaboradores_ids[$i]);
+                        $Colaborador->id_proyecto=$proyecto->id;
+                        $Colaborador->colaborador=$proyecto->aportante_colaborador[$i];
+                        $Colaborador->regimen=$proyecto->aportante_regimen[$i];
+                        $Colaborador->tipo_inst=$proyecto->aportante_tipo_inst[$i];
+                        $Colaborador->tipo=3;
+                        $Colaborador->update(); 
+                    }
+                    else
+                    {*/
+                    for($i=0;$i<$countregistros;$i++)
+                    {
+                        $recurso = Recurso::findOne($model->descripcion[$i]);
+                        
+                        $detRendicion=new DetalleRendicion;
+                        $detRendicion->id_rendicion = $model->id_ren;
+                        $detRendicion->id_clasificador= $model->clasificador_id[$i];
+                        $detRendicion->id_recurso=$recurso->id;
+                        $detRendicion->descripcion=$recurso->detalle;
+                        $detRendicion->mes=$model->mes[$i];
+                        $detRendicion->anio=$model->anio[$i];
+                        $detRendicion->cantidad=$model->cantidad[$i];
+                        $detRendicion->precio_unit=$model->precio_unit[$i];
+                        $detRendicion->total= ($model->cantidad[$i] * $model->precio_unit[$i]);
+                        $detRendicion->ruc=$model->ruc[$i];
+                        $detRendicion->razon_social=$model->razon_social[$i];
+                        $detRendicion->save();
+                        
+                        
+                        //var_dump([':id_recurso'=>$detRendicion->id_recurso,':anio'=>$detRendicion->anio,':mes'=>$detRendicion->mes]);die;
+                        $programado = RecursoProgramado::find()
+                                        ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$detRendicion->id_recurso,':anio'=>$detRendicion->anio,':mes'=>$detRendicion->mes])
+                                        ->one();
+                        
+                        //var_dump($programado->cant_rendida);die;
+                        $programado->cant_rendida = ($programado->cant_rendida + $detRendicion->cantidad);
+                        $programado->precio_unit_rendido = $detRendicion->precio_unit;
+                        if($programado->cant_rendida == $programado->cantidad)
+                        {
+                          $programado->estado = 2;  
+                        }
+                        $programado->update();
+                        
+                        $totales += $detRendicion->total;
+                        
+                        
+                    }
+                    
+                   $desem = SolicitudDesembolso::findOne($desembolsos->id);
+                   $desem->total_pendiente = ($desem->total_pendiente - $totales);
+                   $desem->update();
+                    //}
+                    
+            return $this->redirect('index');
+            
+        }
+        else
+        {
+            $rendicion = Rendicion::findOne($id);
+          $detRendicion =  DetalleRendicion::find()->where('id_rendicion = :id_rendicion',[':id_rendicion'=>$id])->all();
+          
+          $clasif = Maestros::find()
+                                ->where('id_padre = 32 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+          
+          $clasificadores = RecursoProgramado::find()
+                        ->select('recurso.clasificador_id, maestros.descripcion')
+                                ->innerJoin('recurso','recurso.id=recurso_programado.id_recurso')
+                                ->innerJoin('aportante','aportante.id=recurso.fuente')
+                                ->innerJoin('maestros','maestros.id=recurso.clasificador_id')
+                                ->innerJoin('actividad','actividad.id=recurso.actividad_id')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario and aportante.tipo = 1 and recurso_programado.estado = 1 and recurso_programado.cantidad > 0  ',[':user_propietario'=>Yii::$app->user->identity->id])
+                                ->groupBy(['recurso.clasificador_id'])
+                                ->all();
+                                
+                               // var_dump($clasificadores);die;
+        }
+        
+        return $this->render('view',['clasificadores'=>$clasificadores,'detRendicion'=>$detRendicion,'clasif'=>$clasif,'rendicion'=>$rendicion]);
     }
 
     /**
@@ -128,6 +254,8 @@ class RendicionController extends Controller
     {
         $this->layout='principal';
         
+        $totales = 0;
+        
         $model = new DetalleRendicion();
         
         //svar_dump($model->load(Yii::$app->request->post()));
@@ -161,17 +289,47 @@ class RendicionController extends Controller
                     }
                     else
                     {*/
-                    /*for($i=0;$i<$countregistros;$i++)
+                    for($i=0;$i<$countregistros;$i++)
                     {
-                   
+                        $recurso = Recurso::findOne($model->descripcion[$i]);
+                        
                         $detRendicion=new DetalleRendicion;
-                        $detRendicion->id_proyecto=$proyecto->id;
-                        $detRendicion->colaborador=$proyecto->aportante_colaborador[$i];
-                        $detRendicion->regimen=$proyecto->aportante_regimen[$i];
-                        $detRendicion->tipo_inst=$proyecto->aportante_tipo_inst[$i];
-                        $detRendicion->tipo=3;
+                        $detRendicion->id_rendicion = $rendicion->id;
+                        $detRendicion->id_clasificador= $model->clasificador_id[$i];
+                        $detRendicion->id_recurso=$recurso->id;
+                        $detRendicion->descripcion=$recurso->detalle;
+                        $detRendicion->mes=$model->mes[$i];
+                        $detRendicion->anio=$model->anio[$i];
+                        $detRendicion->cantidad=$model->cantidad[$i];
+                        $detRendicion->precio_unit=$model->precio_unit[$i];
+                        $detRendicion->total= ($model->cantidad[$i] * $model->precio_unit[$i]);
+                        $detRendicion->ruc=$model->ruc[$i];
+                        $detRendicion->razon_social=$model->razon_social[$i];
                         $detRendicion->save();
-                    }*/
+                        
+                        
+                        //var_dump([':id_recurso'=>$detRendicion->id_recurso,':anio'=>$detRendicion->anio,':mes'=>$detRendicion->mes]);die;
+                        $programado = RecursoProgramado::find()
+                                        ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$detRendicion->id_recurso,':anio'=>$detRendicion->anio,':mes'=>$detRendicion->mes])
+                                        ->one();
+                        
+                        //var_dump($programado->cant_rendida);die;
+                        $programado->cant_rendida = ($programado->cant_rendida + $detRendicion->cantidad);
+                        $programado->precio_unit_rendido = $detRendicion->precio_unit;
+                        if($programado->cant_rendida == $programado->cantidad)
+                        {
+                          $programado->estado = 2;  
+                        }
+                        $programado->update();
+                        
+                        $totales += $detRendicion->total;
+                        
+                        
+                    }
+                    
+                   $desem = SolicitudDesembolso::findOne($desembolsos->id);
+                   $desem->total_pendiente = ($desem->total_pendiente - $totales);
+                   $desem->update();
                     //}
                     
             return $this->redirect('index');
@@ -307,4 +465,84 @@ class RendicionController extends Controller
         return json_encode(array('precio_unit'=>$anio->precio_unit,'cantidad'=>$anio->cantidad));
         
     }
+    
+    public function actionVerificar_cantidad_pro($id_recurso,$mes,$anio,$cant)
+    {
+
+       $cantidad = RecursoProgramado::find()
+                        ->select('recurso_programado.cantidad, recurso_programado.cant_rendida')
+                                ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$id_recurso,':anio'=>$anio,':mes'=>$mes])
+                                ->one();
+                            
+        $pendiente = ($cantidad->cantidad - $cantidad->cant_rendida);
+        
+        if($cant > $pendiente)
+        {
+            return 1;
+        }
+        return 0;
+        
+    }
+    
+    public function actionVerificar_saldo_desembolso($monto,$id_user)
+    {
+        
+       $desembolso = SolicitudDesembolso::find()
+                            ->where('estado = 1 and id_user = :id_user',[':id_user'=>$id_user])
+                            ->one();
+                            
+        $saldo = ($desembolso->total_pendiente - $monto);
+        
+        if($saldo < 0)
+        {
+            return json_encode(array('estado'=>1,'mensaje'=>"Usted Cuenta con un Saldo de S/.".$desembolso->total_pendiente." <br/>"));
+        }
+        return json_encode(array('estado'=>0,'mensaje'=>""));
+        
+    }
+    
+    public function actionEliminar_rendicion_detalle($id)
+    {
+        $detalle = DetalleRendicion::findOne($id);
+        
+        $desembolsos = SolicitudDesembolso::find()
+                            ->where('estado = 1 and id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->one();
+        
+        $programado = RecursoProgramado::find()
+                                        ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$detalle->id_recurso,':anio'=>$detalle->anio,':mes'=>$detalle->mes])
+                                        ->one();
+                        
+                        //var_dump($programado->cant_rendida);die;
+                        $programado->cant_rendida = ($programado->cant_rendida - $detalle->cantidad);
+                        $programado->estado = 1;  
+                        $programado->update();
+        
+        $desem = SolicitudDesembolso::findOne($desembolsos->id);
+                   $desem->total_pendiente = ($desem->total_pendiente + $detalle->total);
+                   $desem->update();
+                   
+        
+    
+        DetalleRendicion::findOne($id)->delete();
+        
+        return "Se elimino el Registro.";
+        
+    }
+    
+    
+    public function actionProyecto()
+    {
+        $this->layout='principal';
+        $id = 1;
+        $user = '';
+        $searchModel = new RendicionSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id,$user);
+
+        return $this->render('proyecto', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+    
 }

@@ -39,10 +39,30 @@ class RendicionSearch extends Rendicion
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$id,$user)
     {
-        $query = Rendicion::find();
-
+        if(Yii::$app->user->identity->id_perfil == 2)
+        {
+        $query = Rendicion::find()->where('id_user and :id_user',[':id_user'=>Yii::$app->user->identity->id]);
+        }
+        else
+        {
+            if($id == 1)
+            {
+                $query = Rendicion::find()
+                        ->select('rendicion.id_user as id, proyecto.titulo as titulo ,count(rendicion.estado) as cantidad')
+                                ->innerJoin('proyecto','proyecto.user_propietario=rendicion.id_user')
+                                ->where('proyecto.estado = 1 and rendicion.estado = 0')
+                                ->groupBy(['proyecto.id']);
+                                
+                
+            }
+            else
+            {
+                $query = Rendicion::find()->where('id_user and :id_user',[':id_user'=>$user]);
+            }
+            
+        }
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
         ]);

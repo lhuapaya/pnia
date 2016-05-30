@@ -55,6 +55,7 @@ class DesembolsodetalleController extends Controller
             $solicitud = new SolicitudDesembolso();
             $solicitud->id_user = Yii::$app->user->identity->id;
             $solicitud->total = $total;
+            $solicitud->total_pendiente = $total;
             $solicitud->fecha_solicitud = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
             $solicitud->save();
             

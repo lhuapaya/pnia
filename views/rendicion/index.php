@@ -14,11 +14,16 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php
+    if(Yii::$app->user->identity->id_perfil == 2)
+        { ?>
     <p>
         <?= Html::a(Yii::t('app', 'Nueva Rendición'), ['detalle'], ['class' => 'btn btn-success']) ?>
     </p>
-
+   <?php } ?>
+   
+   <div class="col-md-2"></div>
+   <div class="col-md-10">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -55,8 +60,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'width'=>'60px',
             ],
 
-            //['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+             'template' => '{view}',
+             'buttons' => [
+                'view' => function ($url, $model) {
+                    return Html::a('<span class="fa fa-search">Ver</span>', $url, [
+                                'title' => Yii::t('app', 'Ver Desembolso'),
+                                'class'=>'btn btn-primary btn-xs ver',
+                                
+                    ]);
+                }
+              ]
+             
+             ],
         ],
     ]); ?>
-
+    </div>
+    <div class="col-md-1"></div>
 </div>

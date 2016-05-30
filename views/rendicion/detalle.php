@@ -47,7 +47,26 @@ use kartik\date\DatePicker;
                                 </th>
                             </tr>
                         </thead>
-		    
+                        <tfoot>
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                              <td>
+                                Total:
+                              </td>
+                              <td>
+                                <div class="form-group field-aportante-totaltotal required">
+					    <input type="text" id="totales" class="form-control decimal"  placeholder="" value="0.00" disabled/>
+				</div>
+                              </td>
+                              <td></td>
+                            </tr>
+                      </tfoot>
                         <tbody>
                             <?php $det=0; ?>
 			    
@@ -114,7 +133,7 @@ use kartik\date\DatePicker;
 					    </div>
 					</td>
 					<td>
-					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $det ?>)">
+					    <span class="eliminar glyphicon glyphicon-minus-sign" >
 					    <input type="hidden" id="detalle_ids_0" name="DetalleRendicion[detalle_ids][]" value="" />
 					    </span>
 					</td>
@@ -141,6 +160,8 @@ use kartik\date\DatePicker;
     $obt_anio_repro= Yii::$app->getUrlManager()->createUrl('rendicion/obtener_anio_repro');
     $obt_mes_repro= Yii::$app->getUrlManager()->createUrl('rendicion/obtener_mes_repro');
     $obt_precio_repro= Yii::$app->getUrlManager()->createUrl('rendicion/obtener_precio_repro');
+    $ver_cantidad= Yii::$app->getUrlManager()->createUrl('rendicion/verificar_cantidad_pro');
+    $ver_saldo= Yii::$app->getUrlManager()->createUrl('rendicion/verificar_saldo_desembolso');
 ?>            
             
 <script>
@@ -355,9 +376,25 @@ $( document ).ready(function() {
         var pre_unit = $("#detallerendicion-precio_unit_"+tr);
         var cantidad = $("#detallerendicion-cantidad_"+tr);
         var total = $("#detallerendicion-total_"+tr);
+        var totales = 0;
+        
         
         var precio_total = getNum(pre_unit.val()) * getNum(cantidad.val());
         total.val(precio_total.toFixed(2));
+        
+        
+        
+        var clasificador=($('select[name=\'DetalleRendicion[clasificador_id][]\']').length);
+        var valor=($('input[name=\'DetalleRendicion[numero][]\']').serializeArray());
+        
+        for (var i=0; i<clasificador; i++)
+        {
+              
+                totales += parseFloat($('#detallerendicion-total_'+(valor[i].value)).val());
+            
+        }
+        
+        $("#totales").val(totales.toFixed(2));
        
     }
     
@@ -371,7 +408,7 @@ $( document ).ready(function() {
         for (var i=0; i<clasificador; i++) {
             if(($('#detallerendicion-id_clasificador_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-descripcion_'+(valor[i].value)).val()=='0') || ($('#proyecto-recurso_fuente_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-anio_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-mes_'+(valor[i].value)).val()=='0') || ($.trim($('#detallerendicion-precio_unit_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-cantidad_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-ruc_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-razon_social_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-total_'+(valor[i].value)).val())==''))
             {
-                error=error+'Complete todos los Campos del Registro #'+((parseInt(valor[i].value)) + 1)+' <br>';
+                error=error+'Complete todos los Campos de los Registros. <br>';
                // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
             else
@@ -413,7 +450,8 @@ $( document ).ready(function() {
     
     
     $("#btndetalle").click(function(event){
-        var duplicado = 0;
+        jsShowWindowLoad("Procesando...");
+        var totales = 0;
         var array = [];
         var array1 = [];
         var array2 = [];
@@ -422,13 +460,30 @@ $( document ).ready(function() {
         var valor=($('input[name=\'DetalleRendicion[numero][]\']').serializeArray());
         
         for (var i=0; i<clasificador; i++) {
-            if(($('#detallerendicion-id_clasificador_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-descripcion_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-anio_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-mes_'+(valor[i].value)).val()=='0') || ($.trim($('#detallerendicion-precio_unit_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-cantidad_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-ruc_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-razon_social_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-total_'+(valor[i].value)).val())==''))
+            if(($('#detallerendicion-id_clasificador_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-descripcion_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-anio_'+(valor[i].value)).val()=='0') || ($('#detallerendicion-mes_'+(valor[i].value)).val()=='0') || ($.trim($('#detallerendicion-precio_unit_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-total_'+(valor[i].value)).val())==0) || ($.trim($('#detallerendicion-cantidad_'+(valor[i].value)).val())=='0') || ($.trim($('#detallerendicion-ruc_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-razon_social_'+(valor[i].value)).val())=='') || ($.trim($('#detallerendicion-total_'+(valor[i].value)).val())==''))
             {
-                error=error+'Complete todos los Campos del Registro #'+((parseInt(valor[i].value)) + 1)+' <br>';
+                               
+                error=error+'Complete todos los Campos de los Registros. <br>';
                // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
             else
             {
+                $.ajax({
+                    url: '<?= $ver_cantidad ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id_recurso:$('#detallerendicion-descripcion_'+(valor[i].value)).val(),mes:$('#detallerendicion-mes_'+(valor[i].value)).val(),anio:$('#detallerendicion-anio_'+(valor[i].value)).val(),cant:$.trim($('#detallerendicion-cantidad_'+(valor[i].value)).val())},
+                    success: function(data){
+                        
+                        if (data == 1) {
+                            error = error+'La cantidad del Registro #'+((parseInt(valor[i].value)) + 1)+' es mayor a lo pendiente por rendir. <br>';
+                            //break;
+                        }
+
+                    }
+                });
+                
+                totales += parseFloat($('#detallerendicion-total_'+(valor[i].value)).val());
                 array[i] = $('#detallerendicion-descripcion_'+(valor[i].value)).val()+$('#detallerendicion-anio_'+(valor[i].value)).val()+$('#detallerendicion-mes_'+(valor[i].value)).val();
                 //array1[i] = $('#detallerendicion-anio_'+(valor[i].value)).val();
                 //array2[i] = $('#detallerendicion-mes_'+(valor[i].value)).val();
@@ -437,7 +492,24 @@ $( document ).ready(function() {
             }
         }
        
-	console.log(array);
+       
+       console.log(totales);
+        $.ajax({
+                    url: '<?= $ver_saldo ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {monto:totales,id_user:user},
+                    success: function(data){
+                        var valor = jQuery.parseJSON(data);
+                        console.log(valor.estado);
+                        if (valor.estado == 1) {
+                            error = error+valor.mensaje;
+                            //break;
+                        }
+
+                    }
+                });
+	
         array1 = array;
         for (var e=0;e<array1.length;e++) {
             array2 = array.slice(0);
@@ -450,13 +522,17 @@ $( document ).ready(function() {
                 error = error+"No puede tener Recursos duplicados con el mismo programa <br>";
                 break;
             }
-            console.log(array);
+            //console.log(array);
             array2=[];
             //array2 = array;
         }
         
+        
+        
 	//return false;
 	if (error != '') {
+            
+            jsRemoveWindowLoad();
 	    
 	    $.notify({
                 message: error 
@@ -475,5 +551,47 @@ $( document ).ready(function() {
         return true;
     
         }
+    });
+    
+    
+    $("#detalle_tabla").on('click','.eliminar',function(){
+        var r = confirm("Estas seguro de Eliminar?");
+        var mensaje = '';
+        if (r == true) {
+            jsShowWindowLoad("Procesando...");
+            id=$(this).children().val();
+            if (id != '') {
+		/*$.ajax({
+                    url: '<?php // $eliminarrecurso ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id:id},
+                    success: function(data){
+			
+                        mensaje = data;
+                    }
+                });
+		$(this).parent().parent().remove();*/	
+	    }
+	    else
+	    {
+		$(this).parent().parent().remove();
+                
+                mensaje = "Se elimino el Registro Correctamente";
+	    }
+            jsRemoveWindowLoad();
+            $.notify({
+					    message: mensaje 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'top',
+						align: 'right'
+					    },
+					});
+            
+            
+        } 
     });
 </script>

@@ -23,6 +23,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'Solicitar Nuevo Desembolso'), ['desembolsodetalle/index'], ['class' => 'btn btn-success','id'=>'nuevo_desembolso']) ?>
     </p>
     <?php } ?>
+    <div class="col-md-1"></div>
+   <div class="col-md-11">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -50,6 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 
             ],
             'total',
+            'total_pendiente',
             [
                 'label'=>'Estado',
                 'attribute' => 'estado',
@@ -82,7 +85,8 @@ $this->params['breadcrumbs'][] = $this->title;
              ],
         ],
     ]); ?>
-
+    </div>
+    <div class="col-md-1"></div>
 </div>
 <?php
 

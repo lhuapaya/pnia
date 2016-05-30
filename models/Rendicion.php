@@ -22,6 +22,8 @@ class Rendicion extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
+    public $cantidad;
+    public $titulo;
     public static function tableName()
     {
         return 'rendicion';
@@ -34,6 +36,7 @@ class Rendicion extends \yii\db\ActiveRecord
     {
         return [
             [['id_user', 'id_solicitud', 'estado'], 'integer'],
+            [['cantidad','titulo'], 'safe'],
             [['fecha'], 'string', 'max' => 20]
         ];
     }

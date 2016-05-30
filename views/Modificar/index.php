@@ -21,6 +21,8 @@ $this->params['breadcrumbs'][] = $this->title;
         <?= Html::a(Yii::t('app', 'Nuevo Cambio'), ['accion'], ['class' => 'btn btn-success','id'=>'nuevo_cambio']) ?>
     </p>
     <?php }?>
+    <div class="col-md-1"></div>
+   <div class="col-md-11">
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -125,7 +127,8 @@ $this->params['breadcrumbs'][] = $this->title;
              ],
             ],
     ]); ?>
-
+    </div>
+    <div class="col-md-1"></div>
 </div>
 
 <?php

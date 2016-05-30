@@ -17,11 +17,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'SolicitudDesembolso','titulo'=>'Motivo del Rechazo:','tipo'=>'1']); ?>  
-    <div class="col-xs-12 col-sm-7 col-md-2" >
+    <div class="col-xs-12 col-sm-7 col-md-1" >
         <input type="hidden" name="SolicitudDesembolso[id_sol]" value="<?= $id; ?>" />
         <input type="hidden" value="" id="solicituddesembolso-respuesta_aprob" name="SolicitudDesembolso[respuesta_aprob]" /> 
     </div>
-    <div class="col-xs-12 col-sm-7 col-md-8" >
+    <div class="col-xs-12 col-sm-7 col-md-11" >
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
