@@ -61,7 +61,7 @@ $baseUrl = $Asset->baseUrl;
 <?php $this->beginBody() ?>
 <header class="main-header">
         <!-- Logo -->
-        <a href="index2.html" class="logo">
+        <a href="../dashboard/index" class="logo">
           <!-- mini logo for sidebar mini 50x50 pixels -->
           <span class="logo-mini"><b>P</b>NIA</span>
           <!-- logo for regular state and mobile devices -->

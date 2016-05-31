@@ -24,18 +24,20 @@ use app\models\Maestros;
 
 
 <div id="form1">
-
+    
+<div class="alert alert-danger" id="warning">
+	   
+</div>
 <ul class="tabs">
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Datos Generales</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>" >Financiamiento</a></li>
-    <li><a href="#tab3">Objetivos e Indicadores</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Actividades</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Recursos</a></li>
+    <li><a href="#tab2" >Objetivos e Indicadores</a></li>
+    <?php if($observaciones > 0){ ?>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/observaciones?id='.$proyecto->id.'&event='.$evento.'') ?>" >Observaciones</a></li>
+    <?php } ?>
 </ul>
   <div class="clr"></div>
   <section class="block">
     
-    <article id="tab3">
+    <article id="tab2">
        <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>    
 	    
             <div class="alert alert-warning" id="warning">

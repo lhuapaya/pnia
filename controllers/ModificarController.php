@@ -433,12 +433,17 @@ class ModificarController extends Controller
         //$evento = $_REQUEST["event"];
         $this->layout='principal';
         
-        $existe_proyecto = Yii::$app->runAction('proyecto/pertnece_proyecto_user', ['id'=>$id]);
+        if(Yii::$app->user->identity->id_perfil == 2)
+        {
+            $existe_proyecto = Yii::$app->runAction('proyecto/pertnece_proyecto_user', ['id'=>$id]);
         
         if($existe_proyecto == 0)
         {
             return $this->redirect('../dashboard/index');     
         }
+            
+        }
+        
         
         
         $flatUpdate = 0;        
@@ -1199,16 +1204,16 @@ class ModificarController extends Controller
                 return $this->redirect('modificardatosgen?id='.$id.'&event=2'); 
                 break;
             case 2:
-                return $this->redirect('modificardatosgen?id='.$id.'&event=2');  
+                return $this->redirect('modificarobjind?id='.$id.'&event=2');  
                 break;
             case 3:
-                return $this->redirect('modificardatosgen?id='.$id.'&event='.$event); 
+                return $this->redirect('modificarobjind?id='.$id.'&event='.$event); 
                 break;
             case 4:
-                return $this->redirect('modificardatosgen?id='.$id.'&event='.$event); 
+                return $this->redirect('modificaract?id='.$id.'&event='.$event); 
                 break;
             case 5:
-                return $this->redirect('modificardatosgen?id='.$id.'&event='.$event); 
+                return $this->redirect('modificarrec?id='.$id.'&event='.$event); 
                 break;
             }
             

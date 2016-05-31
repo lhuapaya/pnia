@@ -12,7 +12,7 @@ use kartik\date\DatePicker;
             <input type="hidden"  id="id" name="DetalleRendicion[id_ren]" value="<?= $rendicion->id; ?>" />
             <div>
 		<div class="clearfix"></div>
-                <div class="col-xs-12 col-sm-7 col-md-12">
+                <div class="col-xs-12 col-sm-7 col-md-12 ">
                     <table class="table borderless table-hover" name="DetalleRendicion[detalle_tabla]" id="detalle_tabla" border="0">
                         <thead>
                             <tr>
