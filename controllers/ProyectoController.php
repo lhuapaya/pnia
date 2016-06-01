@@ -172,6 +172,7 @@ class ProyectoController extends Controller
                         ->where('estado = 1 and id =:id',[':id'=>$id])
                         ->one();
             
+            
            $responsable = Responsable::find()
                             ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                             ->one();
@@ -288,10 +289,16 @@ class ProyectoController extends Controller
                 }
             }
             
+            
+            $usuario = Usuarios::findOne(Yii::$app->user->identity->id);
+            
             $requiere_aprobar = 0;
             if(Yii::$app->user->identity->id_perfil == $nivel)
             {
-               $requiere_aprobar = 1; 
+               if(($usuario->ejecutora == $proyecto->id_unidad_ejecutora) && ($usuario->dependencia == $proyecto->id_dependencia_inia) )
+               {
+               $requiere_aprobar = 1;
+               }
             }
             
             

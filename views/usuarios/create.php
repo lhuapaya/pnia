@@ -57,14 +57,34 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-xs-12 col-sm-7 col-md-6" >
                 <div class="form-group field-usuarios-img">
                 <label for="usuarios-img">Nombre Archivo Imagen:</label>
-                <input class="form-control" type="text" id="usuarios-img" " placeholder="Nombre y extensión de Imagen para Perfil" name="Usuarios[img]"  /> <!-- required-->
+                <input class="form-control" type="text" id="usuarios-img"  placeholder="Nombre y extensión de Imagen para Perfil" name="Usuarios[img]" value="foto.jpg"  /> <!-- required-->
                 </div>    
     </div>
     <div class="clearfix"></div><br/>
     <div class="col-xs-12 col-sm-7 col-md-12" id="titulo-proyecto">
                 <div class="form-group field-usuarios-titulo required">
                 <label for="usuarios-titulo">Titulo del Proyecto:</label>
-                <input class="form-control" type="text" id="usuarios-titulo" " placeholder="Nombre completo de la Persona" name="Usuarios[titulo]"  required/> <!-- required-->
+                <input class="form-control" type="text" id="usuarios-titulo"  placeholder="Nombre completo de la Persona" name="Usuarios[titulo]"  required/> <!-- required-->
+                </div>    
+    </div>
+    <div class="clearfix"></div>
+    <div class="col-xs-12 col-sm-7 col-md-6" id="ejecutora">
+                <div class="form-group field-usuarios-ejecutora required">
+                <label for="usuarios-id_perfil">Unidad Ejecutora:</label>
+                <select class="form-control" id="usuarios-ejecutora"   name="Usuarios[ejecutora]" >
+                    <option value="0" class="test" >-Seleccionar-</option>
+                    <?php foreach($ejecutora as $ejecutora2){ ?>
+                    <option value="<?= $ejecutora2->id ?>"><?= $ejecutora2->descripcion ?></option>
+                    <?php } ?>
+                </select>
+                </div>    
+    </div>
+    <div class="col-xs-12 col-sm-7 col-md-6" id="estacion">
+                <div class="form-group field-usuarios-dependencia required">
+                <label for="usuarios-dependencia">Estación:</label>
+                <select class="form-control" id="usuarios-dependencia"   name="Usuarios[dependencia]" >
+                    <option value="0">-Seleccionar-</option>
+                </select>
                 </div>    
     </div>
     <div class="clearfix"></div><br/><br/>
@@ -83,13 +103,20 @@ $this->params['breadcrumbs'][] = $this->title;
 
 </div>
 -->
+<?php
 
+    $urlDependencia= Yii::$app->getUrlManager()->createUrl('maestros/dependencia');
+?>
 <script>
  
  $(document).ready(function(){
     
     $("#titulo-proyecto").hide();
+    $("#ejecutora").hide();
+    $("#estacion").hide();
     $("#usuarios-titulo").prop("disabled",true);
+    $("#usuarios-ejecutora").prop('disabled', true);
+    $("#usuarios-dependencia").prop('disabled', true);
 });
  
  $('#usuarios-id_perfil').change(function(){
@@ -106,6 +133,66 @@ $this->params['breadcrumbs'][] = $this->title;
       $("#titulo-proyecto").hide();
       $("#usuarios-titulo").prop("disabled",true);
     }
+    
+    if(valor == 3)
+    {
+        $("#ejecutora").show();
+        $("#estacion").show();
+        $("#usuarios-ejecutora").prop('disabled', false);
+        //$(".test").attr('selected',true);
+
+    }
+    else
+    {
+        $("#estacion").hide();
+        $("#usuarios-ejecutora").prop('disabled', true);
+        $("#usuarios-dependencia").prop('disabled', true);
+    }
+    
+    
+    if(valor == 5)
+    {
+       $("#ejecutora").show();
+       $("#usuarios-ejecutora").prop('disabled', false);
+    }
+    else
+    {
+        if(valor != 3)
+        {
+            $("#ejecutora").hide();
+            $("#usuarios-ejecutora").prop('disabled', true);
+            $("#usuarios-dependencia").prop('disabled', true);
+        }
+    }
+    
 });
+ 
+ 
+ $("#usuarios-ejecutora").change(function(){
+    
+     var dependencia = $("#usuarios-dependencia");
+     var unidad = $(this);
+     
+     if($(this).val() != '0')
+        {
+        $.ajax({
+                    url: '<?= $urlDependencia ?>',
+                    type: 'GET',
+                    async: true,
+                    data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                        dependencia.find('option').remove();
+                        dependencia.append(data);
+                        dependencia.prop('disabled', false);
+                    }
+                });
+        }
+        else
+        {
+            dependencia.find('option').remove();
+            dependencia.append('<option value="0">-Seleccionar-</option>');
+            dependencia.prop('disabled', true);
+        }
+ });
     
 </script>

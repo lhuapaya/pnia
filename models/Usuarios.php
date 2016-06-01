@@ -37,7 +37,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     {
         return [
             //[['id'], 'required'],
-            [['id','id_perfil','estado'], 'integer'],
+            [['id','id_perfil','estado','ejecutora','dependencia'], 'integer'],
 	    [['descripcion','titulo','id_perfil2','nuevo_proyecto'], 'safe'],
             [['Name', 'username', 'password','img'], 'string', 'max' => 50]
         ];

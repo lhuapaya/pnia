@@ -7,6 +7,7 @@ use app\models\Usuarios;
 use app\models\UsuariosSearch;
 use app\models\AuthItem;
 use app\models\Perfil;
+use app\models\Maestros;
 use app\models\AuthAssignment;
 
 
@@ -201,13 +202,31 @@ class UsuariosController extends Controller
                 $titulo_proyecto = null; 
             }
             
+            $ejecutora = Maestros::find()
+                                ->where('id_padre = 25 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+            if($usuarios->dependencia != 0)
+            {
+                
+            $estacion = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$usuarios->ejecutora])
+                                ->orderBy('orden')
+                                ->all();
+            }
+            else
+            {
+               $estacion = null; 
+            }
             
         }
             return $this->render('update', [
                 'usuarios' => $usuarios,
                 'perfil'=>$perfil,
                 'id_proyecto'=>$id_proyecto,
-                'titulo_proyecto'=>$titulo_proyecto
+                'titulo_proyecto'=>$titulo_proyecto,
+                'ejecutora'=>$ejecutora,
+                'estacion'=>$estacion
             ]);
         
     }

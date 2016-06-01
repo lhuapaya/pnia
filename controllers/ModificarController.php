@@ -326,10 +326,14 @@ class ModificarController extends Controller
                 }
             }
             
+            $usuario = Usuarios::findOne(Yii::$app->user->identity->id);
             $requiere_aprobar = 0;
             if(Yii::$app->user->identity->id_perfil == $nivel)
             {
-               $requiere_aprobar = 1; 
+               if(($usuario->ejecutora == $proyecto->id_unidad_ejecutora) && ($usuario->dependencia == $proyecto->id_dependencia_inia) )
+               {
+               $requiere_aprobar = 1;
+               }
             }
             
             
