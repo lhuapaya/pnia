@@ -295,10 +295,20 @@ class ProyectoController extends Controller
             $requiere_aprobar = 0;
             if(Yii::$app->user->identity->id_perfil == $nivel)
             {
-               if(($usuario->ejecutora == $proyecto->id_unidad_ejecutora) && ($usuario->dependencia == $proyecto->id_dependencia_inia) )
-               {
-               $requiere_aprobar = 1;
-               }
+                
+                if(Yii::$app->user->identity->id_perfil == 3)
+                {
+                    if(($usuario->ejecutora == $proyecto->id_unidad_ejecutora) && ($usuario->dependencia == $proyecto->id_dependencia_inia) )
+                    {
+                    $requiere_aprobar = 1;
+                    }
+                }
+                else
+                {
+                  $requiere_aprobar = 1;  
+                }
+                
+                
             }
             
             
