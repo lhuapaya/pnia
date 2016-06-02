@@ -2435,7 +2435,9 @@ and ap.tipo = 1*/
                                         ->select('monetario')
                                         ->where('id_proyecto=:id_proyecto and aportante.tipo = 1',[':id_proyecto'=>$id])
                                         ->one();
-            
+            //var_dump($presupuesto_pnia);die;
+            if((isset($total_recursos)) && (isset($presupuesto_pnia)))
+            {
             if($total_recursos == $presupuesto_pnia->monetario)
             {
                $w = 1; 
@@ -2452,7 +2454,11 @@ and ap.tipo = 1*/
                 $mensaje = "<strong>¡Cuidado! <strong>Tiene aun un saldo disponible de ".(floatval($presupuesto_pnia->monetario) - floatval($total_recursos))." del presupuesto asignado por PNIA por favor completar los Recursos. <br/>";
                $w = 3; 
             }
-            
+            }
+            else
+            {
+               $w = 1;  
+            }
             $array['estado'] = $w;
             $array['mensaje'] = $mensaje;
             

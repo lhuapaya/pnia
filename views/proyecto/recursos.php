@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\web\JsExpression;
 
 ?>
-
+<?php if($actividades){?>
 <div >
 
 	<?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
@@ -116,7 +116,13 @@ use yii\web\JsExpression;
 	    </div>
 	<?php } ?>
  <?php ActiveForm::end(); ?>
-</div>      
+</div>
+<?php } else { ?>
+<div class="clearfix"></div><br/><br/><br/>
+<div class="alert alert-warning" id="warning">
+   Por favor registrar las Actividades antes de Ingresar a esta Opción.		    
+</div>
+<?php } ?>
   <?php
     $obtenerindicadores = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerindicadores');
     $obteneractividad = Yii::$app->getUrlManager()->createUrl('proyecto/obteneractividad');
@@ -145,6 +151,8 @@ var evento = <?= $evento; ?>;
  }
  
  <?php
+ 
+    if($actividades){
 	if($denegado == 1)
 	{
 	$valor = json_decode($ver_monto_total);
@@ -165,7 +173,9 @@ var evento = <?= $evento; ?>;
 	{
 	   $('#warning').hide();
 	}
- <?php } ?>
+ <?php }
+ 
+    }?>
  
  
  $('#proyecto-cerrar_recurso').change(function() {

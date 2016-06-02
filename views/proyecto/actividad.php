@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\web\JsExpression;
 
 ?>
-
+<?php if($indicadores){?>
 <div>
 
       <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
@@ -80,7 +80,13 @@ use yii\web\JsExpression;
 	<?php } ?>
          <?php ActiveForm::end(); ?>
    
- </div>       
+ </div>
+<?php } else { ?>
+<div class="clearfix"></div><br/><br/><br/>
+<div class="alert alert-warning" id="warning">
+   Por favor registrar los Indicadores antes de Ingresar a esta Opción.	    
+</div>
+<?php } ?>
 <?php
   $obtenerindicadores = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerindicadores');
   $refrescaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/refrescaractividades');

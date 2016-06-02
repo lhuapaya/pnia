@@ -214,7 +214,7 @@ use yii\web\JsExpression;
 				<?php } ?>
 			    <?php }else{ ?>
 				
-                               <!-- <tr id="aportante_addr_2">
+                                <tr id="aportante_addr_2">
 				    <td>
 				    <div class="form-group field-aportante-aporte_colaborador_2 required">
 					    <input type="text" id="aportante-aporte_colaborador_2" class="form-control " name="Aportante[aporte_colaborador][]" placeholder=""  disabled>
@@ -240,7 +240,7 @@ use yii\web\JsExpression;
 				    <td>
 					<input type="hidden" name="Aportante[aportante_ids][]" id="aportante-aportante_ids_3" value="" />   
 				    </td>
-				</tr>-->
+				</tr>
 				<?php $co=3; ?>
 			    <?php } ?>
                             <tr id='aportante_addr_<?= $co ?>'></tr>
@@ -255,7 +255,96 @@ use yii\web\JsExpression;
                 <div class="clearfix"></div><br/><br/>
     
     
-    
+    <div>
+		<div class="clearfix"></div>
+		<div class="col-xs-12 col-sm-7 col-md-1">
+		</div>
+                <div class="col-xs-12 col-sm-7 col-md-9">
+                    <table class="table table-bordered table-hover" id="desembolsos_tabla" border="0" >
+                        <thead>
+                            <tr>
+                                <th class="text-center">
+                                    Desmbolso
+                                </th>
+                                <th class="text-center">
+                                    Mes
+                                </th>
+				<th class="text-center">
+                                    Año
+                                </th>
+				<th class="text-center">
+                                    Monto
+                                </th>
+				<th class="text-center">
+                                    %
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $des=0; ?>
+			    <?php if($desembolsos){ ?>
+				
+				<?php foreach($desembolsos as $desembolso){?>
+				    <tr id='desembolsos_addr_<?= $des ?>'>
+					<td class="col-xs-2" >
+                                            <div class="form-group field-aportante-desembolsos_nro_<?= $des ?>  required ">
+						
+						<select id="aportante-desembolsos_nro_<?= $des ?>" class="form-control " name="Aportante[desembolsos_nro][]" Disabled>
+							    <?php
+
+								   foreach($nro_desembolso as $nro_desembolso2)
+								    {?>
+									<option value="<?= $nro_desembolso2->id; ?>" <?=($nro_desembolso2->id == $desembolso->nro_desembolso)?'selected':'' ?> > <?= $nro_desembolso2->descripcion ?></option>
+							    <?php    } ?>
+						</select>	    
+						</div>
+					<input type="hidden" name="Aportante[desembolsos_numero][]" id="aportante-desembolsos_numero_<?= $des; ?>" value="<?= $des; ?>" Disabled>
+                                        </td>
+
+					<td class="col-xs-3">
+					    <div class="form-group field-aportante-desembolsos_mes_<?= $des ?>  required ">
+						
+						<select id="aportante-desembolsos_mes_<?= $des ?>" class="form-control " name="Aportante[desembolsos_mes][]" Disabled>
+							    <?php
+
+								   foreach($meses as $mes)
+								    {?>
+									<option value="<?= $mes->id; ?>" <?=($mes->id == $desembolso->mes)?'selected':'' ?> > <?= $mes->descripcion ?></option>
+							    <?php    } ?>
+						</select>
+					    </div>
+					</td>
+					<td class="col-xs-2">
+					    <div class="form-group field-aportante-desembolsos_anio_<?= $des ?>  required">
+						<input type="text" id="aportante-desembolsos_anio_<?= $des ?>" class="form-control entero" name="Aportante[desembolsos_anio][]" placeholder="" value="<?= $desembolso->anio ?>" Disabled>
+					    </div>
+					</td>
+					<td>
+					    <div class="form-group field-aportante-desembolsos_montos_<?= $des ?> required">
+						<input type="text" id="aportante-desembolsos_monto_<?= $des ?>" class="form-control decimal" name="Aportante[desembolsos_monto][]" placeholder="" value="<?= $desembolso->monto ?>" Disabled>
+						<input type="hidden" id="aportante-desembolsos_montos_<?= $des ?>" class="form-control decimal" name="Aportante[desembolsos_montos][]" placeholder="" value="<?= $desembolso->monto ?>" >
+					    </div>
+					</td>
+					<td class="col-xs-2">
+					    <div class="form-group field-aportante-desembolsos_porcentaje_<?= $des ?> required">
+						<input onkeyup="calcularMonto(<?= $des ?>)" type="text" id="aportante-desembolsos_porcentaje_<?= $des ?>" class="form-control entero" name="Aportante[desembolsos_porcentaje][]" placeholder="" value="<?= $desembolso->porcentaje ?>" Disabled>
+					    </div>
+					</td>
+				    </tr>
+				    <?php $des++; ?>
+				<?php } ?>
+			    <?php }?>
+				
+                        </tbody>
+                    </table>
+                    <br>
+                </div>
+		<div class="col-xs-12 col-sm-7 col-md-2">
+		</div>
+                <div class="clearfix"></div>
+            </div>
+
+</div>
     
     
                 

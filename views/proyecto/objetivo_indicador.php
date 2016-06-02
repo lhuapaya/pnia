@@ -23,6 +23,7 @@ use app\models\Maestros;
 
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
+<?php if($objetivos) {?>
 <div id="form1">
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
             <div>
@@ -95,14 +96,19 @@ use app\models\Maestros;
             <button type="submit" id="btn_obj_ind" class="btn btn-primary pull-right">Guardar</button>   
             </div>
         
-    </div>
+    
     
     
     
     
  <?php ActiveForm::end(); ?>
 </div>
-
+<?php } else { ?>
+<div class="clearfix"></div><br/><br/><br/>
+<div class="alert alert-warning" id="warning">
+   Tus Objetivos no se encuntran Cargados.	    
+</div>
+<?php } ?>
 <?php
 
     $urlproyectoExiste= Yii::$app->getUrlManager()->createUrl('proyecto/existeproyecto');
@@ -124,7 +130,8 @@ $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass(
 }).on('hidden.bs.collapse', function(){
 $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
 });
- 
+
+<?php if($objetivos) {?> 
 var msj_incial = verificar_peso_obj();
 var mensaje_ind = verificar_peso_inds();
 
@@ -136,7 +143,7 @@ else
 {
    $('#warning').hide();
 }
-
+<?php } ?>
 
 /*
 var inicialdependencia = <?= $proyecto-> id_dependencia_inia;?>;
