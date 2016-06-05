@@ -528,7 +528,6 @@ function jsShowWindowLoad(mensaje) {
 }
 
 function moneda_soles(sender) {
-      //alert(sender);
             $(sender).formatCurrency({
                 region: 'es-PE'
                 , roundToDecimalPlace: -1
