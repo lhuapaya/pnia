@@ -2617,12 +2617,13 @@ and ap.tipo = 1*/
             $aporte_sintotal=Aportante::find()
                                 ->where('tipo = 3 and total = 0.00  and id_proyecto=:id_proyecto',[':id_proyecto'=>$id])
                                 ->count();
-            
+            if($aporte_sintotal)
+            {
             if($aporte_sintotal > 0)
             {
                 return json_encode(array('estado'=>1,'mensaje'=>"<strong>¡Cuidado! <strong>Tiene Colaboradores sin aportes. Revisar el formulario de Financiamiento. <br/>"));
             }
-            
+            }
             return json_encode(array('estado'=>0,'mensaje'=>""));
         
     }

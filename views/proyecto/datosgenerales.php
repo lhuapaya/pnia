@@ -317,7 +317,7 @@ $(document).ready(function(){
     
 avisos_dg(<?= $proyecto->id; ?>);
 
-var inicialdependencia = <?= $proyecto-> id_dependencia_inia;?>;
+var inicialdependencia = '<?= $proyecto-> id_dependencia_inia;?>';
 if (inicialdependencia != '')
 {
     var dependencia = $("#proyecto-id_dependencia_inia");

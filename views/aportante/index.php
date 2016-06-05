@@ -5,6 +5,12 @@ use yii\web\JsExpression;
 
 ?>
 
+<style>
+input { 
+    text-align: right; 
+}    
+    
+</style>
 
 <div id="form1">
 
@@ -27,13 +33,13 @@ use yii\web\JsExpression;
                                     
                                 </th>
                                 <th class="text-center">
-                                    Aporte Monetario
+                                    Aporte Monetario (S/.)
                                 </th>
                                 <th class="text-center">
-                                    Aporte No Monetario
+                                    Aporte No Monetario (S/.)
                                 </th>
                                 <th class="text-center">
-                                    Total
+                                    Total (S/.)
                                 </th>
                                 <th>
                                 </th>
@@ -54,21 +60,27 @@ use yii\web\JsExpression;
                                         $total_total += $aportantetotal->total;
                                     }
                                 }
+                                else
+                                {
+                                 $total_monetario = '0.00';
+                                $total_nomonetario = '0.00';
+                                $total_total = '0.00';   
+                                }
                                 ?>
                               <td>Total:</td>
                               <td>
                                 <div class="form-group field-aportante-totalmonetario required">
-					    <input type="text" id="aportante-totalmonetario" class="form-control decimal"  placeholder="" value="<?= $total_monetario; ?>" disabled/>
+					    <strong><input type="text" id="aportante-totalmonetario" class="form-control decimal"  placeholder="" value="<?= $total_monetario; ?>" disabled/></strong>
 				</div>
                               </td>
                               <td>
                                 <div class="form-group field-aportante-totalnomonetario required">
-					    <input type="text" id="aportante-totalnomonetario" class="form-control decimal"  placeholder="" value="<?= $total_nomonetario; ?>" disabled/>
+					<strong><input type="text" id="aportante-totalnomonetario" class="form-control decimal"  placeholder="" value="<?= $total_nomonetario; ?>" disabled/></strong>
 				</div>
                               </td>
                               <td>
                                 <div class="form-group field-aportante-totaltotal required">
-					    <input type="text" id="aportante-totaltotal" class="form-control decimal"  placeholder="" value="<?= $total_total; ?>" disabled/>
+					    <strong><input type="text" id="aportante-totaltotal" class="form-control decimal"  placeholder="" value="<?= $total_total; ?>" disabled/></strong>
 				</div>
                               </td>
                             </tr>
@@ -80,7 +92,7 @@ use yii\web\JsExpression;
                             <?php foreach($aportante12 as $aportante121){?>
                             
                                     <tr id='aportante_addr_<?= $co; ?>'>
-				    <td class="col-md-5">
+				    <td class="col-md-4">
 				    <div class="form-group field-aportante-aporte_colaborador_<?= $co; ?> required">
 					    <input type="text" id="aportante-aporte_colaborador_<?= $co; ?>" class="form-control " name="Aportante[aporte_colaborador][]" placeholder="" value="<?= $aportante121->colaborador; ?>" disabled>
 				    </div>
@@ -89,12 +101,12 @@ use yii\web\JsExpression;
 				    </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante121->monetario; ?>"  disabled>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" autocomplete="off" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante121->monetario; ?>"  disabled>
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-aportante-aporte_nomonetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante121->no_monetario; ?>" disabled>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal" autocomplete="off" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante121->no_monetario; ?>" disabled>
 					</div>
 				    </td>
                                     <td>
@@ -113,7 +125,7 @@ use yii\web\JsExpression;
 			    <?php }else{ ?>
                             
                                     <tr id='aportante_addr_0'>
-				    <td class="col-md-5">
+				    <td class="col-md-4">
 				    <div class="form-group field-aportante-aporte_colaborador_0 required">
 					    <input type="text" id="aportante-aporte_colaborador_0" class="form-control " name="Aportante[aporte_colaborador][]" placeholder="" value="PNIA" disabled>
 				    </div>
@@ -122,12 +134,12 @@ use yii\web\JsExpression;
                                     </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_0 required">
-					    <input onkeyup="sumatotal(0)" type="text" id="aportante-aporte_monetario_0" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder=""  disabled>
+					    <input onkeyup="sumatotal(0)" type="text" id="aportante-aporte_monetario_0" autocomplete="off" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder=""  disabled>
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-aportante-aporte_nomonetario_0 required">
-					    <input onkeyup="sumatotal(0)" type="text" id="aportante-aporte_nomonetario_0" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  disabled>
+					    <input onkeyup="sumatotal(0)" type="text" id="aportante-aporte_nomonetario_0" autocomplete="off" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  disabled>
 					</div>
 				    </td>
                                     <td>
@@ -149,12 +161,12 @@ use yii\web\JsExpression;
                                     </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_1 required">
-					    <input onkeyup="sumatotal(1)" type="text" id="aportante-aporte_monetario_1" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder=""  />
+					    <input onkeyup="sumatotal(1)" type="text" id="aportante-aporte_monetario_1" class="form-control decimal" autocomplete="off" name="Aportante[aporte_monetario][]" placeholder=""  disabled>
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-aportante-aporte_nomonetario_1 required">
-					    <input onkeyup="sumatotal(1)" type="text" id="aportante-aporte_nomonetario_1" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  />
+					    <input onkeyup="sumatotal(1)" type="text" id="aportante-aporte_nomonetario_1" class="form-control decimal" autocomplete="off" name="Aportante[aporte_nomonetario][]" placeholder="" disabled>
 					</div>
 				    </td>
                                     <td>
@@ -179,7 +191,7 @@ use yii\web\JsExpression;
 				<?php foreach($aportante3 as $aportante2){?>
                                 
                                 <tr id='aportante_addr_<?= $co; ?>'>
-				    <td class="col-md-5">
+				    <td class="col-md-4">
 				    <div class="form-group field-aportante-aporte_colaborador_<?= $co; ?> required">
 					    <input type="text" id="aportante-aporte_colaborador_<?= $co; ?>" class="form-control " name="Aportante[aporte_colaborador][]" placeholder="" value="<?= $aportante2->colaborador; ?>" disabled>
 				    </div>
@@ -188,12 +200,12 @@ use yii\web\JsExpression;
 				    </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante2->monetario; ?>"  required>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" autocomplete="off" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante2->monetario; ?>"  required>
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-aportante-aporte_nomonetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante2->no_monetario; ?>" required>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" autocomplete="off" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante2->no_monetario; ?>" required>
 					</div>
 				    </td>
                                     <td>
@@ -284,6 +296,23 @@ var evento = <?= $evento; ?>;
     
  }
  
+ var count = $('input[name=\'Aportante[aporte_total][]\']').length;
+ 
+ for (var i =0;i<count;i++) {
+    
+    var total = $("#aportante-aporte_total_"+i);
+    if (total.val() == '') {
+        total.val(parseFloat(0).toFixed(2));
+    }
+    moneda_soles("#aportante-aporte_total_"+i);
+    
+ }
+
+ 
+ moneda_soles("#aportante-totalmonetario");
+        moneda_soles("#aportante-totalnomonetario");
+        moneda_soles("#aportante-totaltotal");
+ 
  });
  
 function sumatotal(posicion)
@@ -291,9 +320,10 @@ function sumatotal(posicion)
     var monetario = $("#aportante-aporte_monetario_"+posicion);
     var no_monetario =  $("#aportante-aporte_nomonetario_"+posicion);
     var total =  $("#aportante-aporte_total_"+posicion);
+    
      var _total = parseFloat(getNum(monetario.val()))+parseFloat(getNum(no_monetario.val()));
      total.val(_total.toFixed(2));
-     
+     moneda_soles("#aportante-aporte_total_"+posicion);
      sumavertical();
     
 }
@@ -313,12 +343,15 @@ function sumavertical()
             
             total_monetario += parseFloat(getNum($("#aportante-aporte_monetario_"+i).val()));
             total_no_monetario +=  parseFloat(getNum($("#aportante-aporte_nomonetario_"+i).val()));
-            total_total +=  parseFloat(getNum($("#aportante-aporte_total_"+i).val()));   
+            total_total +=  (total_monetario+total_no_monetario);
         }
-        
+        alert(total_total);
         $("#aportante-totalmonetario").val(total_monetario.toFixed(2));
         $("#aportante-totalnomonetario").val(total_no_monetario.toFixed(2));
         $("#aportante-totaltotal").val(total_total.toFixed(2));
+        moneda_soles("#aportante-totalmonetario");
+        moneda_soles("#aportante-totalnomonetario");
+        moneda_soles("#aportante-totaltotal");
         
 }
 
