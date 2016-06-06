@@ -304,12 +304,26 @@ var evento = <?= $evento; ?>;
     if (total.val() == '') {
         total.val(parseFloat(0).toFixed(2));
     }
+
+    
+    
     moneda_soles("#aportante-aporte_total_"+i);
     
  }
-
  
- moneda_soles("#aportante-totalmonetario");
+    var totalmonetario =  $("#aportante-totalmonetario");
+    var totalnomonetario =  $("#aportante-totalnomonetario");
+    var totaltotal =  $("#aportante-totaltotal");
+    
+    var tmonetario = totalmonetario.val();
+    var tnomonetario = totalnomonetario.val();
+    var ttotal = totaltotal.val();
+
+    totalmonetario.val(parseFloat(tmonetario).toFixed(2));
+    totalnomonetario.val(parseFloat(tnomonetario).toFixed(2));
+    totaltotal.val(parseFloat(ttotal).toFixed(2));
+    
+        moneda_soles("#aportante-totalmonetario");
         moneda_soles("#aportante-totalnomonetario");
         moneda_soles("#aportante-totaltotal");
  
@@ -334,7 +348,7 @@ function sumavertical()
 {
     var total_monetario = 0;
     var total_no_monetario = 0;
-    var total_total = 0;
+    var total_total = 0.00;
     
     
     var countaportanete=$('input[name=\'Aportante[aporte_monetario][]\']').length;
@@ -343,9 +357,10 @@ function sumavertical()
             
             total_monetario += parseFloat(getNum($("#aportante-aporte_monetario_"+i).val()));
             total_no_monetario +=  parseFloat(getNum($("#aportante-aporte_nomonetario_"+i).val()));
-            total_total +=  (total_monetario+total_no_monetario);
+            
         }
-        alert(total_total);
+        total_total +=  parseFloat(parseFloat(total_monetario)+parseFloat(total_no_monetario));
+        //alert(total_total);
         $("#aportante-totalmonetario").val(total_monetario.toFixed(2));
         $("#aportante-totalnomonetario").val(total_no_monetario.toFixed(2));
         $("#aportante-totaltotal").val(total_total.toFixed(2));
