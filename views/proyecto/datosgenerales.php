@@ -23,7 +23,9 @@ use app\models\Maestros;
             <div>
                 
             <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Datos Generales</span></h3>
-            
+            <?php if($observaciones){ ?>
+            <a href="observaciones?id=<?= $proyecto->id?>&event=1"   class="btn btn-danger observa">Tiene Observaciones</a>
+            <?php } ?>
             </div>
             <div class="alert alert-danger" id="warning">
 	   
@@ -353,7 +355,8 @@ var evento = <?= $evento; ?>;
     $('#colaboradores_tabla  th:eq(4)').hide();
     $('#colaboradores_tabla  td:nth-child(5)').hide();
     $('#btnproyecto').hide();
-    $('#colcaborador_row_2').hide(); 
+    $('#colcaborador_row_2').hide();
+    $('.observa').hide(); 
  }
  
  //   $('#form1').find('input, textarea, button, select').prop('disabled', true);

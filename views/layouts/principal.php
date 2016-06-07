@@ -53,6 +53,10 @@ $baseUrl = $Asset->baseUrl;
     opacity:0.65;
     background:#999;
 }
+
+.sidebar .sidebar-menu .active .treeview-menu {
+    display: block;
+}
 </style>
     
 </head>
@@ -186,14 +190,14 @@ $baseUrl = $Asset->baseUrl;
                 {
                         
                     echo '
-              <li class="treeview">
+              <li class="treeview active">
               <a href="#">
                 <i class="fa fa-edit"></i> <span>'.$modulo->descripcion.'</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               
               
-              <ul class="treeview-menu">';
+              <ul class="treeview-menu menu-open">';
                 
                // var_dump($modulo->descripcion);die;
                 
@@ -234,14 +238,14 @@ $baseUrl = $Asset->baseUrl;
                 foreach($modulos as $modulo)
                 {
                     echo '
-              <li class="treeview">
+              <li class="treeview active">
               <a href="#">
                 <i class="fa fa-edit"></i> <span>'.$modulo->descripcion.'</span>
                 <i class="fa fa-angle-left pull-right"></i>
               </a>
               
               
-              <ul class="treeview-menu">';
+              <ul class="treeview-menu menu-open">';
                 
                // var_dump($modulo->descripcion);die;
                 
@@ -441,6 +445,7 @@ Copyright © W3Schools.com
 <?php $this->endPage() ?>
 
 <script>
+      
 /*
 $('.numerico').keypress(function (tecla) {
         var reg = /^[0-9\s]+$/;

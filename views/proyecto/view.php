@@ -813,7 +813,7 @@ use app\models\Maestros;
  
   </section>
     <div class="col-xs-12 col-sm-7 col-md-12 col-centered" >
-       <!-- <button style="" type="button" id="btnobservar" class="btn btn-primary " data-toggle="modal" data-target="#modalobs_">Observar</button>  -->
+        <button style="" type="button" id="btnobservar" class="btn btn-primary " data-toggle="modal" data-target="#modalobs_">Observar</button> 
         <button type="submit" id="btnaceptar" class="btn btn-primary ">Aceptar</button>   
     </div>
     <?php ActiveForm::end(); ?>

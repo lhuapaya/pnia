@@ -144,9 +144,13 @@ class ProyectoController extends Controller
                     $pro->situacion = 0;
                     $pro->update();
                     
+                    $hoy = getdate();
+                    
                     $obs = new Observaciones();
-                    $obs->id_aprobaciones = $aprob->id;
+                    $obs->id_proyecto = (int)$proyecto->id;
                     $obs->observacion = $proyecto->observacion;
+                    $obs->id_user = Yii::$app->user->identity->id;
+                    $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
                     $obs->save();
                 }
                 
@@ -875,6 +879,10 @@ class ProyectoController extends Controller
             $cultivo =  CultivoCrianza::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                         ->one();
+                        
+            $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->all();
         }
         
         
@@ -893,7 +901,7 @@ class ProyectoController extends Controller
                         ->one();
         
         
-        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'evento'=>$evento]);
+        return $this->render('datosgenerales',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'evento'=>$evento,'observaciones'=>$observaciones]);
       
     }
     
@@ -1410,8 +1418,8 @@ class ProyectoController extends Controller
                         $actividad->peso=$proyecto->actividades_pesos[$i];
                         $actividad->unidad_medida=$proyecto->actividades_unidad_medidas[$i];
                         $actividad->meta=$proyecto->actividades_metas[$i];
-                        $actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
-                        $actividad->fecha_fin=$proyecto->actividades_ffin[$i];
+                        //$actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
+                        //$actividad->fecha_fin=$proyecto->actividades_ffin[$i];
                         $actividad->update(); 
                     }
                     else
@@ -1423,8 +1431,8 @@ class ProyectoController extends Controller
                         $actividad->peso=$proyecto->actividades_pesos[$i];
                         $actividad->unidad_medida=$proyecto->actividades_unidad_medidas[$i];
                         $actividad->meta=$proyecto->actividades_metas[$i];
-                        $actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
-                        $actividad->fecha_fin=$proyecto->actividades_ffin[$i];
+                        //$actividad->fecha_inicio=$proyecto->actividades_finicio[$i];
+                        //$actividad->fecha_fin=$proyecto->actividades_ffin[$i];
                         $actividad->save(); 
                     }
                 }
@@ -2043,7 +2051,7 @@ class ProyectoController extends Controller
 						<input type="text" id="proyecto-actividades_descripciones_'.$act.'" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="" value="'.$actividad->descripcion.'" />
 					    </div>
 					</td>
-					<td class="col-xs-1">
+					<td class="col-xs-2">
                                         <div class="form-group field-proyecto-actividades_indicadorbid_'.$act.' required">
                                             <select  class="form-control " id="proyecto-actividades_indicadorbid_'.$act.'" name="Proyecto[actividades_indicadorbid][]" >
                                                 <option value="0">--Indicador BID--</option>'.$opcion1.'</select>
@@ -2055,21 +2063,21 @@ class ProyectoController extends Controller
 						<input type="text" id="proyecto-actividades_pesos_'.$act.'" class="form-control entero" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="'.$actividad->peso.'" />
 					    </div>
 					</td>
-					<td>
+					<td class="col-xs-2">
 					    <div class="form-group field-proyecto-actividades_unidad_medidas_'.$act.' required">
 						<input type="text" id="proyecto-actividades_unidad_medidas_'.$act.'" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder="Unidad de Medida" value="'.$actividad->unidad_medida.'" />
 					    </div>
 					</td>
-					<td>
+					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_metas_'.$act.' required">
 						<input type="text" id="proyecto-actividades_metas_'.$act.'" class="form-control entero" name="Proyecto[actividades_metas][]" placeholder="Cantidad Programada<?= $act ?>" value="'.$actividad->meta.'" />
 					    </div>
 					</td>'.$ejecutado.'
-					<td>
+					<!--<td>
 					    <div>
-					    '.\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>$actividad->id,'act'=>$act]).'
+					    '.'0'/*\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>$actividad->id,'act'=>$act])*/.'
 					    </div>
-					</td>
+					</td>-->
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign">
 						<input type="hidden" name="Proyecto[actividades_ids][]" value="'.$actividad->id.'" />
@@ -2113,7 +2121,7 @@ class ProyectoController extends Controller
 						<input type="text" id="proyecto-actividades_descripciones_0" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder=""  />
 					    </div>
 					</td>
-					<td class="col-xs-1">
+					<td class="col-xs-2">
                                         <div class="form-group field-proyecto-actividades_indicadorbid_0 required">
                                             <select  class="form-control " id="proyecto-actividades_indicadorbid_0" name="Proyecto[actividades_indicadorbid][]" >
                                                 <option value="0">--Indicador BID--</option>'.$opcion1.'</select>
@@ -2125,20 +2133,20 @@ class ProyectoController extends Controller
 						<input type="text" id="proyecto-actividades_pesos_0" class="form-control entero" name="Proyecto[actividades_pesos][]" placeholder="" " />
 					    </div>
 					</td>
-					<td>
+					<td class="col-xs-2">
 					    <div class="form-group field-proyecto-actividades_unidad_medidas_0 required">
 						<input type="text" id="proyecto-actividades_unidad_medidas_0" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder=""  />
 					    </div>
 					</td>
-					<td>
+					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_metas_0 required">
 						<input type="text" id="proyecto-actividades_metas_0" class="form-control entero" name="Proyecto[actividades_metas][]" placeholder="" />
 					    </div>
 					</td>'.$ejecutado.'
-					<td>
-					    <div>'.\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>'','act'=>$act]).' 
+					<!--<td>
+					    <div>'.'0'/*\app\widgets\fechas\FechasWidget::widget(['actividad_id'=>'','act'=>$act])*/.' 
 					    </div>
-					</td>
+					</td>-->
 				    <td>
 					<span class="eliminar glyphicon glyphicon-minus-sign">
 					</span>
@@ -2646,5 +2654,17 @@ and ap.tipo = 1*/
             return 0;
         
     }
+    
+    public function actionObservaciones($id,$event)
+    {
+        $this->layout='principal';
+        
+        $proyecto = Proyecto::findOne($id);
+        
+        $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->all();
 
+        return $this->render('observaciones',['proyecto'=>$proyecto,'observaciones'=>$observaciones,'evento'=>$event]);
+    }
 }
