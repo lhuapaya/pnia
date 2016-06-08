@@ -73,7 +73,7 @@
                     </select>
                 </div>
                 <div class="col-xs-12 col-sm-7 col-md-3">
-                    <label>Precio Unitario</label>
+                    <label>Precio Unitario (S/.)</label>
                     <input type="text" id="proyecto-precio_unit_<?= $re ?>" class="form-control decimal" name="Proyecto[precio_unit]" placeholder="" value="<?= $recursos->precio_unit; ?>" />
                 </div>
                 <div class="clearfix"></div><br/

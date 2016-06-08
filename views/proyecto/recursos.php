@@ -279,6 +279,7 @@ var evento = <?= $evento; ?>;
 						   
 						   
 						}
+					    moneda_recurso();
 					    }
 				    });
 			    
@@ -334,6 +335,7 @@ $("#proyecto-id_indicador").change(function(){
 						   
 						   
 						}
+						moneda_recurso();
 					    }
 				    });
 			    
@@ -371,6 +373,7 @@ $( "#proyecto-id_actividad" ).change(function() {
 						   
 						   
 						}
+			moneda_recurso();
                     }
                 });
   

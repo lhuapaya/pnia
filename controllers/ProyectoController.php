@@ -1774,7 +1774,7 @@ class ProyectoController extends Controller
 					    
                                             </div>    
                                         </td>
-                                        <td class="col-xs-3">
+                                        <td class="col-xs-2">
                                             <div class="form-group field-proyecto-recurso_unidad_'.$re.' required">
                                                 <input class="form-control " value="'.$recursos2->unidad_medida.'" type="text"  placeholder="..." id="proyecto-recurso_unidad_'.$re.'" name="Proyecto[recurso_unidad][]"/>
                                             </div>
@@ -1784,7 +1784,7 @@ class ProyectoController extends Controller
                                                 <input  class="form-control " value="'.$recursos2->cantidad.'" class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'.$re.'" name="Proyecto[recurso_cantidad][]" Disabled>
                                             </div>
                                         </td>'.$ejecutado.'
-                                        <td>
+                                        <td class="col-xs-2">
                                             <div class="form-group field-proyecto-recurso_preciototal_'.$re.' required">
                                                 <input class="form-control " value="'.$recursos2->precio_total.'" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'.$re.'" name="Proyecto[recurso_preciototal][]" Disabled>
                                             </div>
@@ -1867,7 +1867,7 @@ class ProyectoController extends Controller
 					    <input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_0" name="Proyecto[recurso_cantidad][]" Disabled>
 					</div>
 				    </td>'.$ejecutado.'
-                                    <td>
+                                    <td class="col-xs-2">
 					<div class="form-group field-proyecto-recurso_preciototal_0 required">
 					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_0" name="Proyecto[recurso_preciototal][]" Disabled>
 					</div>

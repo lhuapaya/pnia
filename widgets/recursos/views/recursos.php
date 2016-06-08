@@ -108,7 +108,7 @@
 					    </div>
 					    </td>
 					<?php } ?>
-                                        <td>
+                                        <td class="col-xs-2">
                                             <div class="form-group field-proyecto-recurso_preciototal_<?= $re; ?> required">
                                                 <input class="form-control " value="<?= $recursos2->precio_total ?>" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $re; ?>" name="Proyecto[recurso_preciototal][]" Disabled>
                                             </div>
@@ -172,7 +172,7 @@
 					    
                                             </div>    
                                         </td>
-                                    <td class="col-xs-3">
+                                    <td class="col-xs-2">
 					<div class="form-group field-proyecto-recurso_unidad_0 required">
 					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_0" name="Proyecto[recurso_unidad][]"/>
 					</div>
@@ -189,7 +189,7 @@
 					    </div>
 					    </td>
 					<?php } ?>
-                                    <td>
+                                    <td class="col-xs-2">
 					<div class="form-group field-proyecto-recurso_preciototal_0 required">
 					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_0" name="Proyecto[recurso_preciototal][]" Disabled>
 					</div>
@@ -231,6 +231,10 @@
  var re = <?= $re; ?>
  
  var evento = <?= $event; ?>
+ 
+ $(document).ready(function(){
+    moneda_recurso();
+ });
  
  $("#recurso_row_1").click(function(){
 	
@@ -312,6 +316,7 @@
             $('#recurso_addr_1_'+re).html('<td>'+(re+1)+'<input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'+re+'" value="'+re+'" /></td><td class="col-xs-2" ><div class="form-group field-proyecto-recurso_clasificador_'+re+' required"><select  class="form-control " id="proyecto-recurso_clasificador_'+re+'" name="Proyecto[recurso_clasificador][]" ><option value="0">--Clasificador--</option><?php foreach($clasificador as $clasificador2) { ?> <option value="<?= $clasificador2->id; ?>" > <?= $clasificador2->descripcion ?></option>; <?php   } ?></select></div></td><td class="col-xs-3"  ><div class="form-group field-proyecto-recurso_descripcion_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_'+re+'" name="Proyecto[recurso_descripcion][]"/></div></td><td><div class="form-group field-proyecto-recurso_fuente_'+re+' required"> <select  class="form-control " id="proyecto-recurso_fuente_'+re+'" name="Proyecto[recurso_fuente][]" > <option value="0">--Fuente--</option> <?php foreach($fuentes as $fuentes2){ ?> <option value="<?= $fuentes2->id; ?>" > <?= $fuentes2->colaborador ?></option>; <?php   } ?></select></div></td><td class="col-xs-2"><div class="form-group field-proyecto-recurso_unidad_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_'+re+'" name="Proyecto[recurso_unidad][]"/></div></td><td class="col-xs-1"><div class="form-group field-proyecto-recurso_cantidad_'+re+' required"><input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'+re+'" name="Proyecto[recurso_cantidad][]" Disabled></div></td><?php if($event == 2){ ?> <td class="col-xs-1">  <div class="form-group field-proyecto-recurso_ejecutado_'+re+' required"> <input type="text" id="proyecto-recurso_ejecutado_'+re+'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>  </div> </td> <?php } ?><td><div class="form-group field-proyecto-recurso_preciototal_'+re+' required"><input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'+re+'" name="Proyecto[recurso_preciototal][]" Disabled></div></td><td><div><button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado'+re+'_" id="btn_programado" onclick="cargartitulos('+re+')">Detalle</button></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
             $('#recurso_tabla').append('<tr id="recurso_addr_1_'+(re+1)+'"></tr>');
             re++;
+	    moneda_recurso();
         return true;
     
         }
@@ -671,6 +676,23 @@ function avisos(id) {
 	{
 	   $('#warning').hide();
 	}
+}
+
+function moneda_recurso()
+{
+   var count=($('input[name=\'Proyecto[recurso_numero][]\']').length);
+   
+   for (var i=0;i<count;i++)
+   {
+    var total = $("#proyecto-recurso_preciototal_"+i);
+    if (total.val() == '')
+    {
+        total.val(parseFloat(0).toFixed(2));
+    }
+
+    moneda_soles("#proyecto-recurso_preciototal_"+i);
+   }
+   
 }
 
 </script>
