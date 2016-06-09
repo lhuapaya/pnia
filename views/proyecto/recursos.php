@@ -19,7 +19,7 @@ use yii\web\JsExpression;
 	$ver_co_apor = json_decode($ver_co_aporte);
 	
 	$denegado = 0;
-	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_peso_act->estado == 0) && ($ver_co_apor->estado == 0) ){
+	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_co_apor->estado == 0) ){
 	   $denegado = 1; 
 	    ?>
 	<div class="alert alert-danger" id="warning">
@@ -183,10 +183,12 @@ var evento = <?= $evento; ?>;
             var ver_saldo = verificar_saldo(<?= $proyecto->id; ?>);
             var ver_recursos = verificar_recursos(<?= $proyecto->id; ?>);
             var ver_prog = verificar_programado(<?= $proyecto->id; ?>);
+	    var ver_act = verificar_actividades(<?= $proyecto->id; ?>);
+	    var ver_peso_act = verificar_peso_actividades(<?= $proyecto->id; ?>);
             
-            if ((ver_saldo[0] > 1) || (ver_recursos[0] != 0) || (ver_prog[0] != 0)) {
+            if ((ver_saldo[0] > 1) || (ver_recursos[0] != 0) || (ver_prog[0] != 0) || (ver_act[0] != 0) || (ver_peso_act[0] != 0)) {
                $.notify({
-                message: ver_saldo[1]+ver_recursos[1]+ver_prog[1]
+                message: ver_saldo[1]+ver_recursos[1]+ver_prog[1]+ver_act[1]+ver_peso_act[1]
                 },{
                 type: 'danger',
                 z_index: 1000000,

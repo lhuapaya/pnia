@@ -224,6 +224,8 @@
     $verificar_saldo = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_presupuesto');
     $verificar_recursos = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_recursos');
     $verificar_programado = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_programado');
+    $verificar_actividades = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_actividades');
+    $verificar_peso_actividades = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_peso_actividades');
 
 ?>
 <script>
@@ -623,6 +625,51 @@ function verificar_recursos(id)
     var array = [];
    $.ajax({
                     url: '<?= $verificar_recursos ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id:id},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+			 
+			array[0] = valor.estado;
+			array[1] = valor.mensaje;
+			
+			;
+                    }
+                });
+   
+   return array
+   
+}
+
+
+function verificar_actividades(id)
+{
+    var array = [];
+   $.ajax({
+                    url: '<?= $verificar_actividades ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {id:id},
+                    success: function(data){
+			var valor = jQuery.parseJSON(data);
+			 
+			array[0] = valor.estado;
+			array[1] = valor.mensaje;
+			
+			;
+                    }
+                });
+   
+   return array
+   
+}
+
+function verificar_peso_actividades(id)
+{
+    var array = [];
+   $.ajax({
+                    url: '<?= $verificar_peso_actividades ?>',
                     type: 'GET',
                     async: false,
                     data: {id:id},

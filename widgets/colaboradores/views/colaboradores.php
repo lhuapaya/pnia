@@ -82,7 +82,7 @@
 				    <?php //}?>
 				<?php } ?>
 			    <?php }else{ ?>
-				<tr id='colaborador_addr_1_0'>
+				<!--<tr id='colaborador_addr_1_0'>
 				    <td>
 				    <?= ($co+1) ?>
 				    <input type="hidden" name="Proyecto[aportante_numero][]" id="proyecto-aportante_numero_0" value="0" />
@@ -120,8 +120,8 @@
 					<span class="eliminar glyphicon glyphicon-minus-sign">
 					</span>
 				    </td>
-				</tr>
-				<?php $co=1; ?>
+				</tr>-->
+				<?php //$co=1; ?>
 			    <?php } ?>
                             <tr id='colaborador_addr_1_<?= $co ?>'></tr>
                         </tbody>

@@ -33,7 +33,7 @@ class ObjetivoEspecifico extends \yii\db\ActiveRecord
     {
         return [
             [['id_proyecto'], 'required'],
-            [['id_proyecto', 'peso', 'estado'], 'integer'],
+            [['id_proyecto', 'peso', 'estado','gestion'], 'integer'],
             [['descripcion'], 'string', 'max' => 2000]
         ];
     }

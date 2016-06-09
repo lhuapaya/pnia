@@ -19,6 +19,7 @@ class IndicadoresWidget extends Widget
 {
     public $objetivo_id;
     public $correlativo;
+    public $gestion;
     public function init()
     {
         parent::init();
@@ -36,7 +37,8 @@ class IndicadoresWidget extends Widget
         return $this->render('indicadores',['indicadores'=>$indicadores,'correlativo'=>$this->correlativo,
                                             ///'proyecto_id'=>$this->proyecto_id,
                                             //'CountObjetivos'=>$CountObjetivos,
-                                            'objetivosind'=>$this->objetivo_id
+                                            'objetivosind'=>$this->objetivo_id,
+                                            'gestion'=>$this->gestion
                                             ]);
     }
 }

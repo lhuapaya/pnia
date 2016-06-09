@@ -1,6 +1,6 @@
 
 <div >
-
+<?php if($gestion == 0){ ?>
             <div>
 		<div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12">
@@ -115,7 +115,9 @@
                 <button type="submit" id="btn_indicadores" class="btn btn-primary" >Guardar</button>
 		</div>
             </div>-->
-
+<?php } else { ?>
+<div class="col-xs-12" ></div>
+<?php }?>
 </div>
 
 <?php

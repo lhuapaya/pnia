@@ -736,7 +736,11 @@ class ProyectoController extends Controller
                         ->count();
         if($proyecto->load(Yii::$app->request->post()) )
         {
+            $countColaboradores = 0;
+            if($proyecto->aportante_colaborador)
+            {
             $countColaboradores = count(array_filter($proyecto->aportante_colaborador));
+            }
            // $countAlianzas=count(array_filter($proyecto->alianzas_instituciones));
             if($existe == 0)
             {
@@ -1016,6 +1020,7 @@ class ProyectoController extends Controller
                         
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy(['gestion'=>SORT_ASC])
                                 ->all();
                                 
         }
@@ -1218,6 +1223,8 @@ class ProyectoController extends Controller
                 
                 for($i=0;$i<$countRecurso;$i++)
                 {
+                    if($proyecto->id_actividad)
+                    {
                     $flat .= 'a';
                     if(isset($proyecto->recurso_ids[$i]))
                     {
@@ -1245,6 +1252,7 @@ class ProyectoController extends Controller
                         //$recurso->precio_unit=$proyecto->recurso_precioun[$i];
                         //$recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
                         $recurso->save(); 
+                    }
                     }
                 }
                 //var_dump($flat);die;
@@ -1294,7 +1302,7 @@ class ProyectoController extends Controller
         
         
         $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]);
-        $ver_actividad = Yii::$app->runAction('proyecto/verificar_actividades', ['id'=>$proyecto->id]);
+        $ver_actividad = Yii::$app->runAction('proyecto/verificar_ind_actividad', ['id'=>$proyecto->id]);
         $ver_monto_total = Yii::$app->runAction('proyecto/verificar_presupuesto', ['id'=>$proyecto->id]);
         $ver_recursos = Yii::$app->runAction('proyecto/verificar_recursos', ['id'=>$proyecto->id]);
         $ver_peso_actividad = Yii::$app->runAction('proyecto/verificar_peso_actividades', ['id'=>$proyecto->id]);
@@ -1451,7 +1459,7 @@ class ProyectoController extends Controller
                         ->one();
                         
             $objetivosespecificos=ObjetivoEspecifico::find()
-                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->where('gestion = 0 and id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
                                 ->all();
                                 
             $indicadores=Indicador::find()
@@ -2414,6 +2422,49 @@ set_time_limit(0);
             return json_encode(array('estado'=>0,'mensaje'=>""));
         
     }
+    
+    public function actionVerificar_ind_actividad($id)
+    {
+        $existe_ind = [];
+        $w = 0;
+
+                        
+            $indicadores=Indicador::find()
+                                ->select('indicador.id,indicador.descripcion,indicador.id_oe')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$id])
+                                ->all();
+            
+            foreach($indicadores as $ind)
+            {
+               $actividades=Actividad::find()
+                                ->where('id_ind=:id_ind',[':id_ind'=>$ind->id])
+                                ->all();
+                foreach($actividades as $act)
+                {
+                    $w++;
+                }
+                
+                $existe_ind[] = $w;
+                
+                $w = 0;
+                
+            }
+            
+            for($e=0;$e<count($existe_ind);$e++)
+            {
+               if($existe_ind[$e] > 0)
+               {
+                return json_encode(array('estado'=>0,'mensaje'=>"")); 
+               }
+            }
+            
+            return json_encode(array('estado'=>1,'mensaje'=>"<strong>¡Cuidado! <strong>No tienen Actividad Registrada. <br/>"));
+            
+        
+    }
+    
     
     
     public function actionVerificar_presupuesto($id)
