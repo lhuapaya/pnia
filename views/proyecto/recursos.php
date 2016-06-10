@@ -81,7 +81,8 @@ use yii\web\JsExpression;
             <select class="form-control" name="Proyecto[id_actividad]" id="proyecto-id_actividad">
 		<?php
                         $array = [];
-                        //$i = 0;
+                        $i = 0;
+			
                            foreach($actividades as $actividades2)
                             {
                                 
@@ -91,9 +92,14 @@ use yii\web\JsExpression;
                                <option value="<?= $actividades2->id; ?>" > <?= $actividades2->descripcion ?></option>;
                     <?php
 			    $array[] = $actividades2->id;
+			    $i++;
 			    }
 			   // $i++;
-			   } ?>    
+			   }
+			   if($i == 0)
+			   {$array[] = '';}
+			   
+			   ?>    
 		</select>    
         </div>
 	<div class="col-xs-12 col-sm-7 col-md-1" >
