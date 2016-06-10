@@ -205,7 +205,7 @@ class ProyectoController extends Controller
             
             $cultivo =  CultivoCrianza::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
+                        ->all();
                         
             /*financiamiento*/
             $aportante12=Aportante::find()
@@ -758,13 +758,14 @@ class ProyectoController extends Controller
             }
             else
             {
-                //var_dump($proyecto->id);
+                
+                //var_dump($proyecto->id_cultivo);die;
                 $data= Proyecto::findOne($proyecto->id);
                 $data->titulo = $proyecto->titulo;
                 $data->vigencia = $proyecto->vigencia;
                 $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
                 $data->id_programa = $proyecto->id_programa;
-                $data->id_cultivo = $proyecto->id_cultivo;
+                //$data->id_cultivo = $proyecto->id_cultivo;
                 $data->id_especie = $proyecto->id_especie;
                 $data->id_areatematica = $proyecto->id_areatematica;
                 
@@ -811,6 +812,19 @@ class ProyectoController extends Controller
                         $Colaborador->tipo=3;
                         $Colaborador->save(); 
                     }
+                }
+                
+                
+                CultivoCrianza::deleteAll('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id]);
+                
+                /*cultivo crianza*/
+                for($i=0;$i<count($proyecto->id_cultivo);$i++)
+
+                {
+                    $cultivo = new CultivoCrianza();
+                    $cultivo->id_proyecto = $proyecto->id;
+                    $cultivo->tipo = $proyecto->id_cultivo[$i];
+                    $cultivo->save();
                 }
                 
                 /*Instituciones Alianza*/
@@ -882,14 +896,14 @@ class ProyectoController extends Controller
             
             $cultivo =  CultivoCrianza::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
+                        ->all();
                         
             $observaciones = Observaciones::find()
                                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                                         ->all();
         }
         
-        
+        //var_dump($cultivo);die;
         $tipoInv = Maestros::find()
                                 ->where('id_padre = 16 and estado = 1')
                                 ->orderBy('orden')

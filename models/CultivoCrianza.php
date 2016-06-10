@@ -10,7 +10,6 @@ use Yii;
  * @property integer $id
  * @property integer $id_proyecto
  * @property integer $tipo
- * @property string $descripcion
  *
  * @property Proyecto $idProyecto
  */
@@ -31,8 +30,7 @@ class CultivoCrianza extends \yii\db\ActiveRecord
     {
         return [
             [['id_proyecto'], 'required'],
-            [['id_proyecto', 'tipo'], 'integer'],
-            [['descripcion'], 'string', 'max' => 100]
+            [['id_proyecto', 'tipo'], 'integer']
         ];
     }
 
@@ -45,7 +43,6 @@ class CultivoCrianza extends \yii\db\ActiveRecord
             'id' => 'ID',
             'id_proyecto' => 'Id Proyecto',
             'tipo' => 'Tipo',
-            'descripcion' => 'Descripcion',
         ];
     }
 
