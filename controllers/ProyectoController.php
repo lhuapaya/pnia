@@ -2439,7 +2439,7 @@ set_time_limit(0);
             foreach($indicadores as $ind)
             {
                $actividades=Actividad::find()
-                                ->where('id_ind=:id_ind',[':id_ind'=>$ind->id])
+                                ->where('gestion = 0 and id_ind=:id_ind',[':id_ind'=>$ind->id])
                                 ->all();
                 foreach($actividades as $act)
                 {

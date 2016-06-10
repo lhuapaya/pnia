@@ -57,7 +57,7 @@ use app\models\Maestros;
                 {
                      
                 ?>
-                    <div class="panel panel-primary">
+                  <div class="panel panel-primary">
                       <div class="panel-heading" style="height: 45px;padding:5px">
                         <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i]) ?>
                         <!--<h4 class="panel-title">
@@ -69,7 +69,8 @@ use app\models\Maestros;
                             <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion]); ?> 
                         </div>
                       </div>
-                    </div>
+                  </div>
+		  
                     
                     
                      
@@ -77,7 +78,7 @@ use app\models\Maestros;
                 <?php
                 $i++;
                 }?>
-                </div>
+                
                 <!--<div class="col-xs-12 col-sm-7 col-md-12" id="proyecto-div_id_<?= $i; ?>" >
 		</div>
 		<div id="objetivo_row_1-" class="btn btn-default pull-left" value="1" ng-click="addRow()">Agregar</div>
@@ -90,8 +91,8 @@ use app\models\Maestros;
                }
                ?> 
             </div>
-            
-            <div class="clearfix"><br></div>
+            </div>
+            <div class="clearfix"></div><b/r>
             <div class="col-xs-12 col-sm-7 col-md-12" >
             <button type="submit" id="btn_obj_ind" class="btn btn-primary pull-right">Guardar</button>   
             </div>
