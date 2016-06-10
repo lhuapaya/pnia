@@ -2433,14 +2433,15 @@ set_time_limit(0);
                                 ->select('indicador.id,indicador.descripcion,indicador.id_oe')
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
-                                ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$id])
+                                ->where('objetivo_especifico.gestion = 0 and proyecto.id=:proyecto_id',[':proyecto_id'=>$id])
                                 ->all();
             
             foreach($indicadores as $ind)
             {
                $actividades=Actividad::find()
-                                ->where('gestion = 0 and id_ind=:id_ind',[':id_ind'=>$ind->id])
+                                ->where('id_ind=:id_ind',[':id_ind'=>$ind->id])
                                 ->all();
+                //var_dump($actividades);die;
                 foreach($actividades as $act)
                 {
                     $w++;
