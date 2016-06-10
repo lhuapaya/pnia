@@ -17,7 +17,7 @@ use yii\web\JsExpression;
 	$ver_act = json_decode($ver_actividad);
 	$ver_peso_act = json_decode($ver_peso_actividad);
 	$ver_co_apor = json_decode($ver_co_aporte);
-	var_dump($ver_act->estado);die;
+	//var_dump($ver_act->estado);die;
 	$denegado = 0;
 	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_co_apor->estado == 0) ){
 	   $denegado = 1; 
