@@ -1,3 +1,20 @@
+.multiselect {
+    width:20em;
+    height:7em;
+    border:solid 1px #c0c0c0;
+    overflow: auto;
+    white-space:nowrap;
+    padding-left: 10px;
+}
+ 
+.multiselect b {
+    display:inline-block;
+}
+ 
+.multiselect-on {
+    color:#ffffff;
+    background-color:#5858FA;
+}
 
 /* Table */
 .variables-matrix {

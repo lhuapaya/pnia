@@ -66,7 +66,7 @@ use app\models\Maestros;
                       </div>
                       <div id="collapse<?= $i; ?>" class="panel-collapse collapse <?=($i == 0)?'in':'' ?>">
                         <div class="panel-body">
-                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion]); ?> 
+                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion,'evento'=>$evento]); ?> 
                         </div>
                       </div>
                   </div>
@@ -382,7 +382,7 @@ $("#btn_obj_ind").click(function(event){
     function verificar_peso_obj()
     {
       var pesos = $('input[name=\'Proyecto[objetivos_peso][]\']').serializeArray();
-      var count = $('input[name=\'Proyecto[objetivos_peso][]\']').length - 1;
+      var count = $('input[name=\'Proyecto[objetivos_peso][]\']').length;
       var total_peso = 0;
       for(i=0; i<count; i++)
       {
@@ -405,13 +405,13 @@ $("#btn_obj_ind").click(function(event){
       var total = 0;
       var resultado = '';
       var count_tablas=($('table[name=\'Proyecto[indicadores_tabla][]\']').length);
-      
+      console.log(count_tablas);
       
       
       for (i=0;i<count_tablas;i++)
       {
-	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length) -1;
-	 
+	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length -1);
+	 //console.log(rowCount);
 	 for (e=0;e<rowCount;e++) {
 	    
 	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+e).val());

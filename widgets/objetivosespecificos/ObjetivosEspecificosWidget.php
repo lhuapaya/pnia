@@ -18,6 +18,7 @@ class ObjetivosEspecificosWidget extends Widget
 {
     public $objetivo_id;
     public $correlativo;
+    
     public function init()
     {
         parent::init();

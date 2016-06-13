@@ -22,6 +22,11 @@
 				<th class="text-center">
                                     Meta
                                 </th>
+				<?php if($event == 2){ ?>
+				<th class="text-center">
+                                    Ejecutado
+                                </th>
+				<?php } ?>
                                 <th>
                                 </th>
                             </tr>
@@ -60,6 +65,13 @@
 						<input type="text" id="proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?>" class="form-control entero" name="Proyecto[indicadores_meta][]" placeholder="Meta" value="<?= $indicador->meta ?>" />
 					    </div>
 					</td>
+					<?php if($event == 2){ ?>
+					    <td class="col-xs-1">
+					    <div class="form-group field-proyecto-indicadores_ejecutado_<?= $correlativo ?> required">
+						<input type="text" id="proyecto-indicadores_ejecutado_<?= $correlativo ?>" class="form-control" name="Proyecto[indicadores_ejecutado][]" placeholder="" value="<?= $indicador->ejecutado ?>" Disabled>
+					    </div>
+					    </td>
+					<?php } ?>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,<?= $ind ?>)">
 						<input type="hidden" id="indicadores_ids_<?= $correlativo; ?>_<?= $ind ?>" name="Proyecto[indicadores_ids][]" value="<?= $indicador->id ?>" />

@@ -765,7 +765,7 @@ class ProyectoController extends Controller
                 $data->vigencia = $proyecto->vigencia;
                 $data->id_tipo_proyecto = $proyecto->id_tipo_proyecto;
                 $data->id_programa = $proyecto->id_programa;
-                //$data->id_cultivo = $proyecto->id_cultivo;
+                $data->id_cultivo = $proyecto->id_cultivo;
                 $data->id_especie = $proyecto->id_especie;
                 $data->id_areatematica = $proyecto->id_areatematica;
                 
@@ -815,9 +815,9 @@ class ProyectoController extends Controller
                 }
                 
                 
-                CultivoCrianza::deleteAll('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id]);
+                /*CultivoCrianza::deleteAll('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id]);
                 
-                /*cultivo crianza*/
+                
                 for($i=0;$i<count($proyecto->id_cultivo);$i++)
 
                 {
@@ -825,7 +825,7 @@ class ProyectoController extends Controller
                     $cultivo->id_proyecto = $proyecto->id;
                     $cultivo->tipo = $proyecto->id_cultivo[$i];
                     $cultivo->save();
-                }
+                }*/
                 
                 /*Instituciones Alianza*/
                /* for($i=0;$i<$countAlianzas;$i++)
@@ -2732,5 +2732,41 @@ and ap.tipo = 1*/
                                         ->all();
 
         return $this->render('observaciones',['proyecto'=>$proyecto,'observaciones'=>$observaciones,'evento'=>$event]);
+    }
+    
+    public function actionCultivos($id)
+    {
+        $option = '';
+       $cultivos = Maestros::find()
+                            ->select('id, descripcion, orden')
+                            ->where('estado = 1 and id_padre = :id_padre',[':id_padre'=>$id])
+                            ->orderBy('orden')
+                            ->all();
+                            
+        foreach($cultivos as $cult)
+        {
+            $option .= '<option value="'.$cult->id.'" >'.$cult->descripcion.'</option>';
+           //$option .= '<b><input type="checkbox" id="proyecto-id_cultivo" name="Proyecto[id_cultivo][]" value="'.$cult->id.'" >'.$cult->descripcion.'</b><br/>';
+        }
+        
+        echo $option;
+    }
+    
+    public function actionEspecies($id)
+    {
+        $option = '';
+       $cultivos = Maestros::find()
+                            ->select('id, descripcion, orden')
+                            ->where('estado = 1 and id_padre = :id_padre',[':id_padre'=>$id])
+                            ->orderBy('orden')
+                            ->all();
+                            
+        foreach($cultivos as $cult)
+        {
+            $option .= '<option value="'.$cult->id.'" >'.$cult->descripcion.'</option>';
+           //$option .= '<b><input type="checkbox" id="proyecto-id_cultivo" name="Proyecto[id_cultivo][]" value="'.$cult->id.'" >'.$cult->descripcion.'</b><br/>';
+        }
+        
+        echo $option;
     }
 }

@@ -74,7 +74,7 @@ use app\models\Maestros;
                       </div>
                       <div id="collapse<?= $i; ?>" class="panel-collapse collapse <?=($i == 0)?'in':'' ?>">
                         <div class="panel-body">
-                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i]); ?> 
+                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'evento'=>$evento]); ?> 
                         </div>
                       </div>
                     </div>

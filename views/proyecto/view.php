@@ -58,7 +58,7 @@ use app\models\Maestros;
             
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_tipo_proyecto required">
-                    <label for="proyecto-id_tipo_proyecto">Invetigación:</label>
+                    <label for="proyecto-id_tipo_proyecto">Investigación:</label>
                 <select class="form-control" id="proyecto-id_tipo_proyecto" name="Proyecto[id_tipo_proyecto]" >
                     <option value="0">--Seleccione--</option>
                     <?php                    
@@ -79,7 +79,7 @@ use app\models\Maestros;
             <div class="clearfix"></div>
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_direccion_linea required">
-                <label for="proyecto-id_direccion_linea">Dirección en Linea:</label>
+                <label for="proyecto-id_direccion_linea">Dirección de Linea:</label>
                 <select  class="form-control" id="proyecto-id_direccion_linea" name="Proyecto[id_direccion_linea]" >
                     <option value="0">--Seleccione--</option>
                     <?php
@@ -128,7 +128,7 @@ use app\models\Maestros;
             </div>
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_dependencia_inia required">
-                <label for="proyecto-id_dependencia_inia">Dependencia del INIA :</label>
+                <label for="proyecto-id_dependencia_inia">Unidad Operativa:</label>
                 <select class="form-control" name="Proyecto[id_dependencia_inia]" id="proyecto-id_dependencia_inia" >
                     <option value="0">--Seleccione--</option>
 
@@ -196,15 +196,21 @@ use app\models\Maestros;
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_programa required">
                     <label for="proyecto-id_programa">Programa:</label>
-                    <select class="form-control" id="proyecto-distrito" name="Proyecto[id_programa]" >
+                    <select onchange="cultivo(1)" class="form-control" id="proyecto-id_programa" name="Proyecto[id_programa]" >
                                                 <option value="0">--Programa--</option>
                     <?php
+                    $prog = null;
                     if ($proyecto->ubigeo) {
                         
                         foreach($programa as $programa2)
                         {
                             echo '<option value="'.$programa2->id.'" '.($programa2->id == $proyecto->id_programa ? 'selected="selected"' : '' ).'> '.$programa2->descripcion .'</option>';
+                            if($programa2->id == $proyecto->id_programa)
+                            {
+                                $prog = $programa2->id;
+                            }
                         }
+                       
                         
                     }
                     ?>
@@ -212,26 +218,58 @@ use app\models\Maestros;
                     </select>
             </div>    
             </div>
-            
-            <div class="col-xs-12 col-sm-7 col-md-4" >
-                <div class="form-group field-proyecto-id_especie required">
-                    
-                 
-                <label for="proyecto-id_especie">Especie:</label>
-                <select class="form-control" id="proyecto-id_especie" name="Proyecto[id_especie]" >
-                 <option value="0">--Seleccione--</option>   
+            <!--<div class="col-xs-12 col-sm-7 col-md-4" >
+            <div class="form-group field-proyecto-id_cultivo required">
+            <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
+            <div class="multiselect" id="multiselect">
                  <?php
-                 
-                    $especie = Maestros::find()
-                                ->where('id_padre = 45 and estado = 1')
+                   if($prog){
+                    $maestro = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$prog])
                                 ->orderBy('orden')
                                 ->all();
 
-                           foreach($especie as $especie2)
+                           foreach($maestro as $maestros)
                             {
                 ?>
-                                <option value="<?= $especie2->id; ?>" <?=($especie2->id == $proyecto->id_especie)?'selected':'' ?> > <?= $especie2->descripcion ?></option>;
-                    <?php   } ?>
+                                <b <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'class="multiselect-on"':'' ?> <?php }?> ><input type="checkbox" id="proyecto-id_cultivo" name="Proyecto[id_cultivo][]" value="<?= $maestros->id; ?>" <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'checked':'' ?> <?php }?>> <?= $maestros->descripcion ?></b><br/>
+                    <?php   } }?>
+                      
+                        
+                    
+                 
+                    
+                </div>
+            
+            </div>
+            </div>-->
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_cultivo required">
+                    
+                 
+                <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
+                <select onchange="especie(1)" class="form-control" id="proyecto-id_cultivo" name="Proyecto[id_cultivo]" >
+                 <option value="0">--Seleccione--</option>   
+                 <?php
+                    $cul = null;
+                    $maestro = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$prog])
+                                ->orderBy('orden')
+                                ->all();
+
+                           foreach($maestro as $maestros)
+                            {
+                ?>
+                                <option value="<?= $maestros->id; ?>" <?=($maestros->id == $proyecto->id_cultivo)?'selected':'' ?> > <?= $maestros->descripcion ?></option>;
+                                
+                                
+                    
+                    <?php
+                                if($maestros->id == $proyecto->id_cultivo)
+                                    {
+                                        $cul = $maestros->id;
+                                    }    
+                    } ?>
                       
                         
                     
@@ -243,33 +281,38 @@ use app\models\Maestros;
                 </div>    
             </div>
             <div class="col-xs-12 col-sm-7 col-md-4" >
-                <div class="form-group field-proyecto-id_cultivo required">
+                <div class="form-group field-proyecto-id_especie required">
                     
                  
-                <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
-                <select class="form-control" id="proyecto-id_cultivo" name="Proyecto[id_cultivo][]" multiple>
-                 <!--<option value="0">--Seleccione--</option>-->   
+                <label for="proyecto-id_especie">Especie:</label>
+                <select class="form-control" id="proyecto-id_especie" name="Proyecto[id_especie]" >
+                 <option value="0">--Seleccione--</option>   
                  <?php
                  
-                    $maestro = Maestros::find()
-                                ->where('id_padre = 1 and estado = 1')
+                    if($cul)
+                    {
+                    $especie = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$cul])
                                 ->orderBy('orden')
                                 ->all();
 
-                           foreach($maestro as $maestros)
+                           foreach($especie as $especie2)
                             {
                 ?>
-                                <option value="<?= $maestros->id; ?>" <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'selected':'' ?> <?php }?>> <?= $maestros->descripcion ?></option>;
-                    <?php   } ?>
+                                <option value="<?= $especie2->id; ?>" <?=($especie2->id == $proyecto->id_especie)?'selected':'' ?> > <?= $especie2->descripcion ?></option>;
+                    
+                                
+                    <?php   } } ?>
                       
                         
                     
                  
                     
-                </select>    
+                </select>   
                     
                             
                 </div>    
+            </div>
             </div>
                 <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-id_areatematica required">
@@ -831,7 +874,8 @@ use app\models\Maestros;
   <script>
 
 $(document).ready(function(){
-    
+ 
+ $(".multiselect").multiselect();   
 $('ul.tabs li:nth-child(1)').addClass('active');
   $('.block article').hide();
   $('.block article:first').show();

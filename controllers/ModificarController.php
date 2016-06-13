@@ -69,7 +69,8 @@ class ModificarController extends Controller
         $this->layout='principal';
         $searchModel = new ModificarSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-
+        $flow = null;
+                  
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -232,7 +233,7 @@ class ModificarController extends Controller
             
             $cultivo =  CultivoCrianza::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
+                        ->all();
                         
             /*financiamiento*/
             $aportante12=Aportante::find()
@@ -604,7 +605,7 @@ class ModificarController extends Controller
             
             $cultivo =  CultivoCrianza::find()
                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
-                        ->one();
+                        ->all();
             
             $observaciones = Observaciones::find()
                                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
@@ -785,7 +786,7 @@ class ModificarController extends Controller
     public function actionModificarobjind($id,$event)
     {
         
-        $evento = $_REQUEST["event"];
+        //$evento = $_REQUEST["event"];
         
         $this->layout='principal';
         $flatUpdate = 0;        
@@ -1222,7 +1223,7 @@ class ModificarController extends Controller
                 return $this->redirect('modificarobjind?id='.$id.'&event=2');  
                 break;
             case 3:
-                return $this->redirect('modificarobjind?id='.$id.'&event='.$event); 
+                return $this->redirect('modificarobjind?id='.$id.'&event=2'); 
                 break;
             case 4:
                 return $this->redirect('modificaract?id='.$id.'&event='.$event); 
@@ -1279,6 +1280,21 @@ class ModificarController extends Controller
                     $w++;
                 }
                 
+                $cultivo = CultivoCrianza::find()
+                                ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proy_ant])
+                                ->all();
+                                
+                if($cultivo)
+                {
+                    foreach($cultivo as $cul)
+                    {
+                        $cul->id_proyecto = $proyecto->id;
+                        unset($cul['id']);
+                        $cul2=new CultivoCrianza($cul);
+                        $cul2->save();
+                    }
+                    
+                }
                 /*
                 for($i=0;$i<$countColaboradores;$i++)
                 {                    

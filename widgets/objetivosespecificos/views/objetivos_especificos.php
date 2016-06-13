@@ -2,7 +2,8 @@
 <div id="divobjetivo" >
 		<?php //if($objetivoespecifico) {?>
                 <div class="col-xs-12 col-sm-9 col-md-12" id="proyecto-div_id_<?= $correlativo; ?>" >
-		    <input type="hidden" value="<?= $objetivoespecifico->id?>" id="proyecto-obj_id_<?= $correlativo; ?>" name="Proyecto[objetivos_ids][]" /> 
+		    <input type="hidden" value="<?= $objetivoespecifico->id?>" id="proyecto-obj_id_<?= $correlativo; ?>" name="Proyecto[objetivos_ids][]" />
+		    <input type="hidden" value="<?= $objetivoespecifico->gestion;?>" id="proyecto-gestion_<?= $correlativo; ?>" name="Proyecto[gestion][]" /> 
 		    <!--<div class="col-md-1" >
 			<?= ($correlativo+1); ?>
 		    </div>-->

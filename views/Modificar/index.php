@@ -23,6 +23,10 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php }?>
     <div class="col-md-1"></div>
    <div class="col-md-11">
+    <?php 
+    if(\Yii::$app->user->can('investigador'))
+        {
+    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
@@ -100,11 +104,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'text-center'],
                 //'width'=>'60px',
             ],
-
+            
             ['class' => 'yii\grid\ActionColumn',
              'template' => '{modificardatosgen}',
              'buttons' => [
                 'modificardatosgen' => function ($url, $model) /*use ($event)*/{
+                    if($model->situacion != 0){$valor = 1; $icon = 'glyphicon-search';}else{$valor=2;$icon = 'glyphicon-pencil';}
+                        $url .= '&event='.$valor; 
+                        return Html::a('<span class="glyphicon '.$icon.'"><input type="hidden" value="'.$model->situacion.'" id="situacion" /></span>', $url, 
+                        [
+                            'title' => '',
+                            'class'=>'ver',
+                        ]);
+                },
+                
+                'modificarobjind' => function ($url, $model) /*use ($event)*/{
                     if($model->situacion != 0){$valor = 1; $icon = 'glyphicon-search';}else{$valor=2;$icon = 'glyphicon-pencil';}
                         $url .= '&event='.$valor; 
                         return Html::a('<span class="glyphicon '.$icon.'"><input type="hidden" value="'.$model->situacion.'" id="situacion" /></span>', $url, 
@@ -127,6 +141,122 @@ $this->params['breadcrumbs'][] = $this->title;
              ],
             ],
     ]); ?>
+    <?php }else{?>
+        <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        //'filterModel' => $searchModel,
+        'columns' => [
+            ['class' => 'yii\grid\SerialColumn'],
+
+            //'id',
+            'titulo',
+            //'vigencia',
+            //'ubigeo',
+            //'id_direccion_linea',
+            //'date_create',
+            // 'id_unidad_ejecutora',
+            // 'id_dependencia_inia',
+            // 'id_tipo_proyecto',
+            // 'desc_tipo_proy',
+            // 'id_programa',
+            // 'id_cultivo',
+            // 'id_especie',
+            // 'id_areatematica',
+            // 'resumen_ejecutivo',
+            // 'relevancia',
+            // 'objetivo_general',
+            // 'plan_trabajo',
+            // 'resultados_esperados',
+            // 'presupuesto',
+            // 'referencias_bibliograficas',
+            // 'problematica',
+            // 'ind_prob',
+            // 'med_prob',
+            // 'sup_prob',
+            // 'proposito',
+            // 'ind_prop',
+            // 'med_prop',
+            // 'sup_prop',
+            // 'user_propietario',
+            // 'tipo_registro',
+            // 'situacion',
+            // 'estado',
+            [
+                //'label'=>'Estado',
+                'attribute' => 'date_create',
+                'format'=>'raw',
+                /*'value'=>function($data) {
+                    
+                    if($data->situacion == 1 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
+                    if($data->situacion == 0 ){return "<span style='color:red;'><strong>Pendiente</strong><span>"; }                         
+                    
+                },*/
+                'contentOptions'=>['style'=>'width: 250px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
+            [
+                //'label'=>'Estado',
+                'attribute' => 'situacion',
+                'format'=>'raw',
+                'value'=>function($data) {
+                    
+                    if($data->situacion == 1 ){return "<span style='color:red;'><strong>Pendiente</strong><span>"; }
+                    if($data->situacion == 0 ){return "<span style='color:Orange;'><strong>Incompleto</strong><span>"; }
+                    if($data->situacion == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
+                /*return  '<select id="accion_'.$data->id.'" class="form-control" onchange="ValorProyecto('.$data->id.')">
+                            <option value=0>--Selec. Opción--</option>
+                            <option value=4>Datos Generales</option>
+                            <option value=5>Financiamiento</option>
+                            <option value=6>Objetivos e Indicadores</option>
+                            <option value=7>Actividades</option>
+                            <option value=9>Recursos</option>
+                        </select>';*/
+                            
+                    
+                },
+                'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
+            
+            ['class' => 'yii\grid\ActionColumn',
+             'template' => '{modificardatosgen}',
+             'buttons' => [
+                'modificardatosgen' => function ($url, $model) /*use ($event)*/{
+                    if($model->situacion != 0){$valor = 1; $icon = 'glyphicon-search';}else{$valor=2;$icon = 'glyphicon-pencil';}
+                        $url .= '&event='.$valor; 
+                        return Html::a('<span class="glyphicon '.$icon.'"><input type="hidden" value="'.$model->situacion.'" id="situacion" /></span>', $url, 
+                        [
+                            'title' => '',
+                            'class'=>'ver',
+                        ]);
+                },
+                
+                'modificarobjind' => function ($url, $model) /*use ($event)*/{
+                    if($model->situacion != 0){$valor = 1; $icon = 'glyphicon-search';}else{$valor=2;$icon = 'glyphicon-pencil';}
+                        $url .= '&event='.$valor; 
+                        return Html::a('<span class="glyphicon '.$icon.'"><input type="hidden" value="'.$model->situacion.'" id="situacion" /></span>', $url, 
+                        [
+                            'title' => '',
+                            'class'=>'ver',
+                        ]);
+                },
+                
+                /*'modificardatosgen' => function ($url, $model) {
+                        $url .= '&event=2'; 
+                        return Html::a('<span class="glyphicon glyphicon-check"></span>', $url, 
+                        [
+                            'title' => Yii::t('app', 'Change today\'s lists'),
+                        ]);
+                        }*/
+              ]
+             
+             
+             ],
+            ],
+    ]); ?>
+    <?php }?>
     </div>
     <div class="col-md-1"></div>
 </div>
