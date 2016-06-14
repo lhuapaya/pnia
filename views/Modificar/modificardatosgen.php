@@ -202,15 +202,21 @@ use app\models\Maestros;
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_programa required">
                     <label for="proyecto-id_programa">Programa:</label>
-                    <select class="form-control" id="proyecto-distrito" name="Proyecto[id_programa]" >
+                    <select onchange="cultivo(1)" class="form-control" id="proyecto-id_programa" name="Proyecto[id_programa]" >
                                                 <option value="0">--Programa--</option>
                     <?php
+                    $prog = null;
                     if ($proyecto->ubigeo) {
                         
                         foreach($programa as $programa2)
                         {
                             echo '<option value="'.$programa2->id.'" '.($programa2->id == $proyecto->id_programa ? 'selected="selected"' : '' ).'> '.$programa2->descripcion .'</option>';
+                            if($programa2->id == $proyecto->id_programa)
+                            {
+                                $prog = $programa2->id;
+                            }
                         }
+                       
                         
                     }
                     ?>
@@ -218,26 +224,58 @@ use app\models\Maestros;
                     </select>
             </div>    
             </div>
-            
-            <div class="col-xs-12 col-sm-7 col-md-4" >
-                <div class="form-group field-proyecto-id_especie required">
-                    
-                 
-                <label for="proyecto-id_especie">Especie:</label>
-                <select class="form-control" id="proyecto-id_especie" name="Proyecto[id_especie]" >
-                 <option value="0">--Seleccione--</option>   
+            <!--<div class="col-xs-12 col-sm-7 col-md-4" >
+            <div class="form-group field-proyecto-id_cultivo required">
+            <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
+            <div class="multiselect" id="multiselect">
                  <?php
-                 
-                    $especie = Maestros::find()
-                                ->where('id_padre = 45 and estado = 1')
+                   if($prog){
+                    $maestro = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$prog])
                                 ->orderBy('orden')
                                 ->all();
 
-                           foreach($especie as $especie2)
+                           foreach($maestro as $maestros)
                             {
                 ?>
-                                <option value="<?= $especie2->id; ?>" <?=($especie2->id == $proyecto->id_especie)?'selected':'' ?> > <?= $especie2->descripcion ?></option>;
-                    <?php   } ?>
+                                <b <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'class="multiselect-on"':'' ?> <?php }?> ><input type="checkbox" id="proyecto-id_cultivo" name="Proyecto[id_cultivo][]" value="<?= $maestros->id; ?>" <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'checked':'' ?> <?php }?>> <?= $maestros->descripcion ?></b><br/>
+                    <?php   } }?>
+                      
+                        
+                    
+                 
+                    
+                </div>
+            
+            </div>
+            </div>-->
+            <div class="col-xs-12 col-sm-7 col-md-4" >
+                <div class="form-group field-proyecto-id_cultivo required">
+                    
+                 
+                <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
+                <select onchange="especie(1)" class="form-control" id="proyecto-id_cultivo" name="Proyecto[id_cultivo]" >
+                 <option value="0">--Seleccione--</option>   
+                 <?php
+                    $cul = null;
+                    $maestro = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$prog])
+                                ->orderBy('orden')
+                                ->all();
+
+                           foreach($maestro as $maestros)
+                            {
+                ?>
+                                <option value="<?= $maestros->id; ?>" <?=($maestros->id == $proyecto->id_cultivo)?'selected':'' ?> > <?= $maestros->descripcion ?></option>;
+                                
+                                
+                    
+                    <?php
+                                if($maestros->id == $proyecto->id_cultivo)
+                                    {
+                                        $cul = $maestros->id;
+                                    }    
+                    } ?>
                       
                         
                     
@@ -248,31 +286,38 @@ use app\models\Maestros;
                             
                 </div>    
             </div>
-            
             <div class="col-xs-12 col-sm-7 col-md-4" >
-            <div class="form-group field-proyecto-id_cultivo required">
-            <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
-            <div class="multiselect">
+                <div class="form-group field-proyecto-id_especie required">
+                    
+                 
+                <label for="proyecto-id_especie">Especie:</label>
+                <select class="form-control" id="proyecto-id_especie" name="Proyecto[id_especie]" >
+                 <option value="0">--Seleccione--</option>   
                  <?php
                  
-                    $maestro = Maestros::find()
-                                ->where('id_padre = 1 and estado = 1')
+                    if($cul)
+                    {
+                    $especie = Maestros::find()
+                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$cul])
                                 ->orderBy('orden')
                                 ->all();
 
-                           foreach($maestro as $maestros)
+                           foreach($especie as $especie2)
                             {
                 ?>
-                                <b <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'class="multiselect-on"':'' ?> <?php }?> ><input type="checkbox" name="Proyecto[id_cultivo][]" value="<?= $maestros->id; ?>" <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'checked':'' ?> <?php }?>> <?= $maestros->descripcion ?></b><br/>
-                    <?php   } ?>
+                                <option value="<?= $especie2->id; ?>" <?=($especie2->id == $proyecto->id_especie)?'selected':'' ?> > <?= $especie2->descripcion ?></option>;
+                    
+                                
+                    <?php   } } ?>
                       
                         
                     
                  
                     
-                </div>
-            
-            </div>
+                </select>   
+                    
+                            
+                </div>    
             </div>
             
             <div class="col-xs-12 col-sm-7 col-md-12" >

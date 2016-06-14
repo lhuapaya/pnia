@@ -39,11 +39,8 @@ use app\models\Maestros;
     
     <article id="tab2">
        <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>    
-	    
-            <div class="alert alert-warning" id="warning">
-	    
-	    </div>
-	    
+	 <?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Descripcion de la Modificación:','tipo'=>'0']); ?> 
+            
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-objetivo_general required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
@@ -74,7 +71,7 @@ use app\models\Maestros;
                       </div>
                       <div id="collapse<?= $i; ?>" class="panel-collapse collapse <?=($i == 0)?'in':'' ?>">
                         <div class="panel-body">
-                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'evento'=>$evento]); ?> 
+                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion,'evento'=>$evento]); ?> 
                         </div>
                       </div>
                     </div>
@@ -101,8 +98,13 @@ use app\models\Maestros;
             
             <div class="clearfix"><br></div>
             <div class="col-xs-12 col-sm-7 col-md-12" >
-            <button type="submit" id="btn_obj_ind" class="btn btn-primary pull-right">Guardar y Continuar >></button>   
+            <button type="submit" id="btnguardar" class="btn btn-primary pull-right" >Guardar</button>   
+            <button style="" type="button" id="btnobservar" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modalobs_">Finalizar</button>
             </div>
+	    <div class="clearfix"></div>
+	    <div class="col-xs-12 col-sm-7 col-md-12 checkbox text-right" style="">
+		<input type="checkbox" name="Proyecto[cerrar_modificacion]" id="proyecto-cerrar_modificacion" class="pull-right"><label><strong>He terminado de realizar mis cambios.</strong></label>
+	    </div>
         
     <?php ActiveForm::end(); ?>
     </article>
@@ -123,11 +125,13 @@ use app\models\Maestros;
 
 <script type="text/javascript">
  
- 
+ $("#btnobservar").hide(); 
     
 $(document).ready(function(){
-
- $('ul.tabs li:nth-child(3)').addClass('active');
+$('.tb_indicador  th:eq(6)').hide();
+$('.tb_indicador  td:nth-child(7)').hide();
+    
+ $('ul.tabs li:nth-child(2)').addClass('active');
   $('.block article').hide();
   $('.block article:first').show();
   $('ul.tabs li').on('click',function(){
@@ -143,6 +147,8 @@ $(document).ready(function(){
 $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
 }).on('hidden.bs.collapse', function(){
 $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+
+
 });
  
 var msj_incial = verificar_peso_obj();
@@ -156,6 +162,7 @@ else
 {
    $('#warning').hide();
 }
+
 
 
 /*
@@ -222,8 +229,8 @@ var evento = <?= $evento; ?>;
 
 
     //$('#form1').find('input, textarea, button, select').prop('disabled', true);
-    $('.table  th:eq(5)').hide();
-    $('.table  td:nth-child(6)').hide();
+    //$('.table  th:eq(5)').hide();
+    //$('.table  td:nth-child(6)').hide();
     $('.btn_hide').hide(); 
  
  
@@ -299,7 +306,7 @@ function distrito(identificador) {
         }
     }
 
-$("#btn_obj_ind").click(function(event){
+$("#btnguardar").click(function(event){
 	var error='';
         var clasificador = 0;
 	var tablas=($('table[name=\'Proyecto[indicadores_tabla][]\']').length);
@@ -564,6 +571,54 @@ $("#btn_obj_ind").click(function(event){
     return true;
 });
 */
+
+
+$('#proyecto-cerrar_modificacion').change(function() {
+        if($(this).is(":checked")) {
+            
+	    var ver_peso_obj = verificar_peso_obj();
+            var ver_peso_ind = verificar_peso_inds();
+            
+            
+            if ((ver_peso_obj != '') && (ver_peso_ind != '')) {
+               $.notify({
+                message: ver_peso_obj + ver_peso_ind
+                },{
+                type: 'danger',
+                z_index: 1000000,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+               $(this).attr("checked", false);
+            }
+            else
+            {
+               
+               var returnVal = confirm("Esta seguro de Finalizar con el Formulario?");
+                if (returnVal == true)
+                {
+                    $("#btnguardar").hide();
+		    $("#btnobservar").show();  
+		    
+                }
+                else
+                {
+                    $(this).attr("checked", false);
+                }
+            }   
+        
+            
+        }
+        else
+        {
+          $("#btnguardar").show();
+	    $("#btnobservar").hide();   
+        }
+      
+    });
+
 
 </script>
 

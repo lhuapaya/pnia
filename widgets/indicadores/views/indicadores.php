@@ -62,13 +62,13 @@
 					</td>
 					<td>
 					    <div class="form-group field-proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?> required">
-						<input type="text" id="proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?>" class="form-control entero" name="Proyecto[indicadores_meta][]" placeholder="Meta" value="<?= $indicador->meta ?>" />
+						<input type="text" <?php if($event == 2){ ?> onkeyup="ver_meta_ind(<?= $correlativo; ?>,<?= $ind ?>)" <?php } ?> id="proyecto-indicadores_meta_<?= $correlativo; ?>_<?= $ind ?>" class="form-control entero" name="Proyecto[indicadores_meta][]" placeholder="Meta" value="<?= $indicador->meta ?>" />
 					    </div>
 					</td>
 					<?php if($event == 2){ ?>
 					    <td class="col-xs-1">
-					    <div class="form-group field-proyecto-indicadores_ejecutado_<?= $correlativo ?> required">
-						<input type="text" id="proyecto-indicadores_ejecutado_<?= $correlativo ?>" class="form-control" name="Proyecto[indicadores_ejecutado][]" placeholder="" value="<?= $indicador->ejecutado ?>" Disabled>
+					    <div class="form-group field-proyecto-indicadores_ejecutado_<?= $correlativo; ?>_<?= $ind ?> required">
+						<input  type="text" id="proyecto-indicadores_ejecutado_<?= $correlativo; ?>_<?= $ind ?>" class="form-control" name="Proyecto[indicadores_ejecutado][]" placeholder="" value="<?= $indicador->ejecutado ?>" Disabled>
 					    </div>
 					    </td>
 					<?php } ?>
@@ -386,5 +386,33 @@
 	}
 	return true;
     });*/
+    
+    
+    function ver_meta_ind(a,b)
+    {
+      var meta = $("#proyecto-indicadores_meta_"+a+"_"+b);
+      var ejecutado = $("#proyecto-indicadores_ejecutado_"+a+"_"+b);
+      if (ejecutado.val() > 0) {
+	 
+	 if (meta.val() < ejecutado.val()) {
+	    
+	    meta.val('');
+	    $.notify({
+                message: "La Meta no puede ser Menor que ek ejecutado" 
+            },{
+                type: 'danger',
+                z_index: 1000000,
+                placement: {
+                    from: 'bottom',
+                    align: 'right'
+                },
+            });
+	    
+	    
+	 }
+	 
+	 
+      }
+    }
     
 </script>

@@ -82,7 +82,7 @@ class ModificarController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id,$event)
+    public function actionView($id,$event,$type)
     {
         $this->layout='principal';
         
@@ -483,11 +483,42 @@ class ModificarController extends Controller
                         ->where('id_nuevo_proyecto = :id_nuevo_proyecto ',[':id_nuevo_proyecto'=>$id])
                         ->count();
         if($flowCount > 0)
-        {                       
+        {
+            switch($flowEstado->tipo_modificacion)
+            {
+            case 1:
+                $tipo = 79;
+                break; 
+            case 3:
+                $tipo = 80;
+                break;
+            case 4:
+                $tipo = 81;
+                break;
+            case 5:
+                $tipo = 82;
+                break;
+            }
+            
             if($flowEstado->estado_flujo > 0)
                 {
-                  return $this->redirect('view?id='.$id.'&event='.$event);     
+                  return $this->redirect('view?id='.$id.'&event='.$event.'&type='.$tipo);     
                 }
+            if($flowEstado->tipo_modificacion != 1){    
+            switch($flowEstado->tipo_modificacion)
+            {
+                
+            case 3:
+                return $this->redirect('modificarobjind?id='.$id.'&event=2'); 
+                break;
+            case 4:
+                return $this->redirect('modificaract?id='.$id.'&event='.$event); 
+                break;
+            case 5:
+                return $this->redirect('modificarrec?id='.$id.'&event='.$event); 
+                break;
+            }
+            }
         }
         
         $proy_ant = $proy->id;                
@@ -805,10 +836,10 @@ class ModificarController extends Controller
           return $this->redirect('index');     
         }
         
-        if($flowEstado->next_url != 'modificarobjind')
+        /*if($flowEstado->next_url != 'modificarobjind')
         {
           return $this->redirect($flowEstado->next_url.'?id='.$id.'&event='.$event);   
-        }
+        }*/
 
         
         
@@ -820,10 +851,7 @@ class ModificarController extends Controller
             $countObjetivosEspecificos=count(array_filter($proyecto->objetivos_descripciones));
             $countIndicadores=count(array_filter($proyecto->indicadores_oe_ids));
             
-            //var_dump($proyecto->indicadores_oe_ids);die;
             
-            
-                //var_dump($proyecto->id);
                 $data= Proyecto::findOne($proyecto->id);
                 $data->objetivo_general = $proyecto->objetivo_general;
                 $data->update();
@@ -877,24 +905,37 @@ class ModificarController extends Controller
                         $indicador->meta=$proyecto->indicadores_meta[$i];
                         $indicador->save();
                         
-                       /* $indicador=new Indicador;
-                        $indicador->id_oe=5;
-                        $indicador->descripcion="123";
-                        $indicador->peso=34;
-                        $indicador->unidad_medida=34;
-                        $indicador->meta="luis";
-                        $indicador->save(); */
                     }
                 }
                 
-            $flow =  FlowChange::findOne($flowEstado->id);
-                $flow->estado_flujo = 3;
-                $flow->next_url = 'modificaract';
+            
+                
+            if(isset($proyecto->cerrar_modificacion))
+             {
+                
+                $flow =  FlowChange::findOne($flowEstado->id);
+                $flow->estado_flujo = 1;
                 $flow->update();
                 
-             
-             
-             return $this->redirect('modificaract?id='.$id.'&event='.$event); 
+                $pro = Proyecto::findOne($proyecto->id);
+                $pro->situacion = 1;
+                $pro->update();
+                
+                $hoy = getdate();
+                
+                $obs = new Observaciones;
+                $obs->id_proyecto = $proyecto->id;
+                $obs->observacion = $proyecto->observacion;
+                $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                $obs->id_user = Yii::$app->user->identity->id;
+                $obs->save();
+                
+                return $this->redirect('index'); 
+             }
+            
+            
+            return $this->refresh();
+
         }
         
                         
@@ -907,12 +948,16 @@ class ModificarController extends Controller
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
                                 ->all();
+            
+            $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->count();
                                 
         }
         
         
         
-        return $this->render('modificarobjind',['proyecto'=>$proyecto,'objetivos'=>$objetivosespecificos,'evento'=>$event]);
+        return $this->render('modificarobjind',['proyecto'=>$proyecto,'objetivos'=>$objetivosespecificos,'evento'=>$event,'observaciones'=>$observaciones]);
       
     }
     
@@ -1280,7 +1325,7 @@ class ModificarController extends Controller
                     $w++;
                 }
                 
-                $cultivo = CultivoCrianza::find()
+                /*$cultivo = CultivoCrianza::find()
                                 ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proy_ant])
                                 ->all();
                                 
@@ -1294,7 +1339,7 @@ class ModificarController extends Controller
                         $cul2->save();
                     }
                     
-                }
+                }*/
                 /*
                 for($i=0;$i<$countColaboradores;$i++)
                 {                    

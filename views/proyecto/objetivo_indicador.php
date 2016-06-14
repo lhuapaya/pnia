@@ -288,6 +288,8 @@ function distrito(identificador) {
         }
     }
 
+    
+    
 $("#btn_obj_ind").click(function(event){
 	var error='';
         var clasificador = 0;

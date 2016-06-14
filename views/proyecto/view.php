@@ -218,31 +218,7 @@ use app\models\Maestros;
                     </select>
             </div>    
             </div>
-            <!--<div class="col-xs-12 col-sm-7 col-md-4" >
-            <div class="form-group field-proyecto-id_cultivo required">
-            <label for="proyecto-id_cultivo">Cultivo o Crianza:</label>
-            <div class="multiselect" id="multiselect">
-                 <?php
-                   if($prog){
-                    $maestro = Maestros::find()
-                                ->where('id_padre = :id_padre and estado = 1',[':id_padre'=>$prog])
-                                ->orderBy('orden')
-                                ->all();
-
-                           foreach($maestro as $maestros)
-                            {
-                ?>
-                                <b <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'class="multiselect-on"':'' ?> <?php }?> ><input type="checkbox" id="proyecto-id_cultivo" name="Proyecto[id_cultivo][]" value="<?= $maestros->id; ?>" <?php foreach($cultivo as $cul){ ?> <?=($maestros->id == $cul->tipo)?'checked':'' ?> <?php }?>> <?= $maestros->descripcion ?></b><br/>
-                    <?php   } }?>
-                      
-                        
-                    
-                 
-                    
-                </div>
             
-            </div>
-            </div>-->
             <div class="col-xs-12 col-sm-7 col-md-4" >
                 <div class="form-group field-proyecto-id_cultivo required">
                     
@@ -311,7 +287,7 @@ use app\models\Maestros;
                 </select>   
                     
                             
-                </div>    
+                   
             </div>
             </div>
                 <div class="col-xs-12 col-sm-7 col-md-12" >
