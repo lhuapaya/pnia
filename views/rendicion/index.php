@@ -18,7 +18,7 @@ $this->params['breadcrumbs'][] = $this->title;
     if(Yii::$app->user->identity->id_perfil == 2)
         { ?>
     <p>
-        <?= Html::a(Yii::t('app', 'Nueva Rendición'), ['detalle'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Nueva Rendición'), ['detalle'], ['class' => 'btn btn-success','id'=>'nueva_rendicion']) ?>
     </p>
    <?php } ?>
    
@@ -78,3 +78,53 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <div class="col-md-1"></div>
 </div>
+<?php
+
+    $verificar_desembolso_disp= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_desembolsos_disponible');
+?>
+<script>
+  
+  $("#nueva_rendicion").click(function() {
+       //alert("llego");
+       var valor1 = 0;
+       var valor2 = null; 
+        
+        
+        $.ajax({
+                    url: '<?= $verificar_desembolso_disp ?>',
+                    type: 'GET',
+                    async: false,
+                    //data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                        
+                      valor2 = data;
+                      
+                    }
+                });
+        
+        
+        if (valor2 == 0) {
+           
+           $.notify({
+                message: "<strong>No es posible esta Acción: </strong>No tiene Deselmbolsos Aprobados." 
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+           
+           return false;
+        }
+        
+        
+        
+        return true;
+        
+    });
+    
+</script>

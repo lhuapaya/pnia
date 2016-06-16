@@ -2615,7 +2615,7 @@ and ap.tipo = 1*/
     {
                         
         $desembolso = SolicitudDesembolso::find()
-                            ->where('estado = 0 and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->where('estado in(0,1) and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
                             ->count();
         
         
@@ -2628,6 +2628,23 @@ and ap.tipo = 1*/
         return 0;
     }
     
+    
+    public function actionVerificar_desembolsos_disponible()
+    {
+                        
+        $desembolso = SolicitudDesembolso::find()
+                            ->where('estado = 1 and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->count();
+        
+        
+
+        if($desembolso > 0)
+        {
+            return $desembolso;
+        }
+        
+        return 0;
+    }
     
     public function actionVerificar_peso_actividades($id)
     {

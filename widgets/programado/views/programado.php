@@ -45,26 +45,26 @@
 			{
 			    switch ($i) {
 					    case 1:
-						echo '<option value="1" selected>Primer Año</option>';
+						echo '<option value="1" selected>2016</option>';
 						break;
 					    case 2:
-						echo '<option value="2" >Segundo Año</option>';
+						echo '<option value="2" >2017</option>';
 						break;
 					    case 3:
-						echo '<option value="3" >Tercer Año</option>';
+						echo '<option value="3" >2018</option>';
 						break;
 					}
 
 			}
 			    if($meses[$re] != 12)
 			    {
-				echo '<option value="'.$i.'" >'.($i == 2 ? 'Segundo' : 'Tercero' ).' Año</option>';
+				echo '<option value="'.$i.'" >'.($i == 2 ? '2017' : '2018' ).'</option>';
 			    }
 			
 			}
 			else
 			{	
-			  echo '<option value="1" selected>Primer Año</option>';
+			  echo '<option value="1" selected>2016</option>';
 			}
 		    
 		    ?>
@@ -98,8 +98,33 @@
                                 }
                                 for($i=1; $i<=count($mes); $i++)
                                 {
+				    switch($i) {
+						    case 1 : $var_mes = "ENE";
+									    break;
+						    case 2 : $var_mes = "FEB";
+									    break;
+						    case 3 : $var_mes = "MAR";
+									    break;
+						    case 4 : $var_mes = "ABR";
+									    break;
+						    case 5 : $var_mes = "MAY";
+									    break;
+						    case 6 : $var_mes = "JUN";
+									    break;
+						    case 7 : $var_mes = "JUL";
+									    break;
+						    case 8 : $var_mes = "AGO";
+									    break;
+						    case 9 : $var_mes = "SEP";
+									    break;
+						    case 10 : $var_mes = "OCT";
+									    break;
+						    case 11 : $var_mes = "NOV";
+									    break;
+						    case 12 : $var_mes = "DIC";
+						    }
                             ?>        
-                                  <td><label>Mes <?= $i; ?></label>
+                                  <td><label><?= $var_mes; ?></label>
 					    <div class="form-group field-proyecto-programado_mes_<?= $re ?>_<?= $i; ?> required">
 						<input type="text" id="proyecto-programado_cantidad_<?= $re ?>_<?= $i; ?>" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="<?= $cantidad[($i-1)]; ?>"  <?php if($evento == 2){ if($estado[($i-1)] > 0){ echo 'Disabled';}} ?>>
                                                 <input type="hidden" id="proyecto-programado_mes_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $mes[($i-1)] ?>" />
