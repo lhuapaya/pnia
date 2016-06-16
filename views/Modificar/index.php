@@ -144,7 +144,7 @@ $this->params['breadcrumbs'][] = $this->title;
   $("#nuevo_cambio").click(function() {
        //alert("llego");
        var valor1 = 0;
-       var valor2 = 0; 
+       var valor2 = null; 
         $.ajax({
                     url: '<?= $verificar_pendientes ?>',
                     type: 'GET',
@@ -180,12 +180,12 @@ $this->params['breadcrumbs'][] = $this->title;
                     async: false,
                     //data: {unidadejecutora:unidad.val()},
                     success: function(data){
+                        
                       valor2 = data;
                       
                     }
                 });
         
-        alert(valor2);
         
         if (valor2 > 0) {
            

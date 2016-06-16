@@ -27,6 +27,7 @@ use app\models\Aportante;
 use app\models\ProyectoSearch;
 use app\models\Accesos;
 use app\models\RecursoProgramado;
+use app\models\SolicitudDesembolso;
 use app\models\Desembolso;
 use app\models\NivelAprobacion;
 use app\models\Aprobaciones;
@@ -2614,10 +2615,10 @@ and ap.tipo = 1*/
     {
                         
         $desembolso = SolicitudDesembolso::find()
-                            ->where('estado in(0,1) and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->where('estado = 0 and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
                             ->count();
         
-        var_dump($desembolso);die;
+        
 
         if($desembolso > 0)
         {

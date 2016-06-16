@@ -239,8 +239,8 @@ var evento = <?= $evento; ?>;
      var objetivo = $(this);
      var val = null;
      
-	indicador.attr('disabled', false);
-	actividad.attr('disabled', false);
+	indicador.show();
+	actividad.show();
      
      if($(this).val() != '0')
         {
@@ -305,8 +305,8 @@ var evento = <?= $evento; ?>;
 			    
 			if (val.estado == 1)
 			{
-			    indicador.attr('disabled', true);
-			    actividad.attr('disabled', true);
+			    indicador.hide();
+			    actividad.hide();
 			}
 			
                     }//
