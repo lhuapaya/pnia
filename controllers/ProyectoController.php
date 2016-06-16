@@ -1034,7 +1034,7 @@ class ProyectoController extends Controller
                         
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
-                                ->orderBy(['gestion'=>SORT_ASC])
+                                ->orderBy(['gestion'=>SORT_ASC,'descripcion'=>SORT_ASC])
                                 ->all();
                                 
         }
@@ -2592,6 +2592,26 @@ and ap.tipo = 1*/
         if($proyectoCount > 0)
         {
             return $proyectoCount;
+        }
+        
+        return 0;
+    }
+    
+    
+    public function actionVerificar_desembolsos_pendientes()
+    {
+                        
+        $desembolso = SolicitudDesembolso::find()
+                            ->where('estado in (0,1) and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->count();
+        
+        echo '<script>
+    console.log('.json_encode($desembolso).');
+</script>';
+
+        if($desembolso > 0)
+        {
+            return $desembolso;
         }
         
         return 0;

@@ -54,8 +54,8 @@ class SolicitudDesembolso extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'id_user' => 'Id User',
-            'total' => 'Total',
-            'total_pendiente' => 'Saldo',
+            'total' => 'Total (S/.)',
+            'total_pendiente' => 'Saldo (S/.)',
             'fecha_solicitud' => 'Fecha Solicitud',
             'fecha_aprobacion' => 'Fecha Aprobacion',
             'observacion' => 'Observacion',

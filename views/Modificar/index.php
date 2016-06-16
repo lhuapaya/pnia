@@ -135,25 +135,27 @@ $this->params['breadcrumbs'][] = $this->title;
 <?php
 
     $verificar_pendientes= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_registros_pendientes');
+    $verificar_desembolso= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_desembolsos_pendientes');
 ?>
 
 
 <script>
     
   $("#nuevo_cambio").click(function() {
-        //alert("llego");
-       var valor = 0; 
+       //alert("llego");
+       var valor1 = 0;
+       var valor2 = 0; 
         $.ajax({
                     url: '<?= $verificar_pendientes ?>',
                     type: 'GET',
                     async: false,
                     //data: {unidadejecutora:unidad.val()},
                     success: function(data){
-                      valor = data;
+                      valor1 = data;
                     }
                 });
         
-        if (valor > 0) {
+        if (valor1 > 0) {
            
            $.notify({
                 message: "<strong>No es posible esta Acción: </strong>Tiene un Registro de Cambio Pendiente." 
@@ -170,6 +172,40 @@ $this->params['breadcrumbs'][] = $this->title;
            
            return false;
         }
+        
+        
+        $.ajax({
+                    url: '<?= $verificar_desembolso ?>',
+                    type: 'GET',
+                    async: false,
+                    //data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                      valor2 = data;
+                      
+                    }
+                });
+        
+        alert(valor2);
+        
+        if (valor2 > 0) {
+           
+           $.notify({
+                message: "<strong>No es posible esta Acción: </strong>Tiene Desembolsos Pendientes." 
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+           
+           return false;
+        }
+        
+        
         
         return true;
         

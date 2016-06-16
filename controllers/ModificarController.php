@@ -532,8 +532,13 @@ class ModificarController extends Controller
         if($proyecto->load(Yii::$app->request->post()))
         {
 
-            
+            $countColaboradores = 0;
+            if($proyecto->aportante_colaborador)
+            {
             $countColaboradores = count(array_filter($proyecto->aportante_colaborador));
+            }
+            
+            
 
 
  

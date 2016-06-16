@@ -228,34 +228,7 @@ use yii\web\JsExpression;
 				<?php } ?>
 			    <?php }else{ ?>
 				
-                                <tr id="aportante_addr_2">
-				    <td>
-				    <div class="form-group field-aportante-aporte_colaborador_2 required">
-					    <input type="text" id="aportante-aporte_colaborador_2" class="form-control " name="Aportante[aporte_colaborador][]" placeholder=""  disabled>
-				    </div>
-                                    <input type="hidden" name="Aportante[aporte_tipo][]" id="aportante-aporte_tipo_2" value="3" />
-				    <input type="hidden" name="Aportante[aporte_numero][]" id="aportante-aporte_numero_2" value="2" />
-                                    </td>
-				    <td>
-					<div class="form-group field-aportante-aporte_monetario_2 required">
-					    <input onkeyup="sumatotal(2)" type="text" id="aportante-aporte_monetario_2" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder=""  />
-					</div>
-				    </td>
-                                    <td>
-					<div class="form-group field-aportante-aporte_nomonetario_2 required">
-					    <input onkeyup="sumatotal(2)" type="text" id="aportante-aporte_nomonetario_2" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  />
-					</div>
-				    </td>
-                                    <td>
-					<div class="form-group field-aportante-aporte_total_2 required">
-					    <input type="text" id="aportante-aporte_total_2" class="form-control decimal" name="Aportante[aporte_total][]" placeholder=""  disabled>
-					</div>
-				    </td>
-				    <td>
-					<input type="hidden" name="Aportante[aportante_ids][]" id="aportante-aportante_ids_3"  value="" />   
-				    </td>
-				</tr>
-				<?php $co=3; ?>
+                                
 			    <?php } ?>
                             <!--<tr id='aportante_addr_<?= $co ?>'></tr>-->
                         </tbody>
