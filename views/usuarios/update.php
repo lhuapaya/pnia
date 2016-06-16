@@ -118,12 +118,19 @@ $this->params['breadcrumbs'][] = $this->title;
  
  $(document).ready(function(){
     var id_perfil = "<?= $usuarios->id_perfil; ?>";
-    
+    console.log(id_perfil);
     if((id_perfil == 1) || (id_perfil == 2) || (id_perfil == 4) || (id_perfil == 6))
     {
     $("#ejecutora").hide();
     $("#estacion").hide();
     $("#usuarios-ejecutora").prop('disabled', true);
+    $("#usuarios-dependencia").prop('disabled', true);
+    }
+    
+    
+    if(id_perfil == 5)
+    {
+    $("#estacion").hide();
     $("#usuarios-dependencia").prop('disabled', true);
     }
     

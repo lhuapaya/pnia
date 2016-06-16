@@ -87,19 +87,21 @@
                                 $mes = [];
                                 $cantidad = [];
                                 $id = [];
+				$estado = [];
                                 
                                 foreach($programado as $programado2)
                                 {
                                     $mes[] = $programado2->mes;
                                     $cantidad[] = $programado2->cantidad;
                                     $id[] = $programado2->id;
+				    $estado[] = $programado2->estado;
                                 }
                                 for($i=1; $i<=count($mes); $i++)
                                 {
                             ?>        
                                   <td><label>Mes <?= $i; ?></label>
 					    <div class="form-group field-proyecto-programado_mes_<?= $re ?>_<?= $i; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $re ?>_<?= $i; ?>" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="<?= $cantidad[($i-1)]; ?>"  />
+						<input type="text" id="proyecto-programado_cantidad_<?= $re ?>_<?= $i; ?>" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="<?= $cantidad[($i-1)]; ?>"  <?php if($evento == 2){ if($estado[($i-1)] > 0){ echo 'Disabled';}} ?>>
                                                 <input type="hidden" id="proyecto-programado_mes_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $mes[($i-1)] ?>" />
                                                 <input type="hidden" id="proyecto-programado_id_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_id][]" placeholder="" value="<?= $id[($i-1)] ?>" />
 					    </div>

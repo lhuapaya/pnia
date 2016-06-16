@@ -1813,7 +1813,7 @@ class ProyectoController extends Controller
                                         </td>
                                         <td>
 					    <div>
-					    '.\app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'vigencia'=>$proyecto->vigencia]).'
+					    '.\app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'vigencia'=>$proyecto->vigencia,'evento'=>$evento]).'
 					    </div>
                                         </td>
 					<td>
@@ -2768,5 +2768,21 @@ and ap.tipo = 1*/
         }
         
         echo $option;
+    }
+    
+    public function actionVer_programado($id)
+    {
+        
+       $programado = RecursoProgramado::find()
+                            ->where('estado > 0 and id_recurso = :id_recurso',[':id_recurso'=>$id])
+                            ->count();
+                            
+        
+        if($programado > 0)
+        {
+            return json_encode(array('estado'=>1,'mensaje'=>"No puede eliminar el Recurso, tiene Asignado un Desembolso.<br/>"));
+        }
+        return json_encode(array('estado'=>0,'mensaje'=>""));
+        
     }
 }

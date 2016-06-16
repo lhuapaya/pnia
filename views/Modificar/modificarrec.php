@@ -6,17 +6,17 @@ use yii\web\JsExpression;
 ?>
 
 <ul class="tabs">
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Datos Generales</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>" >Financiamiento</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Objetivos e Indicadores</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Actividades</a></li>
-    <li><a href="#tab5">Recursos</a></li>
+    <li><a href="#tab5" >Recursos</a></li>
+    <?php if($observaciones > 0){ ?>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/observaciones?id='.$proyecto->id.'&event='.$evento.'') ?>" >Observaciones</a></li>
+    <?php } ?>
 </ul>
   <div class="clr"></div>
   <section class="block">
     
     <article id="tab5">
-        <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>  
+        <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
+	<?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Descripcion de la Modificación:','tipo'=>'0']); ?> 
         <?php
 	$ver_act = json_decode($ver_actividad);
 	$ver_peso_act = json_decode($ver_peso_actividad);
@@ -106,6 +106,11 @@ use yii\web\JsExpression;
         
         
         </div>
+	<div class="clearfix"><br/>
+	<div class="col-xs-12 col-sm-7 col-md-12" >
+            <button type="submit" id="btnguardar" class="btn btn-primary pull-right" >Guardar</button>   
+            <button style="" type="button" id="btnobservar" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modalobs_">Finalizar</button>
+            </div>
         <div class="clearfix"><br/>
         <div class="col-xs-12 col-sm-7 col-md-12 checkbox">
             <label><input type="checkbox" name="Proyecto[cerrar_recurso]" id="proyecto-cerrar_recurso" ><strong>Ya no quiero realizar más cambios en el Formulario de Recursos.</strong></label>
@@ -160,6 +165,12 @@ $('ul.tabs li:nth-child(5)').addClass('active');
     
  }
  
+ if(evento == 2)
+ {
+    $('#btn_recursos').hide();
+    $('#btnobservar').hide();
+ }
+ 
  <?php
 	if($denegado == 1)
 	{
@@ -211,7 +222,8 @@ $('ul.tabs li:nth-child(5)').addClass('active');
                var returnVal = confirm("Esta seguro de cerrar el Formulario?");
                 if (returnVal == true)
                 {
-                    $("#btn_recursos").html('Guardar y Continuar >>');  
+                    $("#btnguardar").hide();
+		    $("#btnobservar").show();  
                 }
                 else
                 {
@@ -229,6 +241,54 @@ $('ul.tabs li:nth-child(5)').addClass('active');
     });
  
  });
+ 
+ 
+ $("#btnguardar").click(function(event){
+        
+        	
+	var error='';
+        var clasificador=($('input[name=\'Proyecto[recurso_descripcion][]\']').length);
+        var valor=($('input[name=\'Proyecto[recurso_numero][]\']').serializeArray());
+        
+        //console.log(valor);
+        //console.log('-'+clasificador);
+        //alert(clasificador);
+        
+        for (var i=0; i<clasificador; i++) {
+            
+            
+           // console.log(valor[i].value);
+            if(($('#proyecto-recurso_clasificador_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_descripcion_'+(valor[i].value)).val())=='') ||($('#proyecto-recurso_fuente_'+(valor[i].value)).val()=='0')|| ($.trim($('#proyecto-recurso_unidad_'+(valor[i].value)).val())=='') )
+            {
+                error=error+'Complete todos los Campos del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
+            else
+            {
+               // $('.field-proyecto-descripciones_'+i).addClass('has-success');
+               // $('.field-proyecto-descripciones_'+i).removeClass('has-error');
+            }
+        }
+	
+	if (error!='') {
+            $.notify({
+                message: error 
+            },{
+                type: 'danger',
+                z_index: 1000000,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+            return false;
+        }
+        else
+        {
+           
+            return true;
+        }
+    });
  
   $("#proyecto-id_objetivo").change(function(){
     

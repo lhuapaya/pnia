@@ -121,7 +121,12 @@ class UsuariosController extends Controller
                         ->where('estado = 1')
                         ->all();
             
-            return $this->render('create', ['perfil'=>$perfil]);
+            $ejecutora = Maestros::find()
+                                ->where('id_padre = 25 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+            
+            return $this->render('create', ['perfil'=>$perfil,'ejecutora'=>$ejecutora]);
         }
     }
 

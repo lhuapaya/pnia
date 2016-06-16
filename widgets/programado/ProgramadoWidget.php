@@ -16,6 +16,7 @@ class ProgramadoWidget extends Widget
     public $recurso_id;
     public $re;
     public $vigencia;
+    public $evento;
     public function init()
     {
         parent::init();
@@ -50,7 +51,8 @@ class ProgramadoWidget extends Widget
                                             're'=>$this->re,
                                             'vigencia'=>$this->vigencia,
                                             'recursos'=>$recursos,
-                                            'rec_prog_id'=>$this->recurso_id
+                                            'rec_prog_id'=>$this->recurso_id,
+                                            'evento'=>$this->evento
                                             ]);
     }
 }

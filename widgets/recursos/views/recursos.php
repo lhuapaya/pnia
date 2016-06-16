@@ -115,7 +115,7 @@
                                         </td>
 					<td>
 					    <div>
-					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'vigencia'=>$vigencia]); ?> 
+					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'vigencia'=>$vigencia,"evento"=>$event]); ?> 
 					    </div>
 					</td>
 					<td>
@@ -196,7 +196,7 @@
 				    </td>
 				    <td>
 					    <div>
-					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>'','re'=>'0','vigencia'=>$vigencia]); ?> 
+					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>'','re'=>'0','vigencia'=>$vigencia,"evento"=>$event]); ?> 
 					    </div>
 				    </td>
 				    <td>
@@ -226,6 +226,7 @@
     $verificar_programado = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_programado');
     $verificar_actividades = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_actividades');
     $verificar_peso_actividades = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_peso_actividades');
+    $ver_programado = Yii::$app->getUrlManager()->createUrl('proyecto/ver_programado');
 
 ?>
 <script>
@@ -330,41 +331,142 @@
  $("#recurso_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro de Eliminar?");
         var mensaje = '';
-        if (r == true) {
-            id=$(this).children().val();
-            if (id) {
-		$.ajax({
-                    url: '<?= $eliminarrecurso ?>',
+	var id=$(this).children().val();
+	var valor = null;
+	if (r == true) {
+	if (evento == 2)
+	{
+	    if (id) {
+	   $.ajax({
+                    url: '<?= $ver_programado ?>',
                     type: 'GET',
                     async: false,
                     data: {id:id},
                     success: function(data){
+			valor = jQuery.parseJSON(data);
+                        
+			if (valor.estado == 1) {
+			    
+			    $.notify({
+					    message: valor.mensaje 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'bottom',
+						align: 'right'
+					    },
+					});
+			}
+			else
+			{
+			    
+				    
+					 $.ajax({
+					     url: '<?= $eliminarrecurso ?>',
+					     type: 'GET',
+					     async: false,
+					     data: {id:id},
+					     success: function(data){
+						 
+						 mensaje = data;
+						 
+						 
+						 
+						 $.notify({
+							message: mensaje 
+						    },{
+							type: 'danger',
+							z_index: 1000000,
+							placement: {
+							    from: 'bottom',
+							    align: 'right'
+							},
+						    });
+					     }
+					 });
+					 	
+				     
+				     
+				     
+				     
+				     
+				     
+				 }
+			    	
+			    
 			
-                        mensaje = data;
+			
+			
                     }
                 });
-		$(this).parent().parent().remove();	
+	   
+		    if (valor.estado == 0) {
+			$(this).parent().parent().remove();s
+		    }
 	    }
 	    else
-	    {
-		$(this).parent().parent().remove();
-                
-                mensaje = "Se elimino el Recurso Correctamente";
-	    }
-            
-            $.notify({
+				     {
+					 $(this).parent().parent().remove();
+					 
+					 mensaje = "Se elimino el Recurso Correctamente";
+					 
+					 $.notify({
 					    message: mensaje 
 					},{
 					    type: 'danger',
 					    z_index: 1000000,
 					    placement: {
-						from: 'top',
+						from: 'bottom',
 						align: 'right'
 					    },
 					});
-            
-            
-        } 
+				     }
+				     
+				     
+				     
+        
+	}
+	else
+	{
+	    
+				     if (id) {
+					 $.ajax({
+					     url: '<?= $eliminarrecurso ?>',
+					     type: 'GET',
+					     async: false,
+					     data: {id:id},
+					     success: function(data){
+						 
+						 mensaje = data;
+					     }
+					 });
+					 $(this).parent().parent().remove();	
+				     }
+				     else
+				     {
+					 $(this).parent().parent().remove();
+					 
+					 mensaje = "Se elimino el Recurso Correctamente";
+				     }
+				     
+				     
+				     $.notify({
+					    message: mensaje 
+					},{
+					    type: 'danger',
+					    z_index: 1000000,
+					    placement: {
+						from: 'bottom',
+						align: 'right'
+					    },
+					});
+				     
+				     
+				
+	}
+	}
+	
     });
     
     $("#btn_recursos").click(function(event){

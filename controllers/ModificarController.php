@@ -100,12 +100,12 @@ class ModificarController extends Controller
         if($proyecto->load(Yii::$app->request->post()) )
         {
             $nivelApLast = NivelAprobacion::find()
-                            ->where('id_actividad = :id_actividad',[':id_actividad'=>79])
+                            ->where('id_actividad = :id_actividad',[':id_actividad'=>$type])
                             ->orderBy(['orden'=>SORT_DESC])
                             ->one();
               
             $nivelAp = NivelAprobacion::find()
-                            ->where('id_actividad = :id_actividad',[':id_actividad'=>79])
+                            ->where('id_actividad = :id_actividad',[':id_actividad'=>$type])
                             ->orderBy(['orden'=>SORT_ASC])
                             ->all();
             
@@ -298,7 +298,7 @@ class ModificarController extends Controller
                         ->all();
             
             $nivelAp = NivelAprobacion::find()
-                            ->where('id_actividad = :id_actividad',[':id_actividad'=>79])
+                            ->where('id_actividad = :id_actividad',[':id_actividad'=>$type])
                             ->orderBy(['orden'=>SORT_ASC])
                             ->all();
             $nivel = '';
@@ -345,6 +345,13 @@ class ModificarController extends Controller
                     {
                     $requiere_aprobar = 1;
                     }
+                }
+                
+                if(Yii::$app->user->identity->id_perfil == 4)
+                {
+                    
+                    $requiere_aprobar = 1;
+                    
                 }
             }
             
@@ -1083,10 +1090,10 @@ class ModificarController extends Controller
           return $this->redirect('index');     
         }
         
-        if($flowEstado->next_url != 'modificarrec')
+        /*if($flowEstado->next_url != 'modificarrec')
         {
           return $this->redirect($flowEstado->next_url.'?id='.$id.'&event='.$event);   
-        }
+        }*/
                         
         if($proyecto->load(Yii::$app->request->post()) )
         {
@@ -1139,8 +1146,17 @@ class ModificarController extends Controller
                 $pro = Proyecto::findOne($proyecto->id);
                 $pro->situacion = 1;
                 $pro->update();
+                
+                $hoy = getdate();
+                
+                $obs = new Observaciones;
+                $obs->id_proyecto = $proyecto->id;
+                $obs->observacion = $proyecto->observacion;
+                $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                $obs->id_user = Yii::$app->user->identity->id;
+                $obs->save();
              
-                return $this->redirect('modificarobs?id='.$id.'&event='.$event); 
+                return $this->redirect('index'); 
              }
              
             return $this->refresh();
@@ -1171,6 +1187,10 @@ class ModificarController extends Controller
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
                                 ->all();
+            
+            $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->count();
                         
         }
         
@@ -1183,7 +1203,7 @@ class ModificarController extends Controller
         //var_dump($ver_monto_total);die;
         
         
-        return $this->render('modificarrec',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad]);
+        return $this->render('modificarrec',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,"observaciones"=>$observaciones]);
     }
     
     public function actionModificarobs($id,$event)
@@ -1271,10 +1291,10 @@ class ModificarController extends Controller
                 return $this->redirect('modificarobjind?id='.$id.'&event=2'); 
                 break;
             case 4:
-                return $this->redirect('modificaract?id='.$id.'&event='.$event); 
+                return $this->redirect('modificaract?id='.$id.'&event=2'); 
                 break;
             case 5:
-                return $this->redirect('modificarrec?id='.$id.'&event='.$event); 
+                return $this->redirect('modificarrec?id='.$id.'&event=2'); 
                 break;
             }
             
@@ -1465,4 +1485,6 @@ class ModificarController extends Controller
                 
        return $proyecto->id; 
     }
+    
+    
 }
