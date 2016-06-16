@@ -237,6 +237,10 @@ var evento = <?= $evento; ?>;
      var indicador = $("#proyecto-id_indicador");
      var actividad = $("#proyecto-id_actividad");
      var objetivo = $(this);
+     var val = null;
+     
+	indicador.attr('disabled', false);
+	actividad.attr('disabled', false);
      
      if($(this).val() != '0')
         {
@@ -246,8 +250,12 @@ var evento = <?= $evento; ?>;
                     async: true,
                     data: {id:objetivo.val()},
                     success: function(data){
+			
+			
+			 val = jQuery.parseJSON(data);
+			
                         indicador.find('option').remove();
-                        indicador.append(data);
+                        indicador.append(val.option);
 			
 			
 			
@@ -294,8 +302,14 @@ var evento = <?= $evento; ?>;
 			    
 			    }
 			    });
+			    
+			if (val.estado == 1)
+			{
+			    indicador.attr('disabled', true);
+			    actividad.attr('disabled', true);
+			}
 			
-                    }
+                    }//
                 });
         }
  });

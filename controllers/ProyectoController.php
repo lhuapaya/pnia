@@ -2189,10 +2189,14 @@ class ProyectoController extends Controller
     public function actionObtenerindicadores($id)
     {
         $opcion1 = '';
+        $estado = 0;
+        
+        $objetivo =  ObjetivoEspecifico::findOne($id);
         
         $indicadores=Indicador::find()
                                 ->where('id_oe=:objetivo_id',[':objetivo_id'=>$id])
                                 ->all();
+        
         
         foreach($indicadores as $indicador)
             {
@@ -2201,7 +2205,15 @@ class ProyectoController extends Controller
                                                   
             }
         
-       echo $opcion1; 
+        
+        if($objetivo->gestion == 1)
+        {
+          $estado = 1;  
+        }
+        
+        
+       $array = array('estado'=>$estado,'option'=>$opcion1);
+            echo json_encode($array);
     }
     
     public function actionObteneractividad($id)
@@ -2602,12 +2614,10 @@ and ap.tipo = 1*/
     {
                         
         $desembolso = SolicitudDesembolso::find()
-                            ->where('estado in (0,1) and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
+                            ->where('estado in(0,1) and id_user =:id_user',[':id_user'=>Yii::$app->user->identity->id])
                             ->count();
         
-        echo '<script>
-    console.log('.json_encode($desembolso).');
-</script>';
+        var_dump($desembolso);die;
 
         if($desembolso > 0)
         {
