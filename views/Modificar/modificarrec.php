@@ -295,6 +295,10 @@ $('ul.tabs li:nth-child(5)').addClass('active');
      var indicador = $("#proyecto-id_indicador");
      var actividad = $("#proyecto-id_actividad");
      var objetivo = $(this);
+     var val = null;
+     
+	indicador.show();
+	actividad.show();
      
      if($(this).val() != '0')
         {
@@ -304,8 +308,12 @@ $('ul.tabs li:nth-child(5)').addClass('active');
                     async: true,
                     data: {id:objetivo.val()},
                     success: function(data){
+			
+			
+			 val = jQuery.parseJSON(data);
+			
                         indicador.find('option').remove();
-                        indicador.append(data);
+                        indicador.append(val.option);
 			
 			
 			
@@ -335,24 +343,31 @@ $('ul.tabs li:nth-child(5)').addClass('active');
 					       console.log(re);
 					       
 					       
-					       if((situacion_proyecto == 1) && (evento == 1))
+					       if((situacion_proyecto > 0) && (evento == 1))
 						{
 						   $('#form1').find('input, textarea, select').prop('disabled', true);
 						   $('.table  th:eq(8)').hide();
 						   $('.table  td:nth-child(9)').hide();
 						   $('#btn_recursos').hide();
-						   $('#btn_grabar').hide();
+						   $('.btn_hide').hide();
 						   
 						   
 						}
+					    moneda_recurso();
 					    }
 				    });
 			    
 			    
 			    }
 			    });
+			    
+			if (val.estado == 1)
+			{
+			    indicador.hide();
+			    actividad.hide();
+			}
 			
-                    }
+                    }//
                 });
         }
  });

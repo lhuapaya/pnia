@@ -99,6 +99,7 @@ class ModificarController extends Controller
                         
         if($proyecto->load(Yii::$app->request->post()) )
         {
+            if($proyecto->respuesta_anular == 0){
             $nivelApLast = NivelAprobacion::find()
                             ->where('id_actividad = :id_actividad',[':id_actividad'=>$type])
                             ->orderBy(['orden'=>SORT_DESC])
@@ -187,7 +188,14 @@ class ModificarController extends Controller
                     }    
                 }
                 
-              
+            }
+            else
+            {
+                $pro = Proyecto::findOne($proyecto->id);
+                    $pro->estado = 3;
+                    $pro->situacion = 3;
+                    $pro->update();
+            }
             
             return $this->redirect('index');
             
@@ -301,6 +309,7 @@ class ModificarController extends Controller
                             ->where('id_actividad = :id_actividad',[':id_actividad'=>$type])
                             ->orderBy(['orden'=>SORT_ASC])
                             ->all();
+        
             $nivel = '';
             foreach($nivelAp as $nivelAp2)
             {
@@ -329,10 +338,12 @@ class ModificarController extends Controller
             
             $usuario = Usuarios::findOne(Yii::$app->user->identity->id);
             $requiere_aprobar = 0;
+            
             if(Yii::$app->user->identity->id_perfil == $nivel)
             {
                 if(Yii::$app->user->identity->id_perfil == 5)
                 {
+                    
                     if(($usuario->ejecutora == $proyecto->id_unidad_ejecutora) )
                     {
                     $requiere_aprobar = 1;
@@ -341,6 +352,7 @@ class ModificarController extends Controller
                 
                 if(Yii::$app->user->identity->id_perfil == 3)
                 {
+                    
                     if(($usuario->ejecutora == $proyecto->id_unidad_ejecutora) && ($usuario->dependencia == $proyecto->id_dependencia_inia) )
                     {
                     $requiere_aprobar = 1;

@@ -70,8 +70,15 @@ use yii\web\JsExpression;
 	</div>
 	<div class="clearfix"></div><br/><br/>
         <div class="col-xs-12 col-sm-7 col-md-12" id="form1">
-    
-        <?= \app\widgets\actividades\ActividadesWidget::widget(['indicador_id'=>$array2[0],'id_proyecto'=>$proyecto->id,'evento'=>$evento]); ?>
+	<?php
+		$evento3 = 1;
+		  if($proyecto->situacion == 2)
+		  {
+		     $evento3 = 2;
+		  }
+	
+	?>
+        <?= \app\widgets\actividades\ActividadesWidget::widget(['indicador_id'=>$array2[0],'id_proyecto'=>$proyecto->id,'evento'=>$evento3]); ?>
         </div>
 	<?php }else{?>
 	    <div class="alert alert-warning" id="warning">
@@ -95,14 +102,22 @@ use yii\web\JsExpression;
   <script>
  var situacion_proyecto = <?= $proyecto->situacion; ?>;
 var evento = <?= $evento; ?>;
-
+var evento3 = <?= $evento3; ?>;
  $(document).ready(function(){ 
 
  if((situacion_proyecto > 0) && (evento == 1))
  {
     $('#form1').find('input, textarea, select').prop('disabled', true);
+    
+    if (evento3 == 2) {
     $('.table  th:eq(7)').hide();
     $('.table  td:nth-child(8)').hide();
+      
+    }
+    else{
+    $('.table  th:eq(6)').hide();
+    $('.table  td:nth-child(7)').hide();
+    }
     $('.btn_hide').hide();  
  }
  
@@ -134,7 +149,7 @@ $("#proyecto-id_objetivo").change(function(){
 				    url: '<?= $refrescaractividad ?>',
 				    type: 'GET',
 				    async: false,
-				    data: {id:id_indicador,evento:<?= $evento; ?>},
+				    data: {id:id_indicador,evento:<?= $evento3; ?>},
 				    success: function(data){
 					var valor = jQuery.parseJSON(data);
 					$('#actividades_tabla').append(valor.html);
@@ -145,8 +160,15 @@ $("#proyecto-id_objetivo").change(function(){
 				    if((situacion_proyecto > 0) && (evento == 1))
 					{
 					   $('#actividades_tabla').find('input, textarea, select').prop('disabled', true);
-					   $('#actividades_tabla  th:eq(7)').hide();
-					   $('#actividades_tabla  td:nth-child(8)').hide();
+					   if (evento3 == 2) {
+					    $('.table  th:eq(7)').hide();
+					    $('.table  td:nth-child(8)').hide();
+					      
+					    }
+					    else{
+					    $('.table  th:eq(6)').hide();
+					    $('.table  td:nth-child(7)').hide();
+					    }
 					   $('.btn_hide').hide(); 
 					}   
 				    }
@@ -171,7 +193,7 @@ ejecutar_numeric();
                     url: '<?= $refrescaractividad ?>',
                     type: 'GET',
                     async: false,
-                    data: {id:id_indicador,evento:<?= $evento; ?>},
+                    data: {id:id_indicador,evento:<?= $evento3; ?>},
                     success: function(data){
 			var valor = jQuery.parseJSON(data);
                         $('#actividades_tabla').append(valor.html);
@@ -181,8 +203,15 @@ ejecutar_numeric();
 		       if((situacion_proyecto > 0) && (evento == 1))
 					{
 					   $('#actividades_tabla').find('input, textarea, select').prop('disabled', true);
-					   $('#actividades_tabla  th:eq(7)').hide();
-					   $('#actividades_tabla  td:nth-child(8)').hide();
+					   if (evento3 == 2) {
+					    $('.table  th:eq(7)').hide();
+					    $('.table  td:nth-child(8)').hide();
+					      
+					    }
+					    else{
+					    $('.table  th:eq(6)').hide();
+					    $('.table  td:nth-child(7)').hide();
+					    }
 					   $('.btn_hide').hide(); 
 					}
                     }

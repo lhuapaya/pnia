@@ -86,10 +86,11 @@ class RendicionController extends Controller
              //var_dump($model->respuesta_aprob);die;  
            if($model->respuesta_aprob == 0)
                 {
-                    $dRendicion = DetalleRendicion::findOne($model->detalle_ids[0]);
+                    //$dRendicion = DetalleRendicion::findOne($model->detalle_ids[0]);
                     
                     for($i=0;$i<$countregistros;$i++)
                     {
+                        $dRendicion = DetalleRendicion::findOne($model->detalle_ids[$i]);
                         $programado = RecursoProgramado::find()
                                         ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$dRendicion->id_recurso,':anio'=>$model->anio[$i],':mes'=>$model->mes[$i]])
                                         ->one();

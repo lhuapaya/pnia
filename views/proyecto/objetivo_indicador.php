@@ -52,7 +52,12 @@ use app\models\Maestros;
                $i = 0;
                if($objetivos)
                {
-               
+		  $evento3 = 1;
+		  if($proyecto->situacion == 2)
+		  {
+		     $evento3 = 2;
+		  }
+		  
                 foreach($objetivos as $objetivo)
                 {
                      
@@ -66,7 +71,7 @@ use app\models\Maestros;
                       </div>
                       <div id="collapse<?= $i; ?>" class="panel-collapse collapse <?=($i == 0)?'in':'' ?>">
                         <div class="panel-body">
-                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion,'evento'=>$evento]); ?> 
+                            <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion,'evento'=>$evento3]); ?> 
                         </div>
                       </div>
                   </div>
@@ -207,12 +212,21 @@ $("#proyecto-id_unidad_ejecutora").change(function(){
  
 var situacion_proyecto = <?= $proyecto->situacion; ?>;
 var evento = <?= $evento; ?>;
-
+var evento3 = <?= $evento3; ?>;
  if((situacion_proyecto > 0) && (evento == 1))
  {
     $('#form1').find('input, textarea, button, select').prop('disabled', true);
-    $('.table  th:eq(5)').hide();
-    $('.table  td:nth-child(6)').hide();
+    if (evento3 == 2) {
+      $('.table  th:eq(6)').hide();
+    $('.table  td:nth-child(7)').hide();
+      
+    }
+    else
+    {
+      $('.table  th:eq(5)').hide();
+    $('.table  td:nth-child(6)').hide();  
+    }
+    
     $('button').hide(); 
  }
  

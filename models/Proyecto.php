@@ -128,6 +128,7 @@ class Proyecto extends \yii\db\ActiveRecord
             public $cerrar_recurso;
             public $cerrar_modificacion;
             public $respuesta_aprob;
+            public $respuesta_anular;
             public $observacion;
             
             public $opcion;
@@ -156,7 +157,7 @@ class Proyecto extends \yii\db\ActiveRecord
               'alianzas_ids','colaboradores_ids','aportante_numero','aportante_colaborador','aportante_regimen','aportante_tipo_inst','zona_ids','zona_distrito','zona_departamento',
               'id_actividad','recurso_clasificador','recurso_descripcion','recurso_unidad','recurso_cantidad','recurso_precioun','recurso_ids',
               'id_indicador','indicadores_pesos','indicadores_unidad_medidas','indicadores_programados','cerrar_actividad','cerrar_recurso',
-              'actividades_indicadorbid','actividades_pesos','actividades_unidad_medidas','actividades_metas','actividades_finicio','actividades_ffin','indicadores_meta','objetivos_peso','indicadores_numero','recurso_fuente'], 'safe'],
+              'actividades_indicadorbid','actividades_pesos','actividades_unidad_medidas','actividades_metas','actividades_finicio','actividades_ffin','indicadores_meta','objetivos_peso','indicadores_numero','recurso_fuente','respuesta_anular'], 'safe'],
 
             //[['titulo', 'direccion_linea', 'estacion_exp', 'sub_estacion_exp'], 'required'],
             [['titulo', 'ind_prob', 'med_prob', 'sup_prob', 'ind_prop', 'med_prop', 'sup_prop'], 'string', 'max' => 500],

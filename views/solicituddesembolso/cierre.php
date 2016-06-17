@@ -80,7 +80,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'value'=>function($data) {
                     if($data->estado == 3 ){return "<span style='color:red;'><strong>Rechazado</strong><span>"; }
                     if($data->estado == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
-                    if($data->estado == 1 ){return "<span style='color:orange;'><strong>Por Rendir</strong><input type='hidden'  id='id' name='SolicitudDesembolso[id]' value='".$data->id."' /><span>"; }
+                    if($data->estado == 1 ){return "<span style='color:orange;'><strong>Por Rendir</strong><input type='hidden'  id='id_sol' name='SolicitudDesembolso[id_sol]' value='".$data->id."' /><span>"; }
                     if($data->estado == 0 ){return "<span style='color:blue;'><strong>Solicitado</strong><span>"; }
                 
                 },
@@ -150,6 +150,14 @@ $this->params['breadcrumbs'][] = $this->title;
     $desembolsos_pendientes= Yii::$app->getUrlManager()->createUrl('desembolsodetalle/desembolso_pendiente');
 ?>
 <script>
+
+$(document).ready(function(){
+    var total = $("#total").val();
+   if(!total)
+   {
+     $('#btncerrar').hide();
+   }
+});
     
 $('#btncerrar').click(function(){
     
@@ -170,6 +178,14 @@ $('#btncerrar').click(function(){
     $("#mensaje").html(mensaje) 
     
 });
-    
+
+
+$("#btn_observacion").click(function( ) {
+   
+          jsShowWindowLoad('Procesando...');
+          
+          return true;
+
+}); 
     
 </script>

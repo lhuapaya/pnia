@@ -43,7 +43,8 @@ use app\models\Perfil;
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-titulo required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
-                <input type="hidden" value="" id="proyecto-respuesta_aprob" name="Proyecto[respuesta_aprob]" /> 
+                <input type="hidden" value="" id="proyecto-respuesta_aprob" name="Proyecto[respuesta_aprob]" />
+                <input type="hidden" value="" id="proyecto-respuesta_anular" name="Proyecto[respuesta_anular]" value="0"/> 
                 <label for="proyecto-titulo">Título del Proyecto:</label>
                 <input class="form-control" type="text" value="<?= $proyecto->titulo?>" placeholder="Nombre del Proyecto" id="proyecto-titulo" name="Proyecto[titulo]"  required/> <!-- required-->
                 </div>
@@ -863,9 +864,12 @@ use app\models\Perfil;
     </article>
  
   </section>
-    <div class="col-xs-12 col-sm-7 col-md-12 col-centered" >
-        <button style="" type="button" id="btnobservar" class="btn btn-primary " data-toggle="modal" data-target="#modalobs_">Observar</button>  
-        <button type="submit" id="btnaceptar" class="btn btn-primary ">Aceptar</button>   
+    <div class="clearfix"></div>
+		<div class="col-xs-12 col-sm-7 col-md-4" ></div>
+                <div class="col-xs-12 col-sm-7 col-md-8 col-centered" >
+        <button style="" type="button" id="btnobservar" class="btn btn-warning " data-toggle="modal" data-target="#modalobs_">Observar</button>  
+        <button type="submit" id="btnaceptar" class="btn btn-success ">Aceptar</button>
+        <button type="submit" id="btnanular" class="btn btn-danger ">Anular Modificación</button>
     </div>
     <?php ActiveForm::end(); ?>
  </div>       
@@ -880,7 +884,7 @@ use app\models\Perfil;
 
   
   <script>
-
+var perfil = <?= Yii::$app->user->identity->id_perfil ?>;
 $(document).ready(function(){
    
    $(".multiselect").multiselect();
@@ -975,20 +979,27 @@ var evento = <?= $evento; ?>;
     $('#proyecto-id').prop('disabled', false);
     $('#proyecto-respuesta_aprob').prop('disabled', false);
     $('#proyecto-observacion').prop('disabled', false);
+    $('#proyecto-respuesta_anular').prop('disabled', false);
     $('#actividades_tabla  th:eq(8)').hide();
    $('#actividades_tabla  td:nth-child(9)').hide();
     $('#recurso_tabla  th:eq(9)').hide();
    $('#recurso_tabla  td:nth-child(10)').hide();
     $('.btn_hide').hide();
+    $('#btnanular').hide();
     
     //$('#indicadores_row_1').hide();
   var requiere_aprobar = <?= $requiere_aprobar; ?>;
+  console.log(requiere_aprobar);
  if(requiere_aprobar == 0)
  {
     $('#btnobservar').hide();
     $('#btnaceptar').hide();
  }
  
+ if ((situacion_proyecto < 2) && (perfil == 2))
+ {
+   $('#btnanular').show();
+ }
  //   $('#form1').find('input, textarea, button, select').prop('disabled', true);
  //   $('#form_colaborador').find('input, textarea, button, select').prop('disabled', false);
 });
@@ -1086,7 +1097,9 @@ $("#proyecto-id_objetivo2").change(function(){
      var indicador = $("#proyecto-id_indicador2");
      var actividad = $("#proyecto-id_actividad2");
      var objetivo = $(this);
-     
+     indicador.show();
+	actividad.show();
+        
      if($(this).val() != '0')
         {
         $.ajax({
@@ -1095,8 +1108,10 @@ $("#proyecto-id_objetivo2").change(function(){
                     async: true,
                     data: {id:objetivo.val()},
                     success: function(data){
+                        val = jQuery.parseJSON(data);
+			
                         indicador.find('option').remove();
-                        indicador.append(data);
+                        indicador.append(val.option);
 			
 			
 			
@@ -1140,6 +1155,12 @@ $("#proyecto-id_objetivo2").change(function(){
 			    }
 			    });
 			
+                        
+                        if (val.estado == 1)
+			{
+			    indicador.hide();
+			    actividad.hide();
+			}
                     }
                 });
         }
@@ -1233,6 +1254,22 @@ $("#btnaceptar").click(function( ) {
     return false;
 });
 
+
+$("#btnanular").click(function( ) {
+   
+   var respuesta = confirm('Esta seguro de Anular esta Modificación?');
+   
+   if (respuesta == true) {
+     
+     $('#proyecto-respuesta_anular').val(1);
+     jsShowWindowLoad('Procesando...');
+     return true;
+   }
+    
+    return false;
+
+
+});
 /*
 $("#btn_observacion").click(function( ) {
    

@@ -10,6 +10,7 @@ use app\models\DetalleSolicitud;
 use app\models\RecursoProgramado;
 use app\models\AprobacionDesembolso;
 use app\models\Aprobaciones;
+use app\models\Saldo;
 use app\models\SolicitudDesembolsoSearch;
 use app\models\DetalleSolicitudSearch;
 use yii\web\Controller;
@@ -309,7 +310,48 @@ class SolicituddesembolsoController extends Controller
         
         if($model->load(Yii::$app->request->post()))
         {
-            var_dump($model->id.' '.$model->total.' '.$model->total_pendiente);die;
+            //var_dump($model->id_sol.' '.$model->total.' '.$model->total_pendiente);die;
+            
+            
+            $saldo = new Saldo();
+            $saldo->id_user = Yii::$app->user->identity->id;
+            $saldo->saldo = $model->total_pendiente;
+            $saldo->id_desembolso = $model->id_sol;
+            $saldo->estado = 0;
+            $saldo->Save();
+            
+            $desembolso = SolicitudDesembolso::findOne($model->id_sol);
+            $desembolso->estado = 2;
+            $desembolso->update();
+            
+            DetalleSolicitud::updateAll(['estado' => 2], 'id_solicitud = :id_solicitud',[':id_solicitud'=>(int)$model->id_sol]);
+            
+            $dDesembolso = DetalleSolicitud::find()->where('id_solicitud = :id_solicitud',[":id_solicitud"=>$model->id_sol])->all();
+            
+            
+            foreach($dDesembolso as $dDes)
+            {
+             $reProg = RecursoProgramado::find()
+                        ->select('recurso_programado.id, recurso_programado.anio, recurso_programado.mes')
+                                ->innerJoin('recurso','recurso.id=recurso_programado.id_recurso')
+                                ->innerJoin('aportante','aportante.id=recurso.fuente')
+                                ->innerJoin('actividad','actividad.id=recurso.actividad_id')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.estado = 1 and recurso_programado.estado in (0,1) and proyecto.user_propietario=:user_propietario and aportante.tipo = 1 and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':user_propietario'=>Yii::$app->user->identity->id,":anio"=>$dDes->anio,":mes"=>$dDes->mes])
+                                ->all();
+                                
+                    foreach($reProg as $reProg2)
+                    {
+                        $reProgramado = RecursoProgramado::findOne($reProg2->id);
+                        $reProgramado->estado = 2;
+                        $reProgramado->update();
+                    }            
+                                
+            }
+            
+            return $this->redirect('../dashboard/index');
         }
         else{
         $searchModel = new SolicitudDesembolsoSearch();

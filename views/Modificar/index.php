@@ -99,6 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if($data->situacion == 1 ){return "<span style='color:red;'><strong>Pendiente</strong><span>"; }
                     if($data->situacion == 0 ){return "<span style='color:Orange;'><strong>Incompleto</strong><span>"; }
                     if($data->situacion == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
+                    if($data->situacion == 3 ){return "<span style='color:blue;'><strong>Anulado</strong><span>"; }
                 /*return  '<select id="accion_'.$data->id.'" class="form-control" onchange="ValorProyecto('.$data->id.')">
                             <option value=0>--Selec. Opción--</option>
                             <option value=4>Datos Generales</option>
