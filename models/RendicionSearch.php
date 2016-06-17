@@ -52,14 +52,14 @@ class RendicionSearch extends Rendicion
                 $query = Rendicion::find()
                         ->select('rendicion.id_user as id, proyecto.titulo as titulo ,count(rendicion.estado) as cantidad')
                                 ->innerJoin('proyecto','proyecto.user_propietario=rendicion.id_user')
-                                ->where('proyecto.estado = 1 and rendicion.estado = 0')
+                                ->where('proyecto.estado = 1 and rendicion.estado = 0 and proyecto.id_unidad_ejecutora =:id_unidad_ejecutora',[":id_unidad_ejecutora"=>Yii::$app->user->identity->ejecutora])
                                 ->groupBy(['proyecto.id']);
                                 
                 
             }
             else
             {
-                $query = Rendicion::find()->where('id_user and :id_user',[':id_user'=>$user]);
+                $query = Rendicion::find()->where('estado = 0 and id_user and :id_user',[':id_user'=>$user]);
             }
             
         }

@@ -73,41 +73,94 @@ class RendicionController extends Controller
         $this->layout='principal';
         
         $totales = 0;
+        $hoy = getdate();
         
         $model = new DetalleRendicion();
         
         //svar_dump($model->load(Yii::$app->request->post()));
         if ($model->load(Yii::$app->request->post()))
         {
-            $countregistros = count(array_filter($model->clasificador_id));
+
+            $countregistros = count(array_filter($model->anio));
+             //var_dump($countregistros);
+             //var_dump($model->respuesta_aprob);die;  
+           if($model->respuesta_aprob == 0)
+                {
+                    $dRendicion = DetalleRendicion::findOne($model->detalle_ids[0]);
+                    
+                    for($i=0;$i<$countregistros;$i++)
+                    {
+                        $programado = RecursoProgramado::find()
+                                        ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$dRendicion->id_recurso,':anio'=>$model->anio[$i],':mes'=>$model->mes[$i]])
+                                        ->one();
+                        
+                        //var_dump($programado->cant_rendida);die;
+                        $programado->cant_rendida = ($programado->cant_rendida - $model->cantidad[$i]);
+                        //$programado->precio_unit_rendido = $detRendicion->precio_unit;
+                          $programado->estado = 1;  
+                        $programado->update();
+                          
+                    }
+                    
+                    
+                    
+                    $rendicion = Rendicion::findOne($model->id_ren);
+                    $rendicion->observacion = $model->observacion;
+                    $rendicion->estado = 3;
+                    $rendicion->fecha_aprobacion = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                    $rendicion->id_user_obs = Yii::$app->user->identity->id;
+                    $rendicion->update();
+                    
+                    //DetalleSolicitud::updateAll(['estado' => 3], 'id_solicitud = :id_solicitud',[':id_solicitud'=>(int)$model->id_sol]);
+
+                    
+                }
+                
+                if($model->respuesta_aprob == 1)
+                {
+                    if(Yii::$app->user->identity->id_perfil == 5)
+                    {
+                        for($i=0;$i<$countregistros;$i++)
+                        {
+                            
+                           $totales += ($model->cantidad[$i] * $model->precio_unit[$i]);
+                              
+                        }
+                        
+                        $rendicion = Rendicion::findOne($model->id_ren);
+                        $rendicion->estado = 2;
+                        $rendicion->fecha_aprobacion = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                        $rendicion->id_user_obs = Yii::$app->user->identity->id;
+                        $rendicion->update();
+
+                        
+                        
+                        $desem = SolicitudDesembolso::findOne($rendicion->id_solicitud);
+                        $desem->total_pendiente = ($desem->total_pendiente - $totales);
+                        $desem->update();
+                    }
+                    
+                    
+                    
+                }
+                
+              
             
-            //var_dump($countregistros);die;
+            return $this->redirect('proyecto');
+            
+                
+              
+            
+        
+          /*  $countregistros = count(array_filter($model->clasificador_id));
+            
             
             $hoy = getdate();
             
             $desembolsos = SolicitudDesembolso::find()
                             ->where('estado = 1 and id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id])
                             ->one();
-           // var_dump($desembolsos->id);die;
            
-                        /*$rendicion=new Rendicion();
-                        $rendicion->id_user= Yii::$app->user->identity->id;
-                        $rendicion->fecha= $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
-                        $rendicion->id_solicitud = $desembolsos->id;
-                        $rendicion->save();*/
-            
-                    /*if($model->detalle_ids[$i] != '')
-                    {
-                        $Colaborador=Aportante::findOne($proyecto->colaboradores_ids[$i]);
-                        $Colaborador->id_proyecto=$proyecto->id;
-                        $Colaborador->colaborador=$proyecto->aportante_colaborador[$i];
-                        $Colaborador->regimen=$proyecto->aportante_regimen[$i];
-                        $Colaborador->tipo_inst=$proyecto->aportante_tipo_inst[$i];
-                        $Colaborador->tipo=3;
-                        $Colaborador->update(); 
-                    }
-                    else
-                    {*/
                     for($i=0;$i<$countregistros;$i++)
                     {
                         $recurso = Recurso::findOne($model->descripcion[$i]);
@@ -149,9 +202,9 @@ class RendicionController extends Controller
                    $desem = SolicitudDesembolso::findOne($desembolsos->id);
                    $desem->total_pendiente = ($desem->total_pendiente - $totales);
                    $desem->update();
-                    //}
                     
-            return $this->redirect('index');
+                    
+            return $this->redirect('index');*/
             
         }
         else
@@ -327,9 +380,9 @@ class RendicionController extends Controller
                         
                     }
                     
-                   $desem = SolicitudDesembolso::findOne($desembolsos->id);
+                   /*$desem = SolicitudDesembolso::findOne($desembolsos->id);
                    $desem->total_pendiente = ($desem->total_pendiente - $totales);
-                   $desem->update();
+                   $desem->update();*/
                     //}
                     
             return $this->redirect('index');
@@ -543,6 +596,33 @@ class RendicionController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
         ]);
+    }
+    
+    public function actionObtener_clasificador()
+    {
+        $option = '';
+        $clasificadores = RecursoProgramado::find()
+                        ->select('recurso.clasificador_id, maestros.descripcion')
+                                ->innerJoin('recurso','recurso.id=recurso_programado.id_recurso')
+                                ->innerJoin('aportante','aportante.id=recurso.fuente')
+                                ->innerJoin('maestros','maestros.id=recurso.clasificador_id')
+                                ->innerJoin('actividad','actividad.id=recurso.actividad_id')
+                                ->innerJoin('indicador','indicador.id=actividad.id_ind')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
+                                ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
+                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario and aportante.tipo = 1 and recurso_programado.estado = 1 and recurso_programado.cantidad > 0  ',[':user_propietario'=>Yii::$app->user->identity->id])
+                                ->groupBy(['recurso.clasificador_id'])
+                                ->all();
+                                
+        
+        foreach($clasificadores as $clasif)
+        {
+            
+        $option .= '<option value="'.$clasif->clasificador_id.'" >'.$clasif->descripcion.'</option>';
+        
+        }
+        
+        return $option;
     }
     
 }

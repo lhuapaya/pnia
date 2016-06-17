@@ -35,9 +35,10 @@ class Rendicion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_user', 'id_solicitud', 'estado'], 'integer'],
+            [['id_user_obs','id_user', 'id_solicitud', 'estado'], 'integer'],
             [['cantidad','titulo'], 'safe'],
-            [['fecha'], 'string', 'max' => 20]
+            [['observacion'], 'string', 'max' => 7000],
+            [['fecha','fecha_aprobacion'], 'string', 'max' => 20]
         ];
     }
 

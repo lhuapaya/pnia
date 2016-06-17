@@ -29,6 +29,9 @@ class DetalleRendicion extends \yii\db\ActiveRecord
      */
     public $clasificador_id;
     public $id_ren;
+    public $respuesta_aprob;
+    public $detalle_ids;
+    public $observacion;
     
     public static function tableName()
     {
@@ -43,7 +46,7 @@ class DetalleRendicion extends \yii\db\ActiveRecord
         return [
             [['id_rendicion', 'id_clasificador', 'id_recurso', 'mes', 'anio', 'cantidad'], 'integer'],
             [['precio_unit', 'total'], 'number'],
-            [['clasificador_id','id_ren'],'safe'],
+            [['clasificador_id','id_ren','respuesta_aprob','detalle_ids','observacion'],'safe'],
             [['descripcion', 'razon_social'], 'string', 'max' => 200],
             [['ruc'], 'string', 'max' => 20]
         ];

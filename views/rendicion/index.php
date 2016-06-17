@@ -41,8 +41,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'format'=>'raw',
                 'value'=>function($data) {
                     
-                    if($data->estado == 1 ){return "<span style='color:green;'><strong>COmpleto</strong><span>"; }
+                    if($data->estado == 2 ){return "<span style='color:green;'><strong>Aprobado</strong><span>"; }
                     if($data->estado == 0 ){return "<span style='color:blue;'><strong>Registrado</strong><span>"; }
+                    if($data->estado == 3 ){return "<span style='color:red;'><strong>Rechazado</strong><span>"; }
                     //if($data->estado == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
                 /*return  '<select id="accion_'.$data->id.'" class="form-control" onchange="ValorProyecto('.$data->id.')">
                             <option value=0>--Selec. Opción--</option>

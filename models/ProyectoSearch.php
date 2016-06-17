@@ -43,11 +43,27 @@ class ProyectoSearch extends Proyecto
     public function search($params)
     {
         //$query = Proyecto::find();
-        
+        if((Yii::$app->user->identity->id_perfil == 1) || (Yii::$app->user->identity->id_perfil == 4) || (Yii::$app->user->identity->id_perfil == 6))
+        {
         $query = Proyecto::find()
                         ->where('estado = 1');
                         //->all();
-
+        }
+        
+        if(Yii::$app->user->identity->id_perfil == 3) 
+        {
+        $query = Proyecto::find()
+                        ->where('estado = 1 and id_unidad_ejecutora =:id_unidad_ejecutora and id_dependencia_inia = :id_dependencia_inia',[":id_unidad_ejecutora"=>Yii::$app->user->identity->ejecutora,":id_dependencia_inia"=>Yii::$app->user->identity->dependencia]);
+                        //->all();
+        }
+        
+        if(Yii::$app->user->identity->id_perfil == 5) 
+        {
+        $query = Proyecto::find()
+                        ->where('estado = 1 and id_unidad_ejecutora =:id_unidad_ejecutora',[":id_unidad_ejecutora"=>Yii::$app->user->identity->ejecutora]);
+                        //->all();
+        }
+        
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => 12],

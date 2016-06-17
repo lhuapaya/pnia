@@ -40,11 +40,15 @@ class SolicitudDesembolsoSearch extends SolicitudDesembolso
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$valor)
     {
         if(Yii::$app->user->identity->id_perfil == 2)
         {
-        $query = SolicitudDesembolso::find();
+            if($valor == 1){
+        $query = SolicitudDesembolso::find();}
+        
+        if($valor == 2){
+        $query = SolicitudDesembolso::find()->where('estado = 1'); }
         }
         else
         {

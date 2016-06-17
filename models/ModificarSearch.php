@@ -42,16 +42,40 @@ class ModificarSearch extends Proyecto
      */
     public function search($params)
     {
-        if(\Yii::$app->user->can('investigador'))
+        if(Yii::$app->user->identity->id_perfil == 2)
         {
         $query = Proyecto::find()
                         ->where('tipo_registro in (1,2) and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id]);
         }
-        else
+        
+        if((Yii::$app->user->identity->id_perfil == 1) || (Yii::$app->user->identity->id_perfil == 4) || (Yii::$app->user->identity->id_perfil == 6))
+        {
+        $query = Proyecto::find()
+                        ->where('tipo_registro in (1,2) and situacion in (0,1) '); 
+        }
+        
+        if(Yii::$app->user->identity->id_perfil == 3) 
+        {
+            $query = Proyecto::find()
+                        ->where('tipo_registro in (1,2) and situacion in (0,1) and id_unidad_ejecutora =:id_unidad_ejecutora and id_dependencia_inia = :id_dependencia_inia',[":id_unidad_ejecutora"=>Yii::$app->user->identity->ejecutora,":id_dependencia_inia"=>Yii::$app->user->identity->dependencia]);
+                        
+        }
+        
+        if(Yii::$app->user->identity->id_perfil == 5) 
+        {
+        $query = Proyecto::find()
+                        ->where('tipo_registro in (1,2) and situacion in (0,1) and id_unidad_ejecutora =:id_unidad_ejecutora',[":id_unidad_ejecutora"=>Yii::$app->user->identity->ejecutora]);
+                        //->all();
+        }
+        
+        
+        
+        
+        /*else
         {
           $query = Proyecto::find()
                         ->where('tipo_registro in (1,2) and situacion in (0,1) ');  
-        }
+        }*/
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
             'pagination' => ['pageSize' => 10],

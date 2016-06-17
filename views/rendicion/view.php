@@ -3,13 +3,16 @@
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 use kartik\date\DatePicker;
+use app\models\Usuarios;
 
 ?>
 
 <h3>Nueva Rendición</h3>
 <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
+<?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'DetalleRendicion','titulo'=>'Motivo del Rechazo:','tipo'=>'1']); ?>
 <div id="form1" >
             <input type="hidden"  id="id" name="DetalleRendicion[id_ren]" value="<?= $rendicion->id; ?>" />
+            <input type="hidden" value="" id="detallerendicion-respuesta_aprob" name="DetalleRendicion[respuesta_aprob]" /> 
             <div>
 		<div class="clearfix"></div>
                 <div class="col-xs-12 col-sm-7 col-md-12 ">
@@ -115,25 +118,30 @@ use kartik\date\DatePicker;
 					</td>
 					<td class="col-xs-1">
 					    <div class="form-group field-detallerendicion-anio_<?= $det; ?>  required ">
-						<select onchange="mes(<?= $det; ?>)" class="form-control" id="detallerendicion-anio_<?= $det; ?>" name="DetalleRendicion[anio][]" >
+						<input type="hidden" class="hiden_cls" value="<?= $detRen->anio; ?>" name="DetalleRendicion[anio][]" /> 
+                                                <select onchange="mes(<?= $det; ?>)" class="form-control" id="detallerendicion-anio_<?= $det; ?>" name="DetalleRendicion[anio][]" >
                                                     <option value="<?= $detRen->anio; ?>" ><?= $detRen->anio; ?></option>
                                                 </select>
 					    </div>
 					</td>
 					<td class="col-xs-1">
 					    <div class="form-group field-detallerendicion-mes_<?= $det; ?>  required ">
+                                            <input type="hidden" class="hiden_cls" value="<?= $detRen->mes; ?>" name="DetalleRendicion[mes][]" /> 
 						<select onchange="precio_cantidad(<?= $det; ?>)" class="form-control" id="detallerendicion-mes_<?= $det; ?>" name="DetalleRendicion[mes][]" >
                                                     <option value="<?= $detRen->mes; ?>" ><?= $des_mes; ?></option>
                                                 </select>
 					    </div>
 					</td>
 					<td>
+                                            
 					    <div class="form-group field-detallerendicion-precio_unit_<?= $det; ?> required">
+                                            <input type="hidden" class="hiden_cls" value="<?= $detRen->precio_unit; ?>" name="DetalleRendicion[precio_unit][]" /> 
 						<input onkeyup="calcular_total(<?= $det; ?>)" type="text" id="detallerendicion-precio_unit_<?= $det; ?>" class="form-control decimal" name="DetalleRendicion[precio_unit][]" placeholder="" value="<?= $detRen->precio_unit; ?>" />
 					    </div>
 					</td>
                                         <td>
 					    <div class="form-group field-detallerendicion-cantidad_<?= $det; ?> required">
+                                            <input type="hidden" class="hiden_cls" value="<?= $detRen->cantidad; ?>" name="DetalleRendicion[cantidad][]" /> 
 						<input onkeyup="calcular_total(<?= $det; ?>)" type="text" id="detallerendicion-cantidad_<?= $det; ?>" class="form-control entero" name="DetalleRendicion[cantidad][]" placeholder="" value="<?= $detRen->cantidad; ?>" />
 					    </div>
 					</td>
@@ -154,7 +162,7 @@ use kartik\date\DatePicker;
 					</td>
 					<td>
 					    <span class="eliminar glyphicon glyphicon-minus-sign" >
-					    <input type="hidden" id="detalle_ids_<?= $det; ?>" name="DetalleRendicion[detalle_ids][]" value="<?= $detRen->id; ?>" />
+					    <input type="hidden" class="hiden_cls" id="detalle_ids_<?= $det; ?>" name="DetalleRendicion[detalle_ids][]" value="<?= $detRen->id; ?>" />
 					    </span>
 					</td>
 				</tr>
@@ -234,15 +242,61 @@ use kartik\date\DatePicker;
                             <tr id='detalle_addr_<?= $det ?>'></tr>
                         </tbody>
                     </table>
-                    <div >
+                   <!-- <div >
                     <button type="button" id="agregar_registro" class="btn btn-default pull-left btn_hide" >Agregar</button>
-                    </div>
+                    </div>-->
                     <br>
                 </div>
+                
+                <?php
+                    if($rendicion->observacion != null){
+                        $datos_user = Usuarios::find()
+                                        ->select('usuarios.Name,perfil.descripcion,usuarios.id_perfil')
+                                            ->innerJoin('perfil','perfil.id=usuarios.id_perfil')
+                                            ->where('usuarios.id=:id_user',[':id_user'=>$rendicion->id_user_obs])
+                                            ->one();
+                        ?>
+                        <div class="clearfix"></div>
+                    <div class="col-xs-12 col-sm-7 col-md-2" ></div>
+                    <div class="col-xs-12 col-sm-7 col-md-8" >
+                            <div class="panel panel-<?= ($datos_user->id_perfil == 2) ? 'info':'danger' ?>">
+                                
+                                <div class="panel-heading">
+                                  <h4 class="panel-title"><?= $datos_user->Name; ?>(<?= $datos_user->descripcion; ?>) - <?= $rendicion->fecha_aprobacion; ?></h4>
+                                </div>
+                                
+                                <div class="panel-body">
+                                 <?= $rendicion->observacion; ?>
+                                </div>
+                                
+                            </div>  
+                    </div>
+                    <div class="col-xs-12 col-sm-7 col-md-2" ></div>
+                    
+                    <?php } ?>
+                
                 <div class="clearfix"></div><br/><br/>
-		<div id="control_boton">
-                <button type="submit" id="btndetalle" class="btn btn-primary" >Guardar</button>
+		<div class="col-xs-12 col-sm-7 col-md-4" ></div>
+                <div class="col-xs-12 col-sm-7 col-md-8 col-centered" >
+                <?php
+                if(Yii::$app->user->identity->id_perfil != 2)
+                {
+                    if($rendicion->estado == 0){
+                ?>
+                    
+                    <button style="" type="button" id="btnrechaza" class="btn btn-danger " data-toggle="modal" data-target="#modalobs_">Rechazar</button>  
+                    <button type="submit" id="btnaceptar" class="btn btn-success ">Aceptar</button>
+                    <a class="btn btn-primary" href="index?id=<?= $rendicion->id_user; ?>" role="button">Regresar</a>
+                <?php }else{ ?>
+                     <a class="btn btn-primary" href="index" role="button">Regresar</a>
+                <?php }}else{ ?>
+                
+                    <a class="btn btn-primary" href="index" role="button">Regresar</a>
+                <!--<button type="submit" id="btndetalle" class="btn btn-primary" >Guardar</button>-->
+                
+                <?php } ?>
 		</div>
+                
 
 
 </div>
@@ -263,11 +317,16 @@ var det = <?= $det ?>;
 var user = <?= Yii::$app->user->identity->id ?>;
 var perfil = <?= Yii::$app->user->identity->id_perfil ?>;
 $( document ).ready(function() {
+    
+  $('#detalle_tabla th:eq(9)').hide();
+$('#detalle_tabla  td:nth-child(10)').hide();  
+    
  calcular_total(0);
  
  $('#form1').find('input, textarea, select').prop('disabled', true);
     $('.hiden_cls').prop('disabled', false);
     $('#id').prop('disabled', false);
+    $('#detallerendicion-respuesta_aprob').prop('disabled', false);
 });
     
     function descripcion(tr)
@@ -656,6 +715,19 @@ $( document ).ready(function() {
         }
     });
     
+    $("#btnaceptar").click(function( ) {
+   
+   var respuesta = confirm('Esta seguro de Aprobar este Desembolso?');
+   
+   if (respuesta == true) {
+     
+     $('#detallerendicion-respuesta_aprob').val(1);
+     jsShowWindowLoad('Procesando...');
+     return true;
+   }
+    
+    return false;
+    });
     
     $("#detalle_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro de Eliminar?");

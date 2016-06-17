@@ -41,7 +41,7 @@ class SolicituddesembolsoController extends Controller
     {
         $this->layout='principal';
         $searchModel = new SolicitudDesembolsoSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,1);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -298,5 +298,19 @@ class SolicituddesembolsoController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    
+    public function actionCierre()
+    {
+        $this->layout='principal';
+        $searchModel = new SolicitudDesembolsoSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,2);
+
+        return $this->render('cierre', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+        
     }
 }
