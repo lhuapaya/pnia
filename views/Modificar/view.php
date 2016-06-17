@@ -24,11 +24,11 @@ use app\models\Perfil;
 <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
 <?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Motivo de la Observación:','tipo'=>'1']); ?>  
 <ul class="tabs" >
-    <li><a href="#tab1">Datos Generales</a></li>
-    <li><a href="#tab2">Financiamiento</a></li>
-    <li><a href="#tab3">Objetivos e Indicadores</a></li>
-    <li><a href="#tab4">Actividades</a></li>
-    <li><a href="#tab5">Recursos</a></li>
+    <li><a <?= ($proyecto->modificacion == 1 ?'style="color: red;"':'') ?> href="#tab1">Datos Generales</a></li>
+    <li><a <?= ($proyecto->modificacion == 2 ?'style="color: red;"':'') ?> href="#tab2">Financiamiento</a></li>
+    <li><a <?= ($proyecto->modificacion == 3 ?'style="color: red;"':'') ?> href="#tab3">Objetivos e Indicadores</a></li>
+    <li><a <?= ($proyecto->modificacion == 4 ?'style="color: red;"':'') ?> href="#tab4">Actividades</a></li>
+    <li><a <?= ($proyecto->modificacion == 5 ?'style="color: red;"':'') ?> href="#tab5">Recursos</a></li>
     <?php if($observaciones){ ?>
     <li><a href="#tab6" >Observaciones</a></li>
     <?php } ?>

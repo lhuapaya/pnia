@@ -1327,6 +1327,7 @@ class ModificarController extends Controller
                 
                 $data = Proyecto::findOne($proyecto->id);
                 $data->tipo_registro = 1;
+                $data->modificacion = $opcion;
                 $data->situacion = 0;
                 $data->estado = 0;
                 $data->date_create = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];

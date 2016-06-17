@@ -145,7 +145,7 @@ class Proyecto extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['situacion','tipo_registro','id_areatematica','id_especie','id_cultivo','id_programa','id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id','vigencia'], 'integer'],
+            [['modificacion','situacion','tipo_registro','id_areatematica','id_especie','id_cultivo','id_programa','id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id','vigencia'], 'integer'],
             [['presupuesto'], 'number'],
             [['prueba'],'safe'],
             [['distrito','nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',

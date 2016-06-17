@@ -304,9 +304,17 @@ class SolicituddesembolsoController extends Controller
     public function actionCierre()
     {
         $this->layout='principal';
+        
+        $model = new SolicitudDesembolso();
+        
+        if($model->load(Yii::$app->request->post()))
+        {
+            var_dump($model->id.' '.$model->total.' '.$model->total_pendiente);die;
+        }
+        else{
         $searchModel = new SolicitudDesembolsoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams,2);
-
+        }
         return $this->render('cierre', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,

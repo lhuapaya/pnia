@@ -77,6 +77,20 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'width'=>'60px',
             ],
             [
+                'label'=>'Tipo',
+                'attribute' => 'modificacion',
+                'format'=>'raw',
+                'value'=>function($data) {
+                    
+                    if($data->modificacion == 1 ){return "Datos Generales"; }
+                    if($data->modificacion == 3 ){return "Objetivos e Indicadores"; }
+                    if($data->modificacion == 4 ){return "Actividades"; }
+                    if($data->modificacion == 5 ){return "Recursos"; }
+                    
+                },
+                //'width'=>'60px',
+            ],
+            [
                 //'label'=>'Estado',
                 'attribute' => 'situacion',
                 'format'=>'raw',
