@@ -178,13 +178,17 @@ foreach($indicadores as $indicador)
                             <tr id='actividad_addr_1_<?= $act ?>'></tr>
                         </tbody>
                     </table>
+		    <?php if($event != 2){ ?>
                     <div id="actividades_row_1" class="btn btn-default pull-left btn_hide" value="1">Agregar</div>
+		    <?php } ?>
                     <br>
                 </div>
                 <div class="clearfix"></div>
+		<?php if($event != 2){ ?>
 		<div id="control_boton">
                 <button type="submit" id="btn_actividades" class="btn btn-primary btn_hide" >Guardar</button>
         </div>
+		<?php } ?>
             </div>
 
 </div>

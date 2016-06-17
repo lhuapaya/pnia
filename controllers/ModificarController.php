@@ -938,7 +938,7 @@ class ModificarController extends Controller
              {
                 
                 $flow =  FlowChange::findOne($flowEstado->id);
-                $flow->estado_flujo = 1;
+                $flow->estado_flujo = 3;
                 $flow->update();
                 
                 $pro = Proyecto::findOne($proyecto->id);
@@ -1004,10 +1004,7 @@ class ModificarController extends Controller
           return $this->redirect('index');     
         }
         
-        if($flowEstado->next_url != 'modificaract')
-        {
-          return $this->redirect($flowEstado->next_url.'?id='.$id.'&event='.$event);   
-        }
+
         
                         
         if($proyecto->load(Yii::$app->request->post()) )
@@ -1050,12 +1047,23 @@ class ModificarController extends Controller
              {
                 $flow =  FlowChange::findOne($flowEstado->id);
                 $flow->estado_flujo = 4;
-                $flow->next_url = 'modificarrec';
                 $flow->update();
+                //var_dump($proyecto->id);die;
+                $pro2 = Proyecto::findOne($proyecto->id);
+                $pro2->situacion = 1;
+                $pro2->update();
                 
+                $hoy = getdate();
+                
+                $obs = new Observaciones;
+                $obs->id_proyecto = $proyecto->id;
+                $obs->observacion = $proyecto->observacion;
+                $obs->fecha = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                $obs->id_user = Yii::$app->user->identity->id;
+                $obs->save();
              
+                return $this->redirect('index'); 
              
-                return $this->redirect('modificarrec?id='.$id.'&event='.$event); 
              }
             
             
@@ -1070,7 +1078,7 @@ class ModificarController extends Controller
                         ->one();
                         
             $objetivosespecificos=ObjetivoEspecifico::find()
-                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->where('gestion = 0 and id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
                                 ->all();
                                 
             $indicadores=Indicador::find()
@@ -1080,12 +1088,14 @@ class ModificarController extends Controller
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
                                 ->all();
                     
-                        
+            $observaciones = Observaciones::find()
+                                        ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                        ->count();            
         }
         
         $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]); //actionVerificar_obj_ind($proyecto->id);
         
-        return $this->render('modificaract',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos,'evento'=>$event,'proyecto'=>$proyecto,'ver_obj_ind'=>$ver_obj_ind]);
+        return $this->render('modificaract',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos,'evento'=>$event,'proyecto'=>$proyecto,'ver_obj_ind'=>$ver_obj_ind,'observaciones'=>$observaciones]);
       
     }
     

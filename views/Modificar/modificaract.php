@@ -6,22 +6,23 @@ use yii\web\JsExpression;
 ?>
 
 <ul class="tabs">
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Datos Generales</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>" >Financiamiento</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Objetivos e Indicadores</a></li>
-    <li><a href="#tab4">Actividades</a></li>
-    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('proyecto/indicador') ?>">Recursos</a></li>
+    <li><a href="#tab4" >Actividades</a></li>
+    <?php if($observaciones > 0){ ?>
+    <li><a href="<?= Yii::$app->getUrlManager()->createUrl('modificar/observaciones?id='.$proyecto->id.'&event='.$evento.'') ?>" >Observaciones</a></li>
+    <?php } ?>
 </ul>
   <div class="clr"></div>
   <section class="block">
     
     <article id="tab4">
-       <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>  
+       <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
+       <?= \app\widgets\observacion\ObservacionWidget::widget(['maestro'=>'Proyecto','titulo'=>'Descripcion de la Modificación:','tipo'=>'0']); ?> 
         <?php if($ver_obj_ind == 0){ ?>
 	<div class="alert alert-warning" id="warning">
 	    
 	    </div>
         <div class="col-xs-12 col-sm-7 col-md-1" >
+	    <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" />
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Obejetivo Especifico:</h5>
@@ -77,6 +78,11 @@ use yii\web\JsExpression;
         <?= \app\widgets\actividades\ActividadesWidget::widget(['indicador_id'=>$array2[0],'id_proyecto'=>$proyecto->id,'evento'=>$evento]); ?>
         </div>
         <div class="clearfix"><br/>
+	<div class="col-xs-12 col-sm-7 col-md-12" >
+            <button type="submit" id="btnguardar" class="btn btn-primary pull-right" >Guardar</button>   
+            <button style="" type="button" id="btnobservar" class="btn btn-primary pull-right" data-toggle="modal" data-target="#modalobs_">Finalizar</button>
+            </div>
+        <div class="clearfix"><br/>
         <div class="col-xs-12 col-sm-7 col-md-12 checkbox">
             <label><input type="checkbox" name="Proyecto[cerrar_actividad]" id="proyecto-cerrar_actividad" ><strong>Ya no quiero realizar más cambios en el Formulario de Actividades.</strong></label>
         </div>
@@ -100,7 +106,11 @@ use yii\web\JsExpression;
  var situacion_proyecto = <?= $proyecto->situacion; ?>;
 var evento = <?= $evento; ?>;
 
- $(document).ready(function(){ 
+ $(document).ready(function(){
+    
+    $('.table  th:eq(7)').hide();
+    $('.table  td:nth-child(8)').hide();
+    
 $('ul.tabs li:nth-child(4)').addClass('active');
   $('.block article').hide();
   $('.block article:first').show();
@@ -120,6 +130,12 @@ $('ul.tabs li:nth-child(4)').addClass('active');
     $('.table  td:nth-child(8)').hide();
     $('.btn_hide').hide();  
  }*/
+ 
+ if(evento == 2)
+ {
+    $('#btn_recursos').hide();
+    $('#btnobservar').hide();
+ }
  
      $('#proyecto-cerrar_actividad').change(function() {
         if($(this).is(":checked")) {
@@ -146,7 +162,8 @@ $('ul.tabs li:nth-child(4)').addClass('active');
                var returnVal = confirm("Esta seguro de cerrar el Formulario?");
                 if (returnVal == true)
                 {
-                    $("#btn_actividades").html('Guardar y Continuar >>');  
+                    $("#btnguardar").hide();
+		    $("#btnobservar").show(); 
                 }
                 else
                 {
@@ -158,7 +175,8 @@ $('ul.tabs li:nth-child(4)').addClass('active');
         }
         else
         {
-          $("#btn_actividades").html('Guardar');    
+          $("#btnguardar").show();
+	  $("#btnobservar").hide();    
         }
       
     });
@@ -169,7 +187,7 @@ $("#proyecto-id_objetivo").change(function(){
     
      var indicador = $("#proyecto-id_indicador");
      var objetivo = $(this);
-     
+     var val = null;
      if($(this).val() != '0')
         {
         $.ajax({
@@ -178,8 +196,10 @@ $("#proyecto-id_objetivo").change(function(){
                     async: false,
                     data: {id:objetivo.val()},
                     success: function(data){
+                        val = jQuery.parseJSON(data);
+			
                         indicador.find('option').remove();
-                        indicador.append(data);
+                        indicador.append(val.option);
 			
 			
 			
@@ -196,14 +216,17 @@ $("#proyecto-id_objetivo").change(function(){
 					$('#actividades_tabla').append(valor.html);
 				       act = valor.contador;
 				       console.log(situacion_proyecto);
-				       avisos();
-				    if((situacion_proyecto == 1) && (evento == 1))
+				       
+				    if((situacion_proyecto > 0) && (evento == 2))
 					{
+					    
 					   $('#form1').find('input, textarea, select').prop('disabled', true);
-					   $('.table  th:eq(7)').hide();
-					   $('.table  td:nth-child(8)').hide();
+					   
 					   $('.btn_hide').hide(); 
-					}   
+					}
+					$('.table  th:eq(7)').hide();
+					$('.table  td:nth-child(8)').hide();
+					avisos();
 				    }
 				});
 			

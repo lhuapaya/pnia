@@ -18,6 +18,7 @@ use yii\web\JsExpression;
 	    
 	    </div>
         <div class="col-xs-12 col-sm-7 col-md-1" >
+	    
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Obejetivo Especifico:</h5>
@@ -128,7 +129,7 @@ $("#proyecto-id_objetivo").change(function(){
     
      var indicador = $("#proyecto-id_indicador");
      var objetivo = $(this);
-     
+     var val = null;
      if($(this).val() != '0')
         {
         $.ajax({
@@ -137,8 +138,10 @@ $("#proyecto-id_objetivo").change(function(){
                     async: false,
                     data: {id:objetivo.val()},
                     success: function(data){
+                        val = jQuery.parseJSON(data);
+			
                         indicador.find('option').remove();
-                        indicador.append(data);
+                        indicador.append(val.option);
 			
 			
 			

@@ -235,7 +235,8 @@ $('ul.tabs li:nth-child(5)').addClass('active');
         }
         else
         {
-          $("#btn_recursos").html('Guardar');    
+          $("#btnguardar").show();
+	  $("#btnobservar").hide();   
         }
       
     });
