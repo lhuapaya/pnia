@@ -73,7 +73,7 @@ class DashboardController extends Controller
                                 ->all();
                                 
                 foreach($sumat_ind as $sumt_ind)                    
-                $total_obj[$i] = ($sumt_ind->ejecutado * 100) / $sumt_ind->meta;
+                {$total_obj[$i] = ($sumt_ind->ejecutado * 100) / $sumt_ind->meta;}
                 $i++;
             }
             
