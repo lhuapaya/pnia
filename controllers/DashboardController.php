@@ -43,6 +43,8 @@ class DashboardController extends Controller
         $total_por_fin = 0;
         $total_obj = [];
         $objetivos = new ObjetivoEspecifico();
+        $indicadores = new Indicador();
+        $actividades = new Actividad();
         
         $muestra_dash = 0;
         
