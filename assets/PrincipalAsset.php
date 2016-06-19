@@ -51,6 +51,7 @@ class PrincipalAsset extends AssetBundle
                  //  'bootstraplte/js/bootstrap.min.js',
                    //'https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js',
                    'distlte/plugins/morris/morris.min.js',
+                   //'distlte/js/waterbubble.js',
                    'distlte/plugins/sparkline/jquery.sparkline.min.js',
                    'distlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js',
                    //'plugins/jvectormap/jquery-jvectormap-world-mill-en.js',
