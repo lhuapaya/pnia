@@ -4,7 +4,7 @@ use yii\widgets\ActiveForm;
 use yii\web\JsExpression;
 
 ?>
-<?php if($indicadores){?>
+<?php $evento3 = 1; if($indicadores){?>
 <div>
 
       <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
@@ -72,7 +72,7 @@ use yii\web\JsExpression;
 	<div class="clearfix"></div><br/><br/>
         <div class="col-xs-12 col-sm-7 col-md-12" id="form1">
 	<?php
-		$evento3 = 1;
+		
 		  if($proyecto->situacion == 2)
 		  {
 		     $evento3 = 2;
