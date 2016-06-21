@@ -54,7 +54,7 @@ class DashboardController extends Controller
         
         $muestra_dash = 0;
         
-       if(Yii::$app->user->identity->id_perfil == 2)
+      /* if(Yii::$app->user->identity->id_perfil == 2)
        {
         $proyecto = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
@@ -204,7 +204,7 @@ class DashboardController extends Controller
             $total_por_fin = ($rendido /$aportante->total) * 100;
         }
         
-       }
+       }*/
                 
                     
         return $this->render('index',["muestra_dash"=>$muestra_dash,"objetivos"=>$objetivos,"total_por_est"=>$total_por_est,"total_obj"=>$total_obj,"indicadores"=>$indicadores,"actividades"=>$actividades,"total_por_ope"=>$total_por_ope,"total_por_fin"=>$total_por_fin,"suma_recursop"=>$suma_recursop]);
