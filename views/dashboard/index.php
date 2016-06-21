@@ -348,7 +348,7 @@ function operativo()
   
 });
 }
-alert(fin);
+
 $("#proyecto-id_objetivo").change(function(){
     
      var indicador = $("#proyecto-id_indicador");
