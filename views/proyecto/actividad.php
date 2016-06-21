@@ -21,7 +21,7 @@ use yii\web\JsExpression;
 	    
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
-            <h5>Obejetivo Especifico:</h5>
+            <h5>Objetivo Especifico:</h5>
                 <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
             <select class="form-control" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo">
 		<?php

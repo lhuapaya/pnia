@@ -29,7 +29,7 @@ use yii\web\JsExpression;
 	    <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
-            <h5>Obejetivo Especifico:</h5>
+            <h5>Objetivo Especifico:</h5>
                 <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
             <select class="form-control" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo">
 		<?php

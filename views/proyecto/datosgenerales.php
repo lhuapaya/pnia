@@ -306,7 +306,7 @@ use app\models\Maestros;
             
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-id_areatematica required">
-                <label for="proyecto-id_areatematica">Área temática:</label>
+                <label for="proyecto-id_areatematica">Programa Transversal:</label>
                 <select class="form-control" id="proyecto-id_areatematica" name="Proyecto[id_areatematica]" >
                     <option value="0">--Seleccione--</option>
                 <?php

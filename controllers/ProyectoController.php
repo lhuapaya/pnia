@@ -2557,7 +2557,7 @@ and ap.tipo = 1*/
             
             if($total_recursos > $presupuesto_pnia->monetario)
             {
-                $mensaje = "<strong>¡Cuidado! <strong>La suma de montos de los Recursos supera por ".(floatval($total_recursos) - floatval($presupuesto_pnia->monetario))." el presupuesto asignado por PNIA por favor corregirlo. <br/>";
+                $mensaje = "<strong>¡Cuidado! <strong>La suma de montos de los Recursos supera por S/. ".(floatval($total_recursos) - floatval($presupuesto_pnia->monetario))." el presupuesto asignado por PNIA por favor corregirlo. <br/>";
                $w = 2; 
             }
             

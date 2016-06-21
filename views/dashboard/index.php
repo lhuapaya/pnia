@@ -106,6 +106,79 @@
           <HR width=100% align="center" size="2" style="border-style: solid" color="black">
           </div>
           <div class="clearfix"></div>
+          <div class="col-md-12" id="div-actividades" >
+          <?php
+                           foreach($actividades as $actividades2)
+                            {
+                                
+				if($actividades2->id_ind == $array2[0])
+				{
+                    ?>
+                              <div class="col-xs-12 col-sm-7 col-md-9 text-left" >
+                              <label>- <?= $actividades2->descripcion ?></label>
+                              </div>
+                              
+                              <div class="col-md-3 text-left">
+                              <div class="clearfix">
+                                            <small class="pull-right">Avance <?= ($actividades2->ejecutado / $actividades2->meta)*100; ?>%</small>
+                                          </div>
+                              <div class="progress xs">
+                                        <div class="progress-bar progress-bar-green" style="width: <?= ($actividades2->ejecutado / $actividades2->meta)*100 ?>%;"></div>
+                              </div>
+                               </div>
+			      <?php } ?>
+                              
+			   <?php } ?>  
+          
+          </div>
+          
+</div> 
+
+<div class="clearfix"></div><br/><br/>
+
+<div class="col-md-12 text-left">
+<h4><strong>Avance Presupuestal</strong></h4>
+</div>
+<div class="clearfix"></div>
+<div class="col-xs-6 col-md-3 text-center " id="div-canvas2">
+          
+          <canvas id="presupuestal" class="operativo"></canvas>
+
+          
+</div>
+<div class="col-md-9 text-center" style="border-color: black; border-style: solid; border-width: 0px; background: #FAFAFA; ">
+          <div class="clearfix"></div><br/>
+          <div class="col-xs-12 col-sm-7 col-md-3" >
+             <h5>Obj. Especifico:</h5>       
+          </div>
+          <div class="col-xs-12 col-sm-7 col-md-6" >
+            <select class="form-control" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo">
+		<?php
+                        //$array1 = [];
+                        //$i = 0;
+                           foreach($suma_recursop as $sum_recursop)
+                            {
+                                //$array1[$i] = $objetivoespecifico->id;
+                                switch($sum_recursop->anio) {
+						    case 1 : $var_anio = "2016";
+									    break;
+						    case 2 : $var_anio = "2017";
+									    break;
+						    case 3 : $var_anio = "2018";
+						    }
+                    ?>
+                               <option value="<?= $sum_recursop->anio; ?>" > <?= $var_anio ?></option>;
+                    <?php  //$i++;
+                    } ?>    
+		</select>    
+        </div>
+          <div class="col-xs-12 col-sm-7 col-md-3" >
+          </div>
+        <div class="clearfix"></div>
+        <div class="col-xs-12 col-sm-7 col-md-12" >
+          <HR width=100% align="center" size="2" style="border-style: solid" color="black">
+          </div>
+          <div class="clearfix"></div>
           <div class="col-xs-12 col-sm-7 col-md-12" id="div-actividades" >
           <?php
                            foreach($actividades as $actividades2)
@@ -123,6 +196,9 @@
           
           </div>
 </div> 
+
+
+
 
 </div>
 
@@ -142,7 +218,7 @@
 <script>
 var est = <?= $total_por_est ?> / 100;
 var ope = <?= $total_por_ope ?> / 100;
-var fin = <?= $total_por_fin ?> / 100;
+var fin = <?= round($total_por_fin) ?> / 100;
 
 
 $('#estrategico').waterbubble({
@@ -207,8 +283,8 @@ $('.operativo').waterbubble({
   
 });
 
-/*
-$('#financiero').waterbubble({
+
+$('#presupuestal').waterbubble({
 
   // bubble size
   radius: 80,
@@ -232,12 +308,12 @@ $('#financiero').waterbubble({
   wave: true,
 
   // custom text displayed inside the water bubble
-  txt: '<?= $total_por_fin ?>%',
+  txt: '<?= round($total_por_fin) ?>%',
 
   // enable water fill animation
   animation: true
   
-});*/
+});
 
 function operativo()
 {
@@ -272,7 +348,7 @@ function operativo()
   
 });
 }
-
+alert(fin);
 $("#proyecto-id_objetivo").change(function(){
     
      var indicador = $("#proyecto-id_indicador");

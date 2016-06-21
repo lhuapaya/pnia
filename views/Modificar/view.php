@@ -295,7 +295,7 @@ use app\models\Perfil;
             
                 <div class="col-xs-12 col-sm-7 col-md-12" >
                 <div class="form-group field-proyecto-id_areatematica required">
-                <label for="proyecto-id_areatematica">Área temática:</label>
+                <label for="proyecto-id_areatematica">Programa Transversal:</label>
                 <select class="form-control" id="proyecto-id_areatematica" name="Proyecto[id_areatematica]" >
                     <option value="0">--Seleccione--</option>
                 <?php
@@ -703,7 +703,7 @@ use app\models\Perfil;
         <div class="col-xs-12 col-sm-7 col-md-1" >
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
-            <h5>Obejetivo Especifico:</h5>
+            <h5>Objetivo Especifico:</h5>
                 <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
             <select class="form-control id_objetivo" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo">
 		<?php
@@ -757,7 +757,7 @@ use app\models\Perfil;
         <div class="col-xs-12 col-sm-7 col-md-1" >
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
-            <h5>Obejetivo Especifico:</h5>
+            <h5>Objetivo Especifico:</h5>
                 <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
             <select class="form-control id_objetivo" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo2">
 		<?php
