@@ -51,6 +51,7 @@ class DashboardController extends Controller
         $objetivos = new ObjetivoEspecifico();
         $indicadores = new Indicador();
         $actividades = new Actividad();
+        $suma_recursop = new RecursoProgramado();
         
         $muestra_dash = 0;
         
