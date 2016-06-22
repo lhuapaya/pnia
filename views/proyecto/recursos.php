@@ -514,7 +514,7 @@ function monto_presupuesto(id)
 
 $("#btn_rec_save").click(function(event){
         
-        	
+        jsShowWindowLoad('Procesando...');	
 	var error='';
 	var tablas=($('table[name=\'Proyecto[recurso_tabla][]\']').length);
         
@@ -544,6 +544,7 @@ $("#btn_rec_save").click(function(event){
 	}
 	
 	if (error!='') {
+	    jsRemoveWindowLoad();
             $.notify({
                 message: error 
             },{
