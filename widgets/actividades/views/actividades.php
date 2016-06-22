@@ -348,6 +348,7 @@ avisos2();
     });
     
   $("#btn_actividades").click(function(event){
+	jsShowWindowLoad("Procesando..");
 	var error = '';
         var cantidadregistros=($('input[name=\'Proyecto[actividades_descripciones][]\']').length);
         var valor=($('input[name=\'Proyecto[actividades_numero][]\']').serializeArray());
@@ -366,6 +367,7 @@ avisos2();
 	var verf_act = verificar_peso_actividades();
 	
 	if (error!='') {
+	    jsRemoveWindowLoad();
             $.notify({
                 message: error 
             },{
@@ -382,6 +384,7 @@ avisos2();
         {
 	    if((verf_act!= ''))
 	   {
+	    jsRemoveWindowLoad();
 	    $('#warning').html(verf_act);
 	    $('#warning').show();
 	    return false;
