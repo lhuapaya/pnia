@@ -564,7 +564,7 @@ function cargaranio(ntabla,re,anios,meses) {
                     async: true,
                     data: {id:p_anio.val(),anios:anios,meses:meses,id_recurso:id_recurso.val(),re:re,tabla:ntabla},
                     success: function(data){
-			console.log(data);
+			$("#registro_meses_"+ntabla+"_"+re).find('td').remove();
                         $("#registro_meses_"+ntabla+"_"+re).html(data);
                     }
                 });
