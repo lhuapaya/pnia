@@ -555,16 +555,16 @@ function eliminarind(ntabla,ntr)
 
 
 function cargaranio(ntabla,re,anios,meses) {
-    alert(ntabla);
     var p_anio = $("#proyecto-programa_anio_"+ntabla+"_"+re);
     var id_recurso = $("#proyecto-id_recurso_"+ntabla+"_"+re);
-    //console.log();
+    
     $.ajax({
                     url: '<?= $cargarmesesanio ?>',
                     type: 'GET',
                     async: true,
                     data: {id:p_anio.val(),anios:anios,meses:meses,id_recurso:id_recurso.val(),re:re,tabla:ntabla},
                     success: function(data){
+			console.log(data);
                         $("#registro_meses_"+ntabla+"_"+re).html(data);
                     }
                 });
