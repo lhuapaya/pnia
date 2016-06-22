@@ -40,10 +40,10 @@ class ProyectoController extends Controller
          return [
             'access' => [
                 'class' => AccessControl::className(),
-                'only' => ['index','nuevo','marcologico','datosgenerales','recursos'],
+                'only' => ['index','view','actividad','objetivo_indicador','observaciones','marcologico','datosgenerales','recursos'],
                 'rules' => [
                     [
-                        'actions' => ['index','nuevo','marcologico','datosgenerales','recursos'],
+                        'actions' => ['index','view','actividad','objetivo_indicador','observaciones','marcologico','datosgenerales','recursos'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],

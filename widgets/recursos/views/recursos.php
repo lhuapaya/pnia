@@ -555,7 +555,7 @@ function eliminarind(ntabla,ntr)
 
 
 function cargaranio(ntabla,re,anios,meses) {
-    
+    alert(ntabla);
     var p_anio = $("#proyecto-programa_anio_"+ntabla+"_"+re);
     var id_recurso = $("#proyecto-id_recurso_"+ntabla+"_"+re);
     //console.log();
