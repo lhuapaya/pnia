@@ -1296,6 +1296,7 @@ class ProyectoController extends Controller
             //var_dump($proyecto);die;
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
                                 ->all();
                                 
             $indicadores=Indicador::find()
@@ -1303,6 +1304,7 @@ class ProyectoController extends Controller
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();
                         
            $actividades=Actividad::find()
