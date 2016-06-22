@@ -82,7 +82,7 @@ use yii\web\JsExpression;
 	</div>
 	<div class="clearfix"></div><br/><br/>
         
-	<div class="col-xs-12 col-sm-7 col-md-12" >
+	<div class="col-xs-12 col-sm-7 col-md-12"  id="form_act" >
                 <label>Actividades:</label>
                 <div class="panel-group" id="accordion">
                <?php
@@ -108,7 +108,8 @@ use yii\web\JsExpression;
                         <div id="divactividad" >
 		<?php //if($objetivoespecifico) {?>
                 <div class="col-xs-12 col-sm-9 col-md-12" id="proyecto-div_id_<?= $i; ?>" >
-		    <input type="hidden" value="<?= $actividades2->id?>" id="proyecto-obj_id_<?= $i; ?>" name="Proyecto[objetivos_ids][]" />
+		    <input type="hidden" value="<?= $actividades2->id?>" id="proyecto-id_actividad_<?= $i; ?>" name="Proyecto[id_actividad][]" />
+		    <input type="hidden" value="<?= $actividades2->descripcion;?>" id="proyecto-act_descripcion_<?= $i; ?>" name="Proyecto[act_descripcion]" /> 
 		    <!--<div class="col-md-1" >
 			<?= ($i+1); ?>
 		    </div>-->
@@ -177,7 +178,7 @@ use yii\web\JsExpression;
 	<?php if($proyecto->situacion == 0) {?>
 	<div class="clearfix"><br/>
 	    <div class="col-xs-12 col-sm-7 col-md-12">
-	    <button type="submit" id="btn_obj_ind" class="btn btn-primary pull-right">Guardar</button> 
+	    <button type="submit" id="btn_rec_save" class="btn btn-primary pull-right">Guardar</button> 
 	    </div>
 	<div class="col-xs-12 col-sm-7 col-md-12 checkbox">
             <label><input type="checkbox" name="Proyecto[cerrar_recurso]" id="proyecto-cerrar_recurso" ><strong>Doy por completo el registro de mi proyecto y Autorizo su revisión.</strong></label>
@@ -284,7 +285,7 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
                var returnVal = confirm("Esta seguro de dar por concluido el registro del Proyecto?");
                 if (returnVal == true)
                 {
-                    $("#btn_recursos").html('Finalizar');  
+                    $("#btn_rec_save").html('Finalizar');  
                 }
                 else
                 {
@@ -296,7 +297,7 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
         }
         else
         {
-          $("#btn_recursos").html('Guardar');    
+          $("#btn_rec_save").html('Guardar');    
         }
       
     });
@@ -313,7 +314,7 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
      var val = null;
      
 	indicador.show();
-	actividad.show();
+	//actividad.show();
      
      if($(this).val() != '0')
         {
@@ -334,7 +335,7 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
 			
 			var id_indicador = indicador.val();
 			
-			    $.ajax({
+			   /* $.ajax({
 			    url: '<?= $obteneractividad ?>',
 			    type: 'GET',
 			    async: false,
@@ -344,16 +345,17 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
 				actividad.append(data);
 				
 				var id_actividad = actividad.val();
-				$('#recurso_tabla > tbody > tr').remove();
+				$('#recurso_tabla > tbody > tr').remove();*/
 				
 				$.ajax({
 					    url: '<?= $refrescarrecurso ?>',
 					    type: 'GET',
 					    async: true,
-					    data: {id:id_actividad,id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
+					    data: {id:id_indicador,id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
 					    success: function(data){
 						var valor = jQuery.parseJSON(data);
-						$('#recurso_tabla').append(valor.html);
+						$('#form_act').find('div').remove();
+						$('#form_act').append(valor.html);
 					       re = valor.contador;
 					       console.log(re);
 					       
@@ -369,17 +371,23 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
 						   
 						}
 					    moneda_recurso();
+					    
+					    $(".collapse").on('show.bs.collapse',function(e){
+					    $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+					    }).on('hidden.bs.collapse', function(){
+					    $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+					    });
 					    }
 				    });
 			    
 			    
-			    }
-			    });
+			    /*}
+			    });*/
 			    
 			if (val.estado == 1)
 			{
 			    indicador.hide();
-			    actividad.hide();
+			    //actividad.hide();
 			}
 			
                     }//
@@ -397,7 +405,7 @@ $("#proyecto-id_indicador").change(function(){
         {
         
 			
-			    $.ajax({
+			    /*$.ajax({
 			    url: '<?= $obteneractividad ?>',
 			    type: 'GET',
 			    async: false,
@@ -407,16 +415,17 @@ $("#proyecto-id_indicador").change(function(){
 				actividad.append(data);
 				
 				var id_actividad = actividad.val();
-				$('#recurso_tabla > tbody > tr').remove();
+				$('#recurso_tabla > tbody > tr').remove();*/
 				
 				$.ajax({
 					    url: '<?= $refrescarrecurso ?>',
 					    type: 'GET',
 					    async: true,
-					    data: {id:id_actividad,id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
+					    data: {id:indicador.val(),id_proyecto:<?= $proyecto->id; ?>,evento:<?= $evento; ?>},
 					    success: function(data){
 						var valor = jQuery.parseJSON(data);
-						$('#recurso_tabla').append(valor.html);
+						$('#form_act').find('div').remove();
+						$('#form_act').append(valor.html);
 					       re = valor.contador;
 					       console.log(re);
 					       
@@ -431,12 +440,18 @@ $("#proyecto-id_indicador").change(function(){
 						   
 						}
 						moneda_recurso();
+						
+						$(".collapse").on('show.bs.collapse',function(e){
+					    $(this).parent().find(".glyphicon-plus").removeClass("glyphicon-plus").addClass("glyphicon-minus");
+					    }).on('hidden.bs.collapse', function(){
+					    $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClass("glyphicon-plus");
+					    });
 					    }
 				    });
 			    
 			    
-			    }
-			    });
+			    /*}
+			    });*/
 			
         }
  });
@@ -494,5 +509,58 @@ function monto_presupuesto(id)
                 });
    return array
 }
+
+
+
+$("#btn_rec_save").click(function(event){
+        
+        	
+	var error='';
+	var tablas=($('table[name=\'Proyecto[recurso_tabla][]\']').length);
+        
+        //console.log(valor);
+        //console.log('-'+clasificador);
+        //alert(clasificador);
+        for (var e=0; e<tablas; e++)
+	{
+	  var clasificador= $('#recurso_tabla_'+e).find('input[name=\'Proyecto[recurso_descripcion][]\']').length;  
+	    var valor=$('#recurso_tabla_'+e).find('input[name=\'Proyecto[recurso_numero][]\']').serializeArray();
+	for (var i=0; i<clasificador; i++) {
+            
+            
+           // console.log(valor[i].value);
+            if(($('#proyecto-recurso_clasificador_'+e+'_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_descripcion_'+e+'_'+(valor[i].value)).val())=='') || ($('#proyecto-recurso_fuente_'+e+'_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_unidad_'+e+'_'+(valor[i].value)).val())=='') )
+            {
+                error=error+'Complete todos los Campos de la Actividad '+(e + 1)+' del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
+               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
+            }
+            else
+            {
+               // $('.field-proyecto-descripciones_'+i).addClass('has-success');
+               // $('.field-proyecto-descripciones_'+i).removeClass('has-error');
+            }
+        }
+	
+	}
+	
+	if (error!='') {
+            $.notify({
+                message: error 
+            },{
+                type: 'danger',
+                z_index: 1000000,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+            return false;
+        }
+        else
+        {
+           
+            return true;
+        }
+    });
  
   </script>

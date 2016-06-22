@@ -41,8 +41,8 @@ class RecursoProgramado extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_recurso', 'anio', 'mes', 'cantidad', 'cant_rendida', 'estado'], 'integer'],
-            [['precio_unit', 'precio_unit_rendido'], 'number'],
+            [['id_recurso', 'anio', 'mes', 'estado'], 'integer'],
+            [['precio_unit', 'precio_unit_rendido', 'cantidad', 'cant_rendida'], 'number'],
             [['id_clasificador','detalle','cantidad2','solicita','clasificador_id','descripcion'],'safe'],
         ];
     }

@@ -69,7 +69,7 @@
                                         </td>
                                         <td class="col-xs-3"  >
                                             <div class="form-group field-proyecto-recurso_descripcion_<?= $correlativo; ?>_<?= $re; ?> required">
-                                                <input class="form-control " value="<?= $recursos2->detalle ?>" type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_descripcion][]"/>
+                                                <input class="form-control " value="<?= $recursos2->detalle ?>" maxlength="2980" type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_descripcion][]"/>
                                             </div>
                                         </td>
 					<td>
@@ -154,7 +154,7 @@
 				    </td>
                                     <td class="col-xs-3"  >
 					<div class="form-group field-proyecto-recurso_descripcion_<?= $correlativo; ?>_0 required">
-					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $correlativo; ?>_0" name="Proyecto[recurso_descripcion][]"/>
+					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $correlativo; ?>_0" maxlength="2980" name="Proyecto[recurso_descripcion][]"/>
 					</div>
 				    </td>
 				    <td>
@@ -319,7 +319,7 @@
 	}
 	else
         {
-            $('#recurso_addr_'+ntabla+'_'+re).html('<td>'+(re+1)+'<input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_'+re+'" value="'+act+'" /><input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'+ntabla+'_'+re+'" value="'+re+'" /></td><td class="col-xs-2" ><div class="form-group field-proyecto-recurso_clasificador_'+ntabla+'_'+re+' required"><select  class="form-control " id="proyecto-recurso_clasificador_'+ntabla+'_'+re+'" name="Proyecto[recurso_clasificador][]" ><option value="0">--Clasificador--</option><?php foreach($clasificador as $clasificador2) { ?> <option value="<?= $clasificador2->id; ?>" > <?= $clasificador2->descripcion ?></option>; <?php   } ?></select></div></td><td class="col-xs-3"  ><div class="form-group field-proyecto-recurso_descripcion_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_'+ntabla+'_'+re+'" name="Proyecto[recurso_descripcion][]"/></div></td><td><div class="form-group field-proyecto-recurso_fuente_'+ntabla+'_'+re+' required"> <select  class="form-control " id="proyecto-recurso_fuente_'+ntabla+'_'+re+'" name="Proyecto[recurso_fuente][]" > <option value="0">--Fuente--</option> <?php foreach($fuentes as $fuentes2){ ?> <option value="<?= $fuentes2->id; ?>" > <?= $fuentes2->colaborador ?></option>; <?php   } ?></select></div></td><td class="col-xs-2"><div class="form-group field-proyecto-recurso_unidad_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_unidad][]"/></div></td><td class="col-xs-1"><div class="form-group field-proyecto-recurso_cantidad_'+ntabla+'_'+re+' required"><input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_cantidad][]" Disabled></div></td><?php if($event == 2){ ?> <td class="col-xs-1">  <div class="form-group field-proyecto-recurso_ejecutado_'+ntabla+'_'+re+' required"> <input type="text" id="proyecto-recurso_ejecutado_'+ntabla+'_'+re+'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>  </div> </td> <?php } ?><td><div class="form-group field-proyecto-recurso_preciototal_'+ntabla+'_'+re+' required"><input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'+ntabla+'_'+re+'" name="Proyecto[recurso_preciototal][]" Disabled></div></td><td><div><button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado_'+ntabla+'_'+re+'_" id="btn_programado" onclick="cargartitulos('+re+')">Detalle</button></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
+            $('#recurso_addr_'+ntabla+'_'+re).html('<td>'+(re+1)+'<input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_'+re+'" value="'+act+'" /><input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'+ntabla+'_'+re+'" value="'+re+'" /></td><td class="col-xs-2" ><div class="form-group field-proyecto-recurso_clasificador_'+ntabla+'_'+re+' required"><select  class="form-control " id="proyecto-recurso_clasificador_'+ntabla+'_'+re+'" name="Proyecto[recurso_clasificador][]" ><option value="0">--Clasificador--</option><?php foreach($clasificador as $clasificador2) { ?> <option value="<?= $clasificador2->id; ?>" > <?= $clasificador2->descripcion ?></option>; <?php   } ?></select></div></td><td class="col-xs-3"  ><div class="form-group field-proyecto-recurso_descripcion_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_'+ntabla+'_'+re+'" maxlength="2980" name="Proyecto[recurso_descripcion][]"/></div></td><td><div class="form-group field-proyecto-recurso_fuente_'+ntabla+'_'+re+' required"> <select  class="form-control " id="proyecto-recurso_fuente_'+ntabla+'_'+re+'" name="Proyecto[recurso_fuente][]" > <option value="0">--Fuente--</option> <?php foreach($fuentes as $fuentes2){ ?> <option value="<?= $fuentes2->id; ?>" > <?= $fuentes2->colaborador ?></option>; <?php   } ?></select></div></td><td class="col-xs-2"><div class="form-group field-proyecto-recurso_unidad_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_unidad][]"/></div></td><td class="col-xs-1"><div class="form-group field-proyecto-recurso_cantidad_'+ntabla+'_'+re+' required"><input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_cantidad][]" Disabled></div></td><?php if($event == 2){ ?> <td class="col-xs-1">  <div class="form-group field-proyecto-recurso_ejecutado_'+ntabla+'_'+re+' required"> <input type="text" id="proyecto-recurso_ejecutado_'+ntabla+'_'+re+'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>  </div> </td> <?php } ?><td><div class="form-group field-proyecto-recurso_preciototal_'+ntabla+'_'+re+' required"><input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'+ntabla+'_'+re+'" name="Proyecto[recurso_preciototal][]" Disabled></div></td><td><div><button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado_'+ntabla+'_'+re+'_" id="btn_programado" onclick="cargartitulos('+re+')">Detalle</button></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
             $('#recurso_tabla_'+ntabla).append('<tr id="recurso_addr_'+ntabla+'_'+(re+1)+'"></tr>');
             re++;
 	    moneda_recurso();
@@ -525,19 +525,20 @@ function eliminarind(ntabla,ntr)
         }
     });
     
- function cargartitulos(re) {
+ function cargartitulos(ntabla,re) {
     
-    var r_id = $('#proyecto-recurso_ids_'+re).val();
+    var r_id = $('#proyecto-recurso_ids_'+ntabla+'_'+re).val();
+    //alert(r_id);
     if(r_id)
     {
-   $("#obj_programado_"+re).html($("#proyecto-id_objetivo option:selected").html());
-   $("#ind_programado_"+re).html($("#proyecto-id_indicador option:selected").html());
-   $("#act_programado_"+re).html($("#proyecto-id_actividad option:selected").html());
+   $("#obj_programado_"+ntabla+"_"+re).html($("#proyecto-id_objetivo option:selected").html());
+   $("#ind_programado_"+ntabla+"_"+re).html($("#proyecto-id_indicador option:selected").html());
+   $("#act_programado_"+ntabla+"_"+re).html($("#proyecto-act_descripcion_"+re).val());
    }
    else
    {
     $.notify({
-                message: "El Recurso "+(re+1)+" no se encuentra registrado por favor Guardar el recurso." 
+                message: "El Recurso "+(re+1)+" de la Actividad "+(ntabla+1)+" no se encuentra registrado por favor Guardar el recurso." 
             },{
                 type: 'danger',
                 z_index: 1000000,
@@ -553,18 +554,18 @@ function eliminarind(ntabla,ntr)
 }
 
 
-function cargaranio(re,anios,meses) {
+function cargaranio(ntabla,re,anios,meses) {
     
-    var p_anio = $("#proyecto-programa_anio_"+re);
-    var id_recurso = $("#proyecto-id_recurso_"+re);
+    var p_anio = $("#proyecto-programa_anio_"+ntabla+"_"+re);
+    var id_recurso = $("#proyecto-id_recurso_"+ntabla+"_"+re);
     //console.log();
     $.ajax({
                     url: '<?= $cargarmesesanio ?>',
                     type: 'GET',
                     async: true,
-                    data: {id:p_anio.val(),anios:anios,meses:meses,id_recurso:id_recurso.val(),re:re},
+                    data: {id:p_anio.val(),anios:anios,meses:meses,id_recurso:id_recurso.val(),re:re,tabla:ntabla},
                     success: function(data){
-                        $("#registro_meses_"+re).html(data);
+                        $("#registro_meses_"+ntabla+"_"+re).html(data);
                     }
                 });
     
@@ -573,15 +574,15 @@ function cargaranio(re,anios,meses) {
     
 }
 
-function grabarrecurso(rei,i) {
+function grabarrecurso(ntabla,rei,i) {
     
     var ii = 0;
     
-    var p_anio = $("#proyecto-programa_anio_"+rei);
-    var id_recurso = $("#proyecto-id_recurso_"+rei);
-    var nro_td = $("#programado_tabla_"+rei+" tr:last td").length;
-    var precio_unit = $("#proyecto-precio_unit_"+rei);
-    
+    var p_anio = $("#proyecto-programa_anio_"+ntabla+"_"+rei);
+    var id_recurso = $("#proyecto-id_recurso_"+ntabla+"_"+rei);
+    var nro_td = $("#programado_tabla_"+ntabla+"_"+rei+" tr:last td").length;
+    var precio_unit = $("#proyecto-precio_unit_"+ntabla+"_"+rei);
+    alert(nro_td);
     if(precio_unit.val() != '')
     {
     var id = new Array(parseInt(nro_td));
@@ -590,13 +591,13 @@ function grabarrecurso(rei,i) {
     var suma_cantidad = 0;
     for (ii=0;ii<nro_td;ii++)
     {
-	mes[ii] = $("#proyecto-programado_mes_"+rei+"_"+(ii+1)).val();
-	cantidad[ii] = $("#proyecto-programado_cantidad_"+rei+"_"+(ii+1)).val();
+	mes[ii] = $("#proyecto-programado_mes_"+ntabla+"_"+rei+"_"+(ii+1)).val();
+	cantidad[ii] = $("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	
-	suma_cantidad += $("#proyecto-programado_cantidad_"+rei+"_"+(ii+1)).val();
+	suma_cantidad += $("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	
-	if ($("#proyecto-programado_id_"+rei+"_"+(ii+1)).val()) {
-	    id[ii] = $("#proyecto-programado_id_"+rei+"_"+(ii+1)).val();
+	if ($("#proyecto-programado_id_"+ntabla+"_"+rei+"_"+(ii+1)).val()) {
+	    id[ii] = $("#proyecto-programado_id_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	}
 	else
 	{
@@ -612,8 +613,8 @@ function grabarrecurso(rei,i) {
                     data: {anio:p_anio.val(),id:id,mes:mes,cantidad:cantidad,id_recurso:id_recurso.val(),precio_unit:precio_unit.val()},
                     success: function(data){
 			var valor = jQuery.parseJSON(data);
-			$("#proyecto-recurso_cantidad_"+rei).val(valor.cantidad);
-			$("#proyecto-recurso_preciototal_"+rei).val(valor.monto);
+			$("#proyecto-recurso_cantidad_"+ntabla+"_"+rei).val(valor.cantidad);
+			$("#proyecto-recurso_preciototal_"+ntabla+"_"+rei).val(valor.monto);
 			
 			
 			jsRemoveWindowLoad();
@@ -647,8 +648,8 @@ function grabarrecurso(rei,i) {
                     data: {anio:p_anio.val(),id:id,mes:mes,cantidad:cantidad,id_recurso:id_recurso.val(),precio_unit:precio_unit.val()},
                     success: function(data){
 			var valor = jQuery.parseJSON(data);
-			$("#proyecto-recurso_cantidad_"+rei).val(valor.cantidad);
-			$("#proyecto-recurso_preciototal_"+rei).val(valor.monto);
+			$("#proyecto-recurso_cantidad_"+ntabla+"_"+rei).val(valor.cantidad);
+			$("#proyecto-recurso_preciototal_"+ntabla+"_"+rei).val(valor.monto);
 			
 			
 			jsRemoveWindowLoad();

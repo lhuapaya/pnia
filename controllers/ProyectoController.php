@@ -1243,8 +1243,9 @@ class ProyectoController extends Controller
                     $flat .= 'a';
                     if(isset($proyecto->recurso_ids[$i]))
                     {
+                        //var_dump($proyecto->recurso_ids[$i].','.$proyecto->recurso_act_ids[$i].','.$proyecto->recurso_clasificador[$i].','.$proyecto->recurso_descripcion[$i].','.$proyecto->recurso_unidad[$i].','.$proyecto->recurso_fuente[$i]);die;
                         $recurso=Recurso::findOne($proyecto->recurso_ids[$i]);
-                        $recurso->actividad_id=$proyecto->id_actividad;
+                        $recurso->actividad_id=$proyecto->recurso_act_ids[$i];
                         $recurso->clasificador_id=$proyecto->recurso_clasificador[$i];
                         $recurso->detalle=$proyecto->recurso_descripcion[$i];
                         $recurso->unidad_medida=$proyecto->recurso_unidad[$i];
@@ -1258,7 +1259,7 @@ class ProyectoController extends Controller
                     {
                         
                         $recurso = new Recurso;
-                        $recurso->actividad_id=$proyecto->id_actividad;
+                        $recurso->actividad_id=$proyecto->recurso_act_ids[$i];
                         $recurso->clasificador_id=$proyecto->recurso_clasificador[$i];
                         $recurso->detalle=$proyecto->recurso_descripcion[$i];
                         $recurso->unidad_medida=$proyecto->recurso_unidad[$i];
@@ -1723,8 +1724,27 @@ class ProyectoController extends Controller
         $re = 0;
         $session = Yii::$app->session;
         
-        $recursos=Recurso::find()
-                                ->where('actividad_id=:actividad_id',[':actividad_id'=>$id])
+        $proyecto = Proyecto::find()
+                        ->where('estado = 1 and id =:id',[':id'=>$id_proyecto])
+                        ->one();
+        
+        $actividades=Actividad::find()
+                                ->where('id_ind=:id_ind',[':id_ind'=>$id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
+                                ->all();
+        
+        $html .= '<div class="panel-group" id="accordion">';
+        
+        if($actividades)
+        {
+        
+                                                
+             
+                                                  
+            
+        
+        /*$recursos=Recurso::find()
+                                ->where('actividad_id=:actividad_id',[':actividad_id'=>$actividad->id])
                                 ->all();
                                 
         $fuentes=Aportante::find()
@@ -1748,9 +1768,62 @@ class ProyectoController extends Controller
             
             
                 foreach($recursos as $recursos2)
-                {
+                {*/
                     
-                    foreach($clasificador as $clasificador2)
+                
+               
+	       $array =[];
+               $i = 0;
+		  
+                foreach($actividades as $actividades2)
+                {
+			$array[] = $actividades2->id;
+			
+
+                $html .=  '<div class="panel panel-primary">
+                      <div class="panel-heading" style="height: 45px;padding:5px">
+                        <div id="divactividad" >
+                <div class="col-xs-12 col-sm-9 col-md-12" id="proyecto-div_id_'.$i.'" >
+		    <input type="hidden" value="'.$actividades2->id.'" id="proyecto-id_actividad_'.$i.'" name="Proyecto[id_actividad][]" />
+		    <input type="hidden" value="'.$actividades2->descripcion.'" id="proyecto-act_descripcion_'.$i.'" name="Proyecto[act_descripcion]" /> 
+		    <div class="col-md-1" >
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$i.'">
+			     <span style="color:black" class="glyphicon ';
+                             if($i == 0){ $html .='glyphicon-minus';}else{ $html .='glyphicon-plus';}
+                             
+                        $html .=      '"></span>
+			</a>
+			</div>
+		    <div class="col-xs-10 col-sm-10 col-md-9" >
+			<div class="form-group field-proyecto-objetivos_descripciones_'.$i.'required">
+			    <label for="proyecto-obj_descripcion_'.$i.'">'.$actividades2->descripcion.'</label>
+			</div> 
+		    </div>
+		    <div class="col-xs-12 col-sm-9 col-md-2" >
+			<div class="form-group field-proyecto-objetivos_peso_'.$i.' required">
+			    
+			</div>    
+		    </div>
+                    
+                    <br>
+                </div>
+                <div class="clearfix"></div>
+	    </div>
+
+                      </div>
+                      <div id="collapse'.$i.'" class="panel-collapse collapse '.($i == 0 ?'in':'').'">
+                        <div class="panel-body">
+                            '.\app\widgets\recursos\RecursosWidget::widget(['actividad_id'=>$actividades2->id,'vigencia'=>$proyecto->vigencia,'id_proyecto'=>$proyecto->id,'evento'=>$evento,'correlativo'=>$i]).'
+                        </div>
+                      </div>
+                  </div>
+                ';
+                    
+                    $i++;
+                }
+                    
+                    
+                   /* foreach($clasificador as $clasificador2)
                     {
                                                         
                      $opcion1 .='<option value="'.$clasificador2->id.'" '.($clasificador2->id == $recursos2->clasificador_id ? 'selected="selected"' : '' ).'>'.$clasificador2->descripcion.'</option>';
@@ -1830,11 +1903,11 @@ class ProyectoController extends Controller
 				     $re++;
                     
                     $opcion2 ='';
-		}
+		}*/
         }
         else
         {
-            foreach($clasificador as $clasificador2)
+            /*foreach($clasificador as $clasificador2)
             {
                                                 
              $opcion1 .='<option value="'.$clasificador2->id.'" >'.$clasificador2->descripcion.'</option>';
@@ -1912,8 +1985,11 @@ class ProyectoController extends Controller
 				</tr>';
                                 
                                 $re = 1;
-            $opcion2 ='';
+            $opcion2 ='';*/
         }
+        
+         $html .='</div>';
+        
         
             $html .='<tr id="recurso_addr_1_'.$re.'"></tr>';
             
@@ -2264,7 +2340,7 @@ set_time_limit(0);
     }
     
     
-    public function actionCargarmesesanio($id, $anios, $meses, $id_recurso,$re)
+    public function actionCargarmesesanio($id, $anios, $meses, $id_recurso,$re,$tabla)
     {
         $tds = null;
         $programado = RecursoProgramado::find()
@@ -2314,10 +2390,10 @@ set_time_limit(0);
 						    }
                                   
                         $tds .=     '<td><label>'.$var_mes.'</label>
-					    <div class="form-group field-proyecto-programado_mes_'.$re.'_'.$i.' required">
-						<input type="text" id="proyecto-programado_cantidad_'.$re.'_'.$i.'" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="'.$cantidad[($i-1)].'"  />
-                                                <input type="hidden" id="proyecto-programado_mes_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="'.$mes[($i-1)].'" />
-                                                <input type="hidden" id="proyecto-programado_id_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_id][]" placeholder="" value="'.$id[($i-1)].'" />
+					    <div class="form-group field-proyecto-programado_mes_'.$tabla.'_'.$re.'_'.$i.' required">
+						<input type="text" id="proyecto-programado_cantidad_'.$tabla.'_'.$re.'_'.$i.'" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="'.$cantidad[($i-1)].'"  />
+                                                <input type="hidden" id="proyecto-programado_mes_'.$tabla.'_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="'.$mes[($i-1)].'" />
+                                                <input type="hidden" id="proyecto-programado_id_'.$tabla.'_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_id][]" placeholder="" value="'.$id[($i-1)].'" />
 					    </div>
                                     </td>';
                                 }
@@ -2327,11 +2403,36 @@ set_time_limit(0);
             if($anios >= $id)$contador = 12; else $contador = $meses;
 				
                                 for($i=1; $i<=$contador; $i++)
-                                {   
-                                $tds .=  '<td><label>Mes '.$i.'</label>
-					    <div class="form-group field-proyecto-programado_mes_'.$re.'_'.$i.' required">
-						<input type="text" id="proyecto-programado_cantidad_'.$re.'_'.$i.'" class="form-control entero" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="'.$i.'" />
+                                {
+                                    switch($i) {
+						    case 1 : $var_mes = "ENE";
+									    break;
+						    case 2 : $var_mes = "FEB";
+									    break;
+						    case 3 : $var_mes = "MAR";
+									    break;
+						    case 4 : $var_mes = "ABR";
+									    break;
+						    case 5 : $var_mes = "MAY";
+									    break;
+						    case 6 : $var_mes = "JUN";
+									    break;
+						    case 7 : $var_mes = "JUL";
+									    break;
+						    case 8 : $var_mes = "AGO";
+									    break;
+						    case 9 : $var_mes = "SEP";
+									    break;
+						    case 10 : $var_mes = "OCT";
+									    break;
+						    case 11 : $var_mes = "NOV";
+									    break;
+						    case 12 : $var_mes = "DIC";
+						    }
+                                $tds .=  '<td><label>'.$var_mes.'</label>
+					    <div class="form-group field-proyecto-programado_mes_'.$tabla.'_'.$re.'_'.$i.' required">
+						<input type="text" id="proyecto-programado_cantidad_'.$tabla.'_'.$re.'_'.$i.'" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_'.$tabla.'_'.$re.'_'.$i.'" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="'.$i.'" />
 					    </div>
                                     </td>';  
                                 }
