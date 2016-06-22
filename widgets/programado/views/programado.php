@@ -1,8 +1,8 @@
 
 <?php if($recursos){ ?>
-<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#programado<?= $re ?>_" id="btn_programado" onclick="cargartitulos(<?= $re ?>)">Detalle</button>
+<button type="button" class="btn btn-info btn-xs" data-toggle="modal" data-target="#programado_<?= $correlativo ?>_" id="btn_programado" onclick="cargartitulos(<?= $re ?>)">Detalle</button>
 
-<div class="modal fade bs-example-modal-lg" id="programado<?= $re ?>_" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-example-modal-lg" id="programado_<?= $correlativo ?>_<?= $re ?>_" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -36,7 +36,7 @@
 				$meses[$re] = $vigencia -($años[$re]*12);
 			    }
 		    ?>
-                    <select onchange="cargaranio(<?= $re ?>,<?= $años[$re] ?>,<?= $meses[$re] ?>)" id="proyecto-programa_anio_<?= $re ?>" class="form-control" name="Proyecto[programa_anio]">
+                    <select onchange="cargaranio(<?= $re ?>,<?= $años[$re] ?>,<?= $meses[$re] ?>)" id="proyecto-programa_anio_<?= $correlativo ?>_<?= $re ?>" class="form-control" name="Proyecto[programa_anio]">
 		    <?php
 			    
 			if($años[$re] > 0)
@@ -74,12 +74,12 @@
                 </div>
                 <div class="col-xs-12 col-sm-7 col-md-3">
                     <label>Precio Unitario (S/.)</label>
-                    <input type="text" id="proyecto-precio_unit_<?= $re ?>" class="form-control decimal" name="Proyecto[precio_unit]" placeholder="" value="<?= $recursos->precio_unit; ?>" />
+                    <input type="text" id="proyecto-precio_unit_<?= $correlativo ?>_<?= $re ?>" class="form-control decimal" name="Proyecto[precio_unit]" placeholder="" value="<?= $recursos->precio_unit; ?>" />
                 </div>
                 <div class="clearfix"></div><br/
                 <div class="col-xs-12 col-sm-7 col-md-12">
                  <input type="hidden" id="proyecto-id_recurso_<?= $re ?>" class="form-control" name="Proyecto[id_recurso_prog]" placeholder="" value="<?= $rec_prog_id ?>" />   
-                    <table class="table table-bordered table-hover" id="programado_tabla_<?= $re ?>">
+                    <table class="table table-bordered table-hover" id="programado_tabla_<?= $correlativo ?>_<?= $re ?>">
 
                         <tbody>
                             <tr id ="registro_meses_<?= $re ?>">

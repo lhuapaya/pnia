@@ -1475,6 +1475,7 @@ class ProyectoController extends Controller
                         
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('gestion = 0 and id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
                                 ->all();
                                 
             $indicadores=Indicador::find()
@@ -1482,6 +1483,7 @@ class ProyectoController extends Controller
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();
                     
                         
@@ -2071,7 +2073,7 @@ class ProyectoController extends Controller
 					</td>
 					<td class="col-xs-4">
 					    <div class="form-group field-proyecto-actividades_descripciones_'.$act.' required">
-						<input type="text" id="proyecto-actividades_descripciones_'.$act.'" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder="" value="'.$actividad->descripcion.'" />
+						<input type="text" id="proyecto-actividades_descripciones_'.$act.'" class="form-control" maxlength="2980" name="Proyecto[actividades_descripciones][]" placeholder="" value="'.$actividad->descripcion.'" />
 					    </div>
 					</td>
 					<td class="col-xs-2">
@@ -2141,7 +2143,7 @@ class ProyectoController extends Controller
 					</td>
 					<td class="col-xs-4">
 					    <div class="form-group field-proyecto-actividades_descripciones_0 required">
-						<input type="text" id="proyecto-actividades_descripciones_0" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder=""  />
+						<input type="text" id="proyecto-actividades_descripciones_0" maxlength="2980" class="form-control" name="Proyecto[actividades_descripciones][]" placeholder=""  />
 					    </div>
 					</td>
 					<td class="col-xs-2">
@@ -2196,6 +2198,7 @@ class ProyectoController extends Controller
         
         $indicadores=Indicador::find()
                                 ->where('id_oe=:objetivo_id',[':objetivo_id'=>$id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
                                 ->all();
         
         
@@ -2223,6 +2226,7 @@ class ProyectoController extends Controller
         
         $actividades=Actividad::find()
                                 ->where('id_ind=:id_ind',[':id_ind'=>$id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
                                 ->all();
         
         foreach($actividades as $actividad)

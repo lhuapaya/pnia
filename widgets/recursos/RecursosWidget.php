@@ -16,6 +16,8 @@ class RecursosWidget extends Widget
     public $vigencia;
     public $id_proyecto;
     public $evento;
+    public $correlativo;
+    
     public function init()
     {
         parent::init();
@@ -45,7 +47,7 @@ class RecursosWidget extends Widget
             //1return \Yii::$app->getResponse()->refresh();
         //}
         
-        return $this->render('recursos',['recursos'=>$recursos,'clasificador'=>$clasificador,'vigencia'=>$this->vigencia,'fuentes'=>$fuentes,'id_proyecto'=>$this->id_proyecto,'event'=>$this->evento]
+        return $this->render('recursos',['recursos'=>$recursos,'clasificador'=>$clasificador,'vigencia'=>$this->vigencia,'fuentes'=>$fuentes,'id_proyecto'=>$this->id_proyecto,'event'=>$this->evento,'correlativo'=>$this->correlativo,'actividad_id'=>$this->actividad_id]
                              );
     }
 }

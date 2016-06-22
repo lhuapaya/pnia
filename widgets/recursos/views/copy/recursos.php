@@ -3,7 +3,7 @@
 
 <div class="col-xs-12 col-sm-7 col-md-12">
     <h5>Recursos</h5>
-                    <table class="table table-bordered table-hover" id="recurso_tabla_<?= $correlativo; ?>" name="Proyecto[recurso_tabla][]">
+                    <table class="table table-bordered table-hover" id="recurso_tabla" name="Proyecto[recurso_tabla][]">
                         <thead>
                             <tr>
                                 <th class="text-center">
@@ -44,15 +44,14 @@
 				
 				<?php foreach($recursos as $recursos2){ ?>
 				    <?php //if($objetivo->id==$proyecto->objetivo_especifico_1_id){ ?>
-				    <tr id='recurso_addr_1_<?= $correlativo; ?>_<?= $re ?>'>
+				    <tr id='recurso_addr_1_<?= $re ?>'>
 					<td>
 					<?= ($re+1) ?>
-                                        <input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_<?= $re; ?>" value="<?= $actividad_id; ?>" />
-					<input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_<?= $re; ?>" value="<?= $re; ?>" />
+                                        <input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_<?= $re; ?>" value="<?= $re; ?>" />
 					</td>
 					<td>
-                                        <div class="form-group field-proyecto-recurso_clasificador_<?= $correlativo; ?>_<?= $re; ?> required">
-                                            <select  class="form-control " id="proyecto-recurso_clasificador_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_clasificador][]" >
+                                        <div class="form-group field-proyecto-recurso_clasificador_<?= $re; ?> required">
+                                            <select  class="form-control " id="proyecto-recurso_clasificador_<?= $re; ?>" name="Proyecto[recurso_clasificador][]" >
                                                 <option value="0">--Clasificador--</option>
                                                 <?php
                                                        foreach($clasificador as $clasificador2)
@@ -68,13 +67,13 @@
                                             </div>    
                                         </td>
                                         <td class="col-xs-3"  >
-                                            <div class="form-group field-proyecto-recurso_descripcion_<?= $correlativo; ?>_<?= $re; ?> required">
-                                                <input class="form-control " value="<?= $recursos2->detalle ?>" type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_descripcion][]"/>
+                                            <div class="form-group field-proyecto-recurso_descripcion_<?= $re; ?> required">
+                                                <input class="form-control " value="<?= $recursos2->detalle ?>" type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $re; ?>" name="Proyecto[recurso_descripcion][]"/>
                                             </div>
                                         </td>
 					<td>
-                                        <div class="form-group field-proyecto-recurso_fuente_<?= $correlativo; ?>_<?= $re; ?> required">
-                                            <select  class="form-control " id="proyecto-recurso_fuente_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_fuente][]" >
+                                        <div class="form-group field-proyecto-recurso_fuente_<?= $re; ?> required">
+                                            <select  class="form-control " id="proyecto-recurso_fuente_<?= $re; ?>" name="Proyecto[recurso_fuente][]" >
                                                 <option value="0">--Fuente--</option>
                                                 <?php
                                                        foreach($fuentes as $fuentes2)
@@ -93,35 +92,35 @@
                                             </div>    
                                         </td>
                                         <td class="col-xs-2">
-                                            <div class="form-group field-proyecto-recurso_unidad_<?= $correlativo; ?>_<?= $re; ?> required">
-                                                <input class="form-control " value="<?= $recursos2->unidad_medida ?>" type="text"  placeholder="..." id="proyecto-recurso_unidad_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_unidad][]"/>
+                                            <div class="form-group field-proyecto-recurso_unidad_<?= $re; ?> required">
+                                                <input class="form-control " value="<?= $recursos2->unidad_medida ?>" type="text"  placeholder="..." id="proyecto-recurso_unidad_<?= $re; ?>" name="Proyecto[recurso_unidad][]"/>
                                             </div>
                                         </td>
                                         <td class="col-xs-1">
-                                            <div class="form-group field-proyecto-recurso_cantidad_<?= $correlativo; ?>_<?= $re; ?> required">
-                                                <input  class="form-control " value="<?= $recursos2->cantidad ?>" class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_cantidad][]" Disabled>
+                                            <div class="form-group field-proyecto-recurso_cantidad_<?= $re; ?> required">
+                                                <input  class="form-control " value="<?= $recursos2->cantidad ?>" class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_<?= $re; ?>" name="Proyecto[recurso_cantidad][]" Disabled>
                                             </div>
                                         </td>
 					<?php if($event == 2){ ?>
 					    <td class="col-xs-1">
-					    <div class="form-group field-proyecto-recurso_ejecutado_<?= $correlativo; ?>_<?= $re ?> required">
-						<input type="text" id="proyecto-recurso_ejecutado_<?= $correlativo; ?>_<?= $re ?>" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder="" value="<?= $recursos2->ejecutado ?>" Disabled>
+					    <div class="form-group field-proyecto-recurso_ejecutado_<?= $re ?> required">
+						<input type="text" id="proyecto-recurso_ejecutado_<?= $re ?>" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder="" value="<?= $recursos2->ejecutado ?>" Disabled>
 					    </div>
 					    </td>
 					<?php } ?>
                                         <td class="col-xs-2">
-                                            <div class="form-group field-proyecto-recurso_preciototal_<?= $correlativo; ?>_<?= $re; ?> required">
-                                                <input class="form-control " value="<?= $recursos2->precio_total ?>" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_preciototal][]" Disabled>
+                                            <div class="form-group field-proyecto-recurso_preciototal_<?= $re; ?> required">
+                                                <input class="form-control " value="<?= $recursos2->precio_total ?>" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $re; ?>" name="Proyecto[recurso_preciototal][]" Disabled>
                                             </div>
                                         </td>
 					<td>
 					    <div>
-					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'tabla'=>$correlativo,'vigencia'=>$vigencia,"evento"=>$event]); ?> 
+					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>$recursos2->id,'re'=>$re,'vigencia'=>$vigencia,"evento"=>$event]); ?> 
 					    </div>
 					</td>
 					<td>
-					    <span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,<?= $re ?>)" id="eliminar_<?= $correlativo; ?>_<?= $re; ?>">
-						<input type="hidden" id="proyecto-recurso_ids_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_ids][]" value="<?= $recursos2->id ?>" />
+					    <span class="eliminar glyphicon glyphicon-minus-sign">
+						<input type="hidden" id="proyecto-recurso_ids_<?= $re; ?>" name="Proyecto[recurso_ids][]" value="<?= $recursos2->id ?>" />
 					    </span>
 					</td>
 				    </tr>
@@ -132,12 +131,11 @@
 				<tr id='recurso_addr_1_0'>
 				    <td>
 				    <?= ($re+1) ?>
-				    <input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_<?= $re; ?>" value="<?= $actividad_id; ?>" />
                                     <input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_<?= $re; ?>" value="<?= $re; ?>" />
 				    </td>
 				    <td class="col-xs-2" >
-					<div class="form-group field-proyecto-recurso_clasificador_<?= $correlativo; ?>_0 required">
-                                            <select  class="form-control " id="proyecto-recurso_clasificador_<?= $correlativo; ?>_0" name="Proyecto[recurso_clasificador][]" >
+					<div class="form-group field-proyecto-recurso_clasificador_0 required">
+                                            <select  class="form-control " id="proyecto-recurso_clasificador_0" name="Proyecto[recurso_clasificador][]" >
                                                 <option value="0">--Clasificador--</option>
                                                 <?php
                                                        foreach($clasificador as $clasificador2)
@@ -153,13 +151,13 @@
 					</div>
 				    </td>
                                     <td class="col-xs-3"  >
-					<div class="form-group field-proyecto-recurso_descripcion_<?= $correlativo; ?>_0 required">
-					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_<?= $correlativo; ?>_0" name="Proyecto[recurso_descripcion][]"/>
+					<div class="form-group field-proyecto-recurso_descripcion_0 required">
+					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_0" name="Proyecto[recurso_descripcion][]"/>
 					</div>
 				    </td>
 				    <td>
-                                        <div class="form-group field-proyecto-recurso_fuente_<?= $correlativo; ?>_0 required">
-                                            <select  class="form-control " id="proyecto-recurso_fuente_<?= $correlativo; ?>_0" name="Proyecto[recurso_fuente][]" >
+                                        <div class="form-group field-proyecto-recurso_fuente_0 required">
+                                            <select  class="form-control " id="proyecto-recurso_fuente_0" name="Proyecto[recurso_fuente][]" >
                                                 <option value="0">--Fuente--</option>
                                                 <?php
                                                        foreach($fuentes as $fuentes2)
@@ -175,49 +173,49 @@
                                             </div>    
                                         </td>
                                     <td class="col-xs-2">
-					<div class="form-group field-proyecto-recurso_unidad_<?= $correlativo; ?>_0 required">
-					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_<?= $correlativo; ?>_0" name="Proyecto[recurso_unidad][]"/>
+					<div class="form-group field-proyecto-recurso_unidad_0 required">
+					    <input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_0" name="Proyecto[recurso_unidad][]"/>
 					</div>
 				    </td>
                                     <td class="col-xs-1">
-					<div class="form-group field-proyecto-recurso_cantidad_<?= $correlativo; ?>_0 required">
-					    <input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_<?= $correlativo; ?>_0" name="Proyecto[recurso_cantidad][]" Disabled>
+					<div class="form-group field-proyecto-recurso_cantidad_0 required">
+					    <input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_0" name="Proyecto[recurso_cantidad][]" Disabled>
 					</div>
 				    </td>
 				    <?php if($event == 2){ ?>
 					    <td class="col-xs-1">
-					    <div class="form-group field-proyecto-recurso_ejecutado_<?= $correlativo; ?>_0 required">
-						<input type="text" id="proyecto-recurso_ejecutado_<?= $correlativo; ?>_0" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>
+					    <div class="form-group field-proyecto-recurso_ejecutado_0 required">
+						<input type="text" id="proyecto-recurso_ejecutado_0" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>
 					    </div>
 					    </td>
 					<?php } ?>
                                     <td class="col-xs-2">
-					<div class="form-group field-proyecto-recurso_preciototal_<?= $correlativo; ?>_0 required">
-					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $correlativo; ?>_0" name="Proyecto[recurso_preciototal][]" Disabled>
+					<div class="form-group field-proyecto-recurso_preciototal_0 required">
+					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_0" name="Proyecto[recurso_preciototal][]" Disabled>
 					</div>
 				    </td>
 				    <td>
 					    <div>
-					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>'','re'=>'0','tabla'=>$correlativo,'vigencia'=>$vigencia,"evento"=>$event]); ?> 
+					    <?= \app\widgets\programado\ProgramadoWidget::widget(['recurso_id'=>'','re'=>'0','vigencia'=>$vigencia,"evento"=>$event]); ?> 
 					    </div>
 				    </td>
 				    <td>
-					<span class="eliminar glyphicon glyphicon-minus-sign" onclick="eliminarind(<?= $correlativo; ?>,0)" id="eliminar_<?= $correlativo; ?>_0">
+					<span class="eliminar glyphicon glyphicon-minus-sign">
 					    
 					</span>
 				    </td>
 				</tr>
 				<?php $re=1; ?>
 			    <?php } ?>
-                            <tr id='recurso_addr_<?= $correlativo; ?>_<?= $re ?>'></tr>
+                            <tr id='recurso_addr_1_<?= $re ?>'></tr>
                         </tbody>
                     </table>
-                    <div id="recurso_row__1" class="btn btn-default pull-left btn_hide" value="1" onclick="agregarind(<?= $correlativo; ?>,<?= $re ?>,<?= $actividad_id; ?>)">Agregar</div>
+                    <div id="recurso_row_1" class="btn btn-default pull-left btn_hide" value="1">Agregar</div>
                     <br>
                 </div>
-        <!--<div id="control_boton">
+        <div id="control_boton">
                 <button type="submit" id="btn_recursos" class="btn btn-primary btn_hide" >Guardar</button>
-        </div>-->
+        </div>
 <?php
     $eliminarrecurso = Yii::$app->getUrlManager()->createUrl('proyecto/eliminarrecurso');
     $refrescarrecurso = Yii::$app->getUrlManager()->createUrl('proyecto/refrescarrecursos');
@@ -241,17 +239,16 @@
     moneda_recurso();
  });
  
- function agregarind(ntabla,ntr,act){
- //$("#recurso_row_1").click(function(){
+ $("#recurso_row_1").click(function(){
 	
 	var error = '';
-	var clasificador= $('#recurso_tabla_'+ntabla).find('input[name=\'Proyecto[recurso_descripcion][]\']').length;
-	var valor=$('#recurso_tabla_'+ntabla).find('input[name=\'Proyecto[recurso_numero][]\']').serializeArray();
+        var clasificador=($('input[name=\'Proyecto[recurso_descripcion][]\']').length);
+        var valor=($('input[name=\'Proyecto[recurso_numero][]\']').serializeArray());
         
         for (var i=0; i<clasificador; i++) {
-            if(($('#proyecto-recurso_clasificador_'+ntabla+'_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_descripcion_'+ntabla+'_'+(valor[i].value)).val())=='') || ($('#proyecto-recurso_fuente_'+ntabla+'_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_unidad_'+ntabla+'_'+(valor[i].value)).val())=='') )
+            if(($('#proyecto-recurso_clasificador_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_descripcion_'+(valor[i].value)).val())=='') || ($('#proyecto-recurso_fuente_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_unidad_'+(valor[i].value)).val())=='') )
             {
-                error=error+'Complete todos los Campos de la Actividad '+(ntabla + 1)+' del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
+                error=error+'Complete todos los Campos del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
                // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
             else
@@ -319,27 +316,22 @@
 	}
 	else
         {
-            $('#recurso_addr_'+ntabla+'_'+re).html('<td>'+(re+1)+'<input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_'+re+'" value="'+act+'" /><input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'+ntabla+'_'+re+'" value="'+re+'" /></td><td class="col-xs-2" ><div class="form-group field-proyecto-recurso_clasificador_'+ntabla+'_'+re+' required"><select  class="form-control " id="proyecto-recurso_clasificador_'+ntabla+'_'+re+'" name="Proyecto[recurso_clasificador][]" ><option value="0">--Clasificador--</option><?php foreach($clasificador as $clasificador2) { ?> <option value="<?= $clasificador2->id; ?>" > <?= $clasificador2->descripcion ?></option>; <?php   } ?></select></div></td><td class="col-xs-3"  ><div class="form-group field-proyecto-recurso_descripcion_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_'+ntabla+'_'+re+'" name="Proyecto[recurso_descripcion][]"/></div></td><td><div class="form-group field-proyecto-recurso_fuente_'+ntabla+'_'+re+' required"> <select  class="form-control " id="proyecto-recurso_fuente_'+ntabla+'_'+re+'" name="Proyecto[recurso_fuente][]" > <option value="0">--Fuente--</option> <?php foreach($fuentes as $fuentes2){ ?> <option value="<?= $fuentes2->id; ?>" > <?= $fuentes2->colaborador ?></option>; <?php   } ?></select></div></td><td class="col-xs-2"><div class="form-group field-proyecto-recurso_unidad_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_unidad][]"/></div></td><td class="col-xs-1"><div class="form-group field-proyecto-recurso_cantidad_'+ntabla+'_'+re+' required"><input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_cantidad][]" Disabled></div></td><?php if($event == 2){ ?> <td class="col-xs-1">  <div class="form-group field-proyecto-recurso_ejecutado_'+ntabla+'_'+re+' required"> <input type="text" id="proyecto-recurso_ejecutado_'+ntabla+'_'+re+'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>  </div> </td> <?php } ?><td><div class="form-group field-proyecto-recurso_preciototal_'+ntabla+'_'+re+' required"><input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'+ntabla+'_'+re+'" name="Proyecto[recurso_preciototal][]" Disabled></div></td><td><div><button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado_'+ntabla+'_'+re+'_" id="btn_programado" onclick="cargartitulos('+re+')">Detalle</button></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
-            $('#recurso_tabla_'+ntabla).append('<tr id="recurso_addr_'+ntabla+'_'+(re+1)+'"></tr>');
+            $('#recurso_addr_1_'+re).html('<td>'+(re+1)+'<input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'+re+'" value="'+re+'" /></td><td class="col-xs-2" ><div class="form-group field-proyecto-recurso_clasificador_'+re+' required"><select  class="form-control " id="proyecto-recurso_clasificador_'+re+'" name="Proyecto[recurso_clasificador][]" ><option value="0">--Clasificador--</option><?php foreach($clasificador as $clasificador2) { ?> <option value="<?= $clasificador2->id; ?>" > <?= $clasificador2->descripcion ?></option>; <?php   } ?></select></div></td><td class="col-xs-3"  ><div class="form-group field-proyecto-recurso_descripcion_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_'+re+'" name="Proyecto[recurso_descripcion][]"/></div></td><td><div class="form-group field-proyecto-recurso_fuente_'+re+' required"> <select  class="form-control " id="proyecto-recurso_fuente_'+re+'" name="Proyecto[recurso_fuente][]" > <option value="0">--Fuente--</option> <?php foreach($fuentes as $fuentes2){ ?> <option value="<?= $fuentes2->id; ?>" > <?= $fuentes2->colaborador ?></option>; <?php   } ?></select></div></td><td class="col-xs-2"><div class="form-group field-proyecto-recurso_unidad_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_'+re+'" name="Proyecto[recurso_unidad][]"/></div></td><td class="col-xs-1"><div class="form-group field-proyecto-recurso_cantidad_'+re+' required"><input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'+re+'" name="Proyecto[recurso_cantidad][]" Disabled></div></td><?php if($event == 2){ ?> <td class="col-xs-1">  <div class="form-group field-proyecto-recurso_ejecutado_'+re+' required"> <input type="text" id="proyecto-recurso_ejecutado_'+re+'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>  </div> </td> <?php } ?><td><div class="form-group field-proyecto-recurso_preciototal_'+re+' required"><input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'+re+'" name="Proyecto[recurso_preciototal][]" Disabled></div></td><td><div><button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado'+re+'_" id="btn_programado" onclick="cargartitulos('+re+')">Detalle</button></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
+            $('#recurso_tabla').append('<tr id="recurso_addr_1_'+(re+1)+'"></tr>');
             re++;
 	    moneda_recurso();
         return true;
     
         }
         
+        
+    });
  
- }       
- //   });
  
- 
- //$("#recurso_tabla").on('click','.eliminar',function(){
-
-function eliminarind(ntabla,ntr)
-    { 
+ $("#recurso_tabla").on('click','.eliminar',function(){
         var r = confirm("Estas seguro de Eliminar?");
         var mensaje = '';
-	var eliminar = $("#eliminar_"+ntabla+"_"+ntr);
-	var id= eliminar.children().val();
+	var id=$(this).children().val();
 	var valor = null;
 	if (r == true) {
 	if (evento == 2)
@@ -410,12 +402,12 @@ function eliminarind(ntabla,ntr)
                 });
 	   
 		    if (valor.estado == 0) {
-			eliminar.parent().parent().remove();s
+			$(this).parent().parent().remove();s
 		    }
 	    }
 	    else
 				     {
-					 eliminar.parent().parent().remove();
+					 $(this).parent().parent().remove();
 					 
 					 mensaje = "Se elimino el Recurso Correctamente";
 					 
@@ -449,11 +441,11 @@ function eliminarind(ntabla,ntr)
 						 mensaje = data;
 					     }
 					 });
-					 eliminar.parent().parent().remove();	
+					 $(this).parent().parent().remove();	
 				     }
 				     else
 				     {
-					 eliminar.parent().parent().remove();
+					 $(this).parent().parent().remove();
 					 
 					 mensaje = "Se elimino el Recurso Correctamente";
 				     }
@@ -474,9 +466,8 @@ function eliminarind(ntabla,ntr)
 				
 	}
 	}
-
- }	
- //   });
+	
+    });
     
     $("#btn_recursos").click(function(event){
         
