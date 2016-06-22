@@ -521,7 +521,7 @@ $("#btn_rec_save").click(function(event){
         //console.log(valor);
         //console.log('-'+clasificador);
         //alert(clasificador);
-        for (var e=0; e<tablas; e++)
+      /*  for (var e=0; e<tablas; e++)
 	{
 	  var clasificador= $('#recurso_tabla_'+e).find('input[name=\'Proyecto[recurso_descripcion][]\']').length;  
 	    var valor=$('#recurso_tabla_'+e).find('input[name=\'Proyecto[recurso_numero][]\']').serializeArray();
@@ -534,12 +534,7 @@ $("#btn_rec_save").click(function(event){
                 error=error+'Complete todos los Campos de la Actividad '+(e + 1)+' del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
                // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
-            else
-            {
-               // $('.field-proyecto-descripciones_'+i).addClass('has-success');
-               // $('.field-proyecto-descripciones_'+i).removeClass('has-error');
-            }
-        }
+        }*/
 	
 	}
 	
