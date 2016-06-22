@@ -2451,7 +2451,7 @@ set_time_limit(0);
         $precio_unit = $_REQUEST["precio_unit"];
         
 
-        
+        var_dump($id);die;
         $count = count($mes);
 
         

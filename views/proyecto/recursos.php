@@ -534,9 +534,9 @@ $("#btn_rec_save").click(function(event){
                 error=error+'Complete todos los Campos de la Actividad '+(e + 1)+' del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
                // $('.field-proyecto-descripciones_'+i).addClass('has-error');
             }
-        }*/
+        }
 	
-	}
+	}*/
 	
 	if (error!='') {
 	    jsRemoveWindowLoad();
