@@ -1225,7 +1225,7 @@ class ProyectoController extends Controller
         if($proyecto->load(Yii::$app->request->post()) )
         {
             $countRecurso = count(array_filter($proyecto->recurso_descripcion));
-            //var_dump($proyecto->recurso_ids);
+            var_dump($countRecurso);
             //var_dump($proyecto->recurso_descripcion);
             //die;
             if($existe == 0)

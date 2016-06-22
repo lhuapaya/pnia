@@ -582,7 +582,7 @@ function grabarrecurso(ntabla,rei,i) {
     var id_recurso = $("#proyecto-id_recurso_"+ntabla+"_"+rei);
     var nro_td = $("#programado_tabla_"+ntabla+"_"+rei+" tr:last td").length;
     var precio_unit = $("#proyecto-precio_unit_"+ntabla+"_"+rei);
-    alert(nro_td);
+    //alert(nro_td);
     if(precio_unit.val() != '')
     {
     var id = new Array(parseInt(nro_td));
