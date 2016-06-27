@@ -100,7 +100,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <script>
 
  $(document).ready(function(){
-    moneda_soles(".soles");
+    //moneda_soles(".soles");
  });
 
 </script>
