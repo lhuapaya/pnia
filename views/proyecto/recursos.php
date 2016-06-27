@@ -412,6 +412,8 @@ $(this).parent().find(".glyphicon-minus").removeClass("glyphicon-minus").addClas
 					       re[x] = $('#recurso_tabla_'+x).find('input[name=\'Proyecto[recurso_descripcion][]\']').length;
 					    }
 					    console.log(re);
+					    
+					    $('.decimal').numeric({ decimalPlaces: 2 });
 					    }
 				    });
 			    
@@ -492,6 +494,8 @@ $("#proyecto-id_indicador").change(function(){
 					       re[x] = $('#recurso_tabla_'+x).find('input[name=\'Proyecto[recurso_descripcion][]\']').length;
 					    }
 					    console.log(re);
+					    
+					    $('.decimal').numeric({ decimalPlaces: 2 });
 						
 						
 					    }

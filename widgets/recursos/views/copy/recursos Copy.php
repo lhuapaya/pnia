@@ -492,27 +492,24 @@ function cargaranio(ntabla,re,anios,meses) {
     
 }
 
-function grabarrecurso(ntabla,rei,i,meses) {
+function grabarrecurso(ntabla,rei,i) {
     
     var ii = 0;
     
-    //var p_anio = $("#proyecto-programa_anio_"+ntabla+"_"+rei);
+    var p_anio = $("#proyecto-programa_anio_"+ntabla+"_"+rei);
     var id_recurso = $("#proyecto-id_recurso_"+ntabla+"_"+rei);
-    //var nro_td = $("#programado_tabla_"+ntabla+"_"+rei+" tr:last td").length;
+    var nro_td = $("#programado_tabla_"+ntabla+"_"+rei+" tr:last td").length;
     var precio_unit = $("#proyecto-precio_unit_"+ntabla+"_"+rei);
     //alert(nro_td);
     if(precio_unit.val() != '')
     {
-    var id = [];
-    var cantidad = [];
-    var mes = [];
-    var anio = [];
+    var id = new Array(parseInt(nro_td));
+    var cantidad = new Array(parseInt(nro_td));
+    var mes = new Array(parseInt(nro_td));
     var suma_cantidad = 0;
-    
-    for (ii=0;ii<meses;ii++)
+    for (ii=0;ii<nro_td;ii++)
     {
 	mes[ii] = $("#proyecto-programado_mes_"+ntabla+"_"+rei+"_"+(ii+1)).val();
-	anio[ii] = $("#proyecto-programado_anio_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	cantidad[ii] = $("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	
 	suma_cantidad += $("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val();
@@ -531,7 +528,7 @@ function grabarrecurso(ntabla,rei,i,meses) {
                     url: '<?= $grabarprogramado ?>',
                     type: 'POST',
                     async: true,
-                    data: {anio:anio,id:id,mes:mes,cantidad:cantidad,id_recurso:id_recurso.val(),precio_unit:precio_unit.val()},
+                    data: {anio:p_anio.val(),id:id,mes:mes,cantidad:cantidad,id_recurso:id_recurso.val(),precio_unit:precio_unit.val()},
                     success: function(data){
 			var valor = jQuery.parseJSON(data);
 			$("#proyecto-recurso_cantidad_"+ntabla+"_"+rei).val(valor.cantidad);
@@ -551,10 +548,7 @@ function grabarrecurso(ntabla,rei,i,meses) {
 				from: 'bottom',
 				align: 'right'
 			    },
-			});
-		       moneda_soles(".soles");
-		       
-		       $("#w0").submit();
+			});		
                     },
 		     beforeSend: function(){
 			jsShowWindowLoad('Procesando nueva Modificación...');
@@ -629,7 +623,6 @@ function grabarrecurso(ntabla,rei,i,meses) {
 	
 	
     }
-    
     
 }
 

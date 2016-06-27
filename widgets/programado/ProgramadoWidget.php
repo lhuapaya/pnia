@@ -39,7 +39,7 @@ class ProgramadoWidget extends Widget
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$this->proyecto_id])
                                 ->all();*/
         $programado = RecursoProgramado::find()
-                                ->where('anio = 1 and id_recurso = :id_recurso',[':id_recurso'=>$this->recurso_id])
+                                ->where('id_recurso = :id_recurso',[':id_recurso'=>$this->recurso_id])
                                 ->orderBy('mes')
                                 ->all();
         

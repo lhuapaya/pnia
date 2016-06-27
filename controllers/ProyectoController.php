@@ -2486,7 +2486,7 @@ set_time_limit(0);
                     {
                         $recursoprogramado=RecursoProgramado::findOne($id[$i]);
                         $recursoprogramado->id_recurso=$id_recurso;
-                        $recursoprogramado->anio=$anio;
+                        $recursoprogramado->anio=$anio[$i];
                         $recursoprogramado->mes=$mes[$i];
                         $recursoprogramado->cantidad=$cantidad[$i];
                         $recursoprogramado->precio_unit=$precio_unit;
@@ -2496,7 +2496,7 @@ set_time_limit(0);
                     {
                         $recursoprogramado=new RecursoProgramado;
                         $recursoprogramado->id_recurso=$id_recurso;
-                        $recursoprogramado->anio=$anio;
+                        $recursoprogramado->anio=$anio[$i];
                         $recursoprogramado->mes=$mes[$i];
                         $recursoprogramado->cantidad=$cantidad[$i];
                         $recursoprogramado->precio_unit=$precio_unit;
