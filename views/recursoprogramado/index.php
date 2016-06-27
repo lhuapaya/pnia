@@ -67,7 +67,9 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Monto (S/.)',
                 'attribute' => 'cantidad',
                 'format'=>'raw',
-                'value'=>'cantidad',
+                'value'=>function($data) {
+                   return '<label class="soles">'.$data->cantidad.'</label>';
+                },
                 //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 //'width'=>'60px',
@@ -94,3 +96,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <div class="col-xs-12 col-sm-7 col-md-2" ></div>
 
 </div>
+
+<script>
+
+ $(document).ready(function(){
+    moneda_soles(".soles");
+ });
+
+</script>
