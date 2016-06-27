@@ -1,5 +1,6 @@
 
-<div id="divobjetivo" >
+<div class="clearfix"></div>
+<div id="divobjetivo" class="col-xs-12 col-sm-9 col-md-12">
 		<?php //if($objetivoespecifico) {?>
                 <div class="col-xs-12 col-sm-9 col-md-12" id="proyecto-div_id_<?= $correlativo; ?>" >
 		    <input type="hidden" value="<?= $objetivoespecifico->id?>" id="proyecto-obj_id_<?= $correlativo; ?>" name="Proyecto[objetivos_ids][]" />
@@ -12,23 +13,23 @@
 			     <span style="color:black" class="glyphicon <?=($correlativo == 0)?'glyphicon-minus':'glyphicon-plus' ?> "></span>
 			</a>
 			</div>
-		    <div class="col-xs-10 col-sm-10 col-md-9" >
+		    <div class="col-xs-10 col-sm-10 col-md-8" >
 			<div class="form-group field-proyecto-objetivos_descripciones_<?= $correlativo; ?> required">
 			    <!--<label for="proyecto-obj_descripcion_<?= $correlativo; ?>">Descripción:</label>-->
-			    <input class="form-control" type="text" value="<?= $objetivoespecifico->descripcion;?>" placeholder="" id="proyecto-objetivos_descripciones_<?= $correlativo; ?>" name="Proyecto[objetivos_descripciones][]"  required/>
+			    <input class="form-control" type="text" value="<?= $objetivoespecifico->descripcion;?>" placeholder="" maxlength="1980" id="proyecto-objetivos_descripciones_<?= $correlativo; ?>" name="Proyecto[objetivos_descripciones][]"  required/>
 			</div> 
 		    </div>
+		    <div class="col-md-1">
+			Peso:
+			</div>
 		    <div class="col-xs-12 col-sm-9 col-md-2" >
+			
 			<div class="form-group field-proyecto-objetivos_peso_<?= $correlativo; ?> required">
-			    <!--<label for="proyecto-obj_peso_<?= $correlativo; ?>">Descripción:</label>-->
-			    <input class="form-control entero" type="text" value="<?= $objetivoespecifico->peso;?>" placeholder="" id="proyecto-objetivos_peso_<?= $correlativo; ?>" name="Proyecto[objetivos_peso][]"  required/>
+			    
+			    <input class="form-control entero text-center" type="text" maxlength="3" value="<?= $objetivoespecifico->peso;?>" placeholder="" id="proyecto-objetivos_peso_<?= $correlativo; ?>" name="Proyecto[objetivos_peso][]"  required>
 			</div>    
 		    </div>
-		    <!--<div >
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $correlativo; ?>">
-			     <span style="color:black" class="glyphicon <?=($correlativo == 0)?'glyphicon-minus':'glyphicon-plus' ?> "></span>
-			</a>
-		    </div>-->
+
                     
                     <br>
                 </div>

@@ -29,9 +29,16 @@ use yii\web\JsExpression;
                         $i = 0;
                            foreach($objetivosespecificos as $objetivoespecifico)
                             {
+				if($flat_ob_esp == '')
+				{
                                 $array1[$i] = $objetivoespecifico->id;
+				}
+				else
+				{
+				  $array1[$i]  = $flat_ob_esp;
+				}
                     ?>
-                               <option value="<?= $objetivoespecifico->id; ?>" > <?= $objetivoespecifico->descripcion ?></option>;
+                               <option value="<?= $objetivoespecifico->id; ?>" <?= ($objetivoespecifico->id == $flat_ob_esp)?'Selected':'' ?>> <?= $objetivoespecifico->descripcion ?></option>;
                     <?php  $i++; }
 		    echo '<script>
     console.log('.json_encode($array1).');</script>';
@@ -55,9 +62,16 @@ use yii\web\JsExpression;
                                 
 				if($indicadores2->id_oe == $array1[0])
 				{
+				    if($flat_ind == '')
+				    {
 				    $array2[] = $indicadores2->id;
+				    }
+				    else
+				    {
+				      $array2[]  = $flat_ind;
+				    }
                     ?>
-                               <option value="<?= $indicadores2->id; ?>" > <?= $indicadores2->descripcion ?></option>;
+                               <option value="<?= $indicadores2->id; ?>" <?= ($indicadores2->id == $flat_ind)?'Selected':'' ?>> <?= $indicadores2->descripcion ?></option>;
                     <?php  
 				
 				}
@@ -81,6 +95,7 @@ use yii\web\JsExpression;
 	?>
         <?= \app\widgets\actividades\ActividadesWidget::widget(['indicador_id'=>$array2[0],'id_proyecto'=>$proyecto->id,'evento'=>$evento3]); ?>
         </div>
+	<div class="clearfix"></div><br/><br/>
 	<?php }else{?>
 	    <div class="alert alert-warning" id="warning">
 		<strong>¡Error!</strong> Hay Objetivos sin Indicadores no puede continuar.

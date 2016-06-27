@@ -423,16 +423,17 @@ $("#btnguardar").click(function(event){
       var total = 0;
       var resultado = '';
       var count_tablas=($('table[name=\'Proyecto[indicadores_tabla][]\']').length);
+      console.log(count_tablas);
       
-      
-      
-      for (i=0;i<count_tablas;i++)
+      for (var i=0;i<count_tablas;i++)
       {
-	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length) -1;
+	 var valor=$('#indicadores_tabla_'+i).find('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray();
 	 
-	 for (e=0;e<rowCount;e++) {
+	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length -1);
+	 //console.log(rowCount);
+	 for (var e=0;e<rowCount;e++) {
 	    
-	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+e).val());
+	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+(valor[e].value)).val());
 	 }
 	 
 	 if (total != 100){
@@ -444,6 +445,7 @@ $("#btnguardar").click(function(event){
       
       return resultado;
     }
+    
     
 /*$("#btnproyecto").click(function( ) {
     

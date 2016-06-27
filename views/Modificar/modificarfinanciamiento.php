@@ -358,6 +358,11 @@ var evento = <?= $evento; ?>;
 
  $(document).ready(function(){
     
+    moneda_soles("#aportante-aporte_monetario_0");
+    moneda_soles("#aportante-aporte_nomonetario_0");
+    moneda_soles("#aportante-aporte_monetario_1");
+    moneda_soles("#aportante-aporte_nomonetario_1");
+    
     avisos_dg(<?= $proyecto->id; ?>);
     
  $('ul.tabs li:nth-child(2)').addClass('active');
@@ -425,23 +430,37 @@ function sumavertical()
 {
     var total_monetario = 0;
     var total_no_monetario = 0;
-    var total_total = 0;
-    
+    var total_total = 0.00;
+    var no_monetario = '';
+    var monetario = '';
     
     var countaportanete=$('input[name=\'Aportante[aporte_monetario][]\']').length;
     
         for (var i=0; i<countaportanete; i++) {
+            no_monetario = $("#aportante-aporte_nomonetario_"+i).val();
+            monetario =  $("#aportante-aporte_monetario_"+i).val();
+            no_monetario = no_monetario.replace("S/. ","");
+            monetario = monetario.replace("S/. ","");
+            no_monetario = no_monetario.replace(",","");
+            monetario = monetario.replace(",","");
             
-            total_monetario += parseFloat(getNum($("#aportante-aporte_monetario_"+i).val()));
-            total_no_monetario +=  parseFloat(getNum($("#aportante-aporte_nomonetario_"+i).val()));
-            total_total +=  parseFloat(getNum($("#aportante-aporte_total_"+i).val()));   
+            //alert(getNum(parseFloat(monetario)));break;
+            
+            total_monetario += getNum(parseFloat(monetario));
+            total_no_monetario +=  getNum(parseFloat(no_monetario));
+            
         }
-        
+        total_total +=  parseFloat(parseFloat(total_monetario)+parseFloat(total_no_monetario));
+        //alert(total_total);
         $("#aportante-totalmonetario").val(total_monetario.toFixed(2));
         $("#aportante-totalnomonetario").val(total_no_monetario.toFixed(2));
         $("#aportante-totaltotal").val(total_total.toFixed(2));
+        moneda_soles("#aportante-totalmonetario");
+        moneda_soles("#aportante-totalnomonetario");
+        moneda_soles("#aportante-totaltotal");
         
 }
+
 
    // var co = <?= $co ?>;
  

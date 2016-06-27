@@ -101,7 +101,7 @@ input {
 				    </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" autocomplete="off" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante121->monetario; ?>"  disabled>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" onload="convertSoles(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" autocomplete="off" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante121->monetario; ?>"  disabled>
 					</div>
 				    </td>
                                     <td>
@@ -285,7 +285,12 @@ var evento = <?= $evento; ?>;
 
 
  $(document).ready(function(){ 
-
+    
+    moneda_soles("#aportante-aporte_monetario_0");
+    moneda_soles("#aportante-aporte_nomonetario_0");
+    moneda_soles("#aportante-aporte_monetario_1");
+    moneda_soles("#aportante-aporte_nomonetario_1");
+    
     avisos_dg(<?= $proyecto->id; ?>);
     
  if((situacion_proyecto > 0) && (evento == 1))
@@ -349,14 +354,23 @@ function sumavertical()
     var total_monetario = 0;
     var total_no_monetario = 0;
     var total_total = 0.00;
-    
+    var no_monetario = '';
+    var monetario = '';
     
     var countaportanete=$('input[name=\'Aportante[aporte_monetario][]\']').length;
     
         for (var i=0; i<countaportanete; i++) {
+            no_monetario = $("#aportante-aporte_nomonetario_"+i).val();
+            monetario =  $("#aportante-aporte_monetario_"+i).val();
+            no_monetario = no_monetario.replace("S/. ","");
+            monetario = monetario.replace("S/. ","");
+            no_monetario = no_monetario.replace(",","");
+            monetario = monetario.replace(",","");
             
-            total_monetario += parseFloat(getNum($("#aportante-aporte_monetario_"+i).val()));
-            total_no_monetario +=  parseFloat(getNum($("#aportante-aporte_nomonetario_"+i).val()));
+            //alert(getNum(parseFloat(monetario)));break;
+            
+            total_monetario += getNum(parseFloat(monetario));
+            total_no_monetario +=  getNum(parseFloat(no_monetario));
             
         }
         total_total +=  parseFloat(parseFloat(total_monetario)+parseFloat(total_no_monetario));

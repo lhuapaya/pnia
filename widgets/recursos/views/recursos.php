@@ -44,7 +44,7 @@
 				
 				<?php foreach($recursos as $recursos2){ ?>
 				    <?php //if($objetivo->id==$proyecto->objetivo_especifico_1_id){ ?>
-				    <tr id='recurso_addr_1_<?= $correlativo; ?>_<?= $re ?>'>
+				    <tr id='recurso_addr_<?= $correlativo; ?>_<?= $re ?>'>
 					<td>
 					<?= ($re+1) ?>
                                         <input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_<?= $re; ?>" value="<?= $actividad_id; ?>" />
@@ -80,7 +80,7 @@
                                                        foreach($fuentes as $fuentes2)
                                                         {
 							    echo '<script>
-								    console.log('.json_encode($fuentes2->id.' '.$recursos2->fuente).');
+								    //console.log('.json_encode($fuentes2->id.' '.$recursos2->fuente).');
 								</script>';
                                                 ?>
                                                            <option value="<?= $fuentes2->id; ?>" <?=($fuentes2->id == $recursos2->fuente)?'selected':'' ?>> <?= $fuentes2->colaborador ?></option>;
@@ -111,7 +111,7 @@
 					<?php } ?>
                                         <td class="col-xs-2">
                                             <div class="form-group field-proyecto-recurso_preciototal_<?= $correlativo; ?>_<?= $re; ?> required">
-                                                <input class="form-control " value="<?= $recursos2->precio_total ?>" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_preciototal][]" Disabled>
+                                                <input value="<?= $recursos2->precio_total ?>" class="form-control soles"  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $correlativo; ?>_<?= $re; ?>" name="Proyecto[recurso_preciototal][]" Disabled>
                                             </div>
                                         </td>
 					<td>
@@ -129,7 +129,7 @@
 				    <?php //}?>
 				<?php } ?>
 			    <?php }else{ ?>
-				<tr id='recurso_addr_1_0'>
+				<tr id='recurso_addr_<?= $correlativo; ?>_0'>
 				    <td>
 				    <?= ($re+1) ?>
 				    <input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_<?= $re; ?>" value="<?= $actividad_id; ?>" />
@@ -193,7 +193,7 @@
 					<?php } ?>
                                     <td class="col-xs-2">
 					<div class="form-group field-proyecto-recurso_preciototal_<?= $correlativo; ?>_0 required">
-					    <input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $correlativo; ?>_0" name="Proyecto[recurso_preciototal][]" Disabled>
+					    <input class="form-control soles" class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_<?= $correlativo; ?>_0" name="Proyecto[recurso_preciototal][]" Disabled>
 					</div>
 				    </td>
 				    <td>
@@ -233,102 +233,20 @@
 ?>
 <script>
  
- var re = <?= $re; ?>
- 
  var evento = <?= $event; ?>
  
+  var re = [];
  $(document).ready(function(){
     moneda_recurso();
+    
+    moneda_soles(".soles");
+    
+    
  });
  
- function agregarind(ntabla,ntr,act){
- //$("#recurso_row_1").click(function(){
-	
-	var error = '';
-	var clasificador= $('#recurso_tabla_'+ntabla).find('input[name=\'Proyecto[recurso_descripcion][]\']').length;
-	var valor=$('#recurso_tabla_'+ntabla).find('input[name=\'Proyecto[recurso_numero][]\']').serializeArray();
-        
-        for (var i=0; i<clasificador; i++) {
-            if(($('#proyecto-recurso_clasificador_'+ntabla+'_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_descripcion_'+ntabla+'_'+(valor[i].value)).val())=='') || ($('#proyecto-recurso_fuente_'+ntabla+'_'+(valor[i].value)).val()=='0') || ($.trim($('#proyecto-recurso_unidad_'+ntabla+'_'+(valor[i].value)).val())=='') )
-            {
-                error=error+'Complete todos los Campos de la Actividad '+(ntabla + 1)+' del Recurso #'+((parseInt(valor[i].value)) + 1)+' <br>';
-               // $('.field-proyecto-descripciones_'+i).addClass('has-error');
-            }
-            else
-            {
-               // $('.field-proyecto-descripciones_'+i).addClass('has-success');
-               // $('.field-proyecto-descripciones_'+i).removeClass('has-error');
-            }
-        }
-       
-	/*var clasificador = $('#proyecto-recurso_clasificador_'+(re-1));
-	var descripcion = $('#proyecto-recurso_descripcion_'+(re-1));
-	var unidad = $('#proyecto-recurso_unidad_'+(re-1));
-	var cantidad = $('#proyecto-recurso_cantidad_'+(re-1));
-        var precioun = $('#proyecto-recurso_precioun_'+(re-1));
-	
-       
-        if(clasificador.val()=='0')
-        {
-            error += "Ingrese Clasificador Nro "+re+" <br>";
-	    $('.field-proyecto-recurso_clasificador_'+(re-1)).addClass('has-success');
-            $('.field-proyecto-recurso_clasificador_'+(re-1)).removeClass('has-error');
-	}
-	
-	if($.trim(descripcion.val())=='')
-        {
-            error += "Ingrese Detalle Nro "+re+" <br>";
-	    $('.field-proyecto-recurso_descripcion_'+(re-1)).addClass('has-success');
-            $('.field-proyecto-recurso_descripcion_'+(re-1)).removeClass('has-error');
-	}
-	
-	if($.trim(unidad.val())=='')
-        {
-            error += "Ingrese la Unidad de Medida Nro "+re+" <br>";
-	    $('.field-proyecto-recurso_unidad_'+(re-1)).addClass('has-success');
-            $('.field-proyecto-recurso_unidad_'+(re-1)).removeClass('has-error');
-	}
-        
-        if($.trim(cantidad.val())=='')
-        {
-            error += "Ingrese la Cantidad Nro "+re+" <br>";
-	    $('.field-proyecto-recurso_cantidad_'+(re-1)).addClass('has-success');
-            $('.field-proyecto-recurso_cantidad_'+(re-1)).removeClass('has-error');
-	}
-        
-        if($.trim(precioun.val())=='')
-        {
-            error += "Ingrese el Precio Unitario Nro "+re+" <br>";
-	    $('.field-proyecto-recurso_precioun_'+(re-1)).addClass('has-success');
-            $('.field-proyecto-recurso_precioun_'+(re-1)).removeClass('has-error');
-	}*/
-	
-	if (error != '') {
-	    
-	    $.notify({
-                message: error 
-            },{
-                type: 'danger',
-                z_index: 1000000,
-                placement: {
-                    from: 'bottom',
-                    align: 'right'
-                },
-            });
-            return false;
-	}
-	else
-        {
-            $('#recurso_addr_'+ntabla+'_'+re).html('<td>'+(re+1)+'<input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_'+re+'" value="'+act+'" /><input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_'+ntabla+'_'+re+'" value="'+re+'" /></td><td class="col-xs-2" ><div class="form-group field-proyecto-recurso_clasificador_'+ntabla+'_'+re+' required"><select  class="form-control " id="proyecto-recurso_clasificador_'+ntabla+'_'+re+'" name="Proyecto[recurso_clasificador][]" ><option value="0">--Clasificador--</option><?php foreach($clasificador as $clasificador2) { ?> <option value="<?= $clasificador2->id; ?>" > <?= $clasificador2->descripcion ?></option>; <?php   } ?></select></div></td><td class="col-xs-3"  ><div class="form-group field-proyecto-recurso_descripcion_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_descripcion_'+ntabla+'_'+re+'" maxlength="2980" name="Proyecto[recurso_descripcion][]"/></div></td><td><div class="form-group field-proyecto-recurso_fuente_'+ntabla+'_'+re+' required"> <select  class="form-control " id="proyecto-recurso_fuente_'+ntabla+'_'+re+'" name="Proyecto[recurso_fuente][]" > <option value="0">--Fuente--</option> <?php foreach($fuentes as $fuentes2){ ?> <option value="<?= $fuentes2->id; ?>" > <?= $fuentes2->colaborador ?></option>; <?php   } ?></select></div></td><td class="col-xs-2"><div class="form-group field-proyecto-recurso_unidad_'+ntabla+'_'+re+' required"><input class="form-control " type="text"  placeholder="..." id="proyecto-recurso_unidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_unidad][]"/></div></td><td class="col-xs-1"><div class="form-group field-proyecto-recurso_cantidad_'+ntabla+'_'+re+' required"><input  class="form-control " class="form-control " type="text"  placeholder="..." id="proyecto-recurso_cantidad_'+ntabla+'_'+re+'" name="Proyecto[recurso_cantidad][]" Disabled></div></td><?php if($event == 2){ ?> <td class="col-xs-1">  <div class="form-group field-proyecto-recurso_ejecutado_'+ntabla+'_'+re+' required"> <input type="text" id="proyecto-recurso_ejecutado_'+ntabla+'_'+re+'" class="form-control" name="Proyecto[recurso_ejecutado][]" placeholder=""  Disabled>  </div> </td> <?php } ?><td><div class="form-group field-proyecto-recurso_preciototal_'+ntabla+'_'+re+' required"><input class="form-control " class="form-control "  type="text"  placeholder="..." id="proyecto-recurso_preciototal_'+ntabla+'_'+re+'" name="Proyecto[recurso_preciototal][]" Disabled></div></td><td><div><button type="button" class="btn btn-warning btn-xs" data-toggle="modal" data-target="#programado_'+ntabla+'_'+re+'_" id="btn_programado" onclick="cargartitulos('+re+')">Detalle</button></div></td><td><span class="eliminar glyphicon glyphicon-minus-sign"></span></td>');
-            $('#recurso_tabla_'+ntabla).append('<tr id="recurso_addr_'+ntabla+'_'+(re+1)+'"></tr>');
-            re++;
-	    moneda_recurso();
-        return true;
-    
-        }
-        
+
  
- }       
+     
  //   });
  
  
@@ -799,7 +717,7 @@ function verificar_peso_actividades(id)
    
 }
 
-
+/*
 function verificar_programado(id)
 {
     var array = [];
@@ -820,11 +738,11 @@ function verificar_programado(id)
    return array
    
 }
-
+*/
 function avisos(id) {
     var saldo = monto_presupuesto(id);
     var recursos = verificar_recursos(id);
-    var programado = verificar_programado(id);
+    var programado = verificar_programado(id,"<?= $verificar_programado ?>");
     
     
     if ((saldo[0] > 1) || (recursos[0] > 0) || (programado[0] != 0)) {
@@ -853,5 +771,7 @@ function moneda_recurso()
    }
    
 }
+
+
 
 </script>

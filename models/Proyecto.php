@@ -133,6 +133,8 @@ class Proyecto extends \yii\db\ActiveRecord
             public $recurso_act_ids;
             
             public $opcion;
+            public $id_objetivo;
+            public $recurso_numero;
     /**
      * @inheritdoc
      */
@@ -150,7 +152,7 @@ class Proyecto extends \yii\db\ActiveRecord
             [['modificacion','situacion','tipo_registro','id_areatematica','id_especie','id_cultivo','id_programa','id_direccion_linea','id_unidad_ejecutora','id_dependencia_inia','id_tipo_proyecto', 'user_propietario', 'estado','id','vigencia'], 'integer'],
             [['presupuesto'], 'number'],
             [['prueba'],'safe'],
-            [['recurso_act_ids','distrito','nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
+            [['recurso_numero','id_objetivo','recurso_act_ids','distrito','nombres','apellidos','telefono','celular','correo','descripciones','ids','objetivos_ids',
               'objetivos_descripciones','actividades_ids','actividades_descripciones','opcion',
               'indicadores_ids','indicadores_oe_ids','indicadores_descripciones','descripcion','observacion','cerrar_modificacion',
               'cronogramas_ids','cronogramas_meses','cronogramas_actividad_ids','descripcioncc','tipocc','idcc','otrosat','idat','respuesta_aprob',

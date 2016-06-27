@@ -83,7 +83,7 @@ $baseUrl = $Asset->baseUrl;
               <li class="dropdown user user-menu">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                   <img src="<?= Yii::$app->homeUrl.'img/'.Yii::$app->user->identity->img;?>" class="user-image" alt="User Image">
-                  <span class="hidden-xs"><?= Yii::$app->user->identity->Name;?></span>
+                  <span class="hidden-xs"><?= Yii::$app->user->identity->Name;?><?= (Yii::$app->user->identity->id_perfil == 2)? ' ('.Yii::$app->user->identity->username.')':''  ?></span>
                 </a>
                 <ul class="dropdown-menu">
                   <!-- User image -->
@@ -94,7 +94,7 @@ $baseUrl = $Asset->baseUrl;
                               $perfil = Perfil::findOne(Yii::$app->user->identity->id_perfil);
                         
                         ?>
-                      <?= Yii::$app->user->identity->Name;?> - <?= $perfil->descripcion ?>
+                      <?= Yii::$app->user->identity->Name;?> <br/> <?= $perfil->descripcion ?> <br/> <?= (Yii::$app->user->identity->id_perfil == 2)? 'Usuario: '.Yii::$app->user->identity->username:''  ?> <br/>
                       <!--<small>Member since Nov. 2012</small>-->
                     </p>
                   </li>

@@ -24,9 +24,9 @@ use app\models\Maestros;
 
 <!--<form class="contact_form" action="#" id="contact_form" runat="server">-->
 <?php if($objetivos) {?>
-<div id="form1">
+<div id="form1" >
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
-            <div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
                 
             <h3><strong>    Mi Proyecto | </strong><span style=" font-size: medium">Objetivos e Indicadores</span></h3>
             
@@ -36,14 +36,18 @@ use app\models\Maestros;
 	    
 	    </div>
 	    
-            <div class="col-xs-12 col-sm-7 col-md-12" >
+            
+	    <div class="clearfix"></div><br/>
+	    <div class="col-xs-12 col-sm-9 col-md-1" ></div>
+	    <div class="col-xs-12 col-sm-12 col-md-10" >
                 <div class="form-group field-proyecto-objetivo_general required">
                 <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
                 <label for="proyecto-objetivo_general">Objetivo General:</label>
-                <textarea class="form-control" type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 100%; height: 40px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general; ?></textarea>
+                <textarea class="form-control" type="text"  placeholder="..."  rows="10" cols="80" style="margin: 0px; width: 100%; height: 60px;" id="proyecto-objetivo_general" name="Proyecto[objetivo_general]"  required><?= $proyecto->objetivo_general; ?></textarea>
                 </div>
             </div>
-            <div class="clearfix"></div>
+	    <div class="col-xs-12 col-sm-9 col-md-1" ></div>
+            <div class="clearfix"></div><br/><br/>
             
             <div class="col-xs-12 col-sm-7 col-md-12" >
                 <label>Objetivos Especificos:</label>
@@ -65,17 +69,14 @@ use app\models\Maestros;
                   <div class="panel panel-primary">
                       <div class="panel-heading" style="height: 45px;padding:5px">
                         <?= \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i]) ?>
-                        <!--<h4 class="panel-title">
-                          <a data-toggle="collapse" data-parent="#accordion" href="#collapse1">Collapsible Group 1</a>
-                        </h4>-->
                       </div>
-                      <div id="collapse<?= $i; ?>" class="panel-collapse collapse <?=($i == 0)?'in':'' ?>">
+                      <div id="collapse<?= $i; ?>" class="panel-collapse collapse <?=($i == 0)?'in':'' ?>  ">
                         <div class="panel-body">
                             <?= \app\widgets\indicadores\IndicadoresWidget::widget(['objetivo_id'=>$objetivo->id,'correlativo'=>$i,'gestion'=>$objetivo->gestion,'evento'=>$evento3]); ?> 
                         </div>
                       </div>
                   </div>
-		  
+	    
                     
                     
                      
@@ -84,10 +85,6 @@ use app\models\Maestros;
                 $i++;
                 }?>
                 
-                <!--<div class="col-xs-12 col-sm-7 col-md-12" id="proyecto-div_id_<?= $i; ?>" >
-		</div>
-		<div id="objetivo_row_1-" class="btn btn-default pull-left" value="1" ng-click="addRow()">Agregar</div>
-              -->
               <?php }
                else
                {
@@ -97,11 +94,12 @@ use app\models\Maestros;
                ?> 
             </div>
             </div>
-            <div class="clearfix"></div><b/r>
+
+	    <div class="clearfix"></div><br/><br/>
             <div class="col-xs-12 col-sm-7 col-md-12" >
             <button type="submit" id="btn_obj_ind" class="btn btn-primary pull-right">Guardar</button>   
             </div>
-        
+	    <div class="clearfix"></div><br/><br/>  
     
     
     
@@ -423,14 +421,15 @@ $("#btn_obj_ind").click(function(event){
       var count_tablas=($('table[name=\'Proyecto[indicadores_tabla][]\']').length);
       console.log(count_tablas);
       
-      
-      for (i=0;i<count_tablas;i++)
+      for (var i=0;i<count_tablas;i++)
       {
+	 var valor=$('#indicadores_tabla_'+i).find('input[name=\'Proyecto[indicadores_numero][]\']').serializeArray();
+	 
 	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length -1);
 	 //console.log(rowCount);
-	 for (e=0;e<rowCount;e++) {
+	 for (var e=0;e<rowCount;e++) {
 	    
-	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+e).val());
+	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+(valor[e].value)).val());
 	 }
 	 
 	 if (total != 100){

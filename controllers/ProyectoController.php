@@ -1216,7 +1216,8 @@ class ProyectoController extends Controller
         $proyecto = new Proyecto();
         $session = Yii::$app->session;
         $flat = '';
-        
+        $flat_ob_esp = '';
+        $flat_ind = '';
         
         $existe = Proyecto::find()
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
@@ -1224,23 +1225,28 @@ class ProyectoController extends Controller
                         
         if($proyecto->load(Yii::$app->request->post()) )
         {
-            $countRecurso = count(array_filter($proyecto->recurso_descripcion));
+            $countRecurso = count(array_filter($proyecto->recurso_act_ids));
             //var_dump($countRecurso);die;
             //var_dump($proyecto->recurso_descripcion);
             //die;
+            //var_dump($countRecurso);
             if($existe == 0)
             {
 
             }
             else
             {
- 
+                $flat_ob_esp = $proyecto->id_objetivo;
+                $flat_ind = $proyecto->id_indicador;
                 
                 for($i=0;$i<$countRecurso;$i++)
                 {
                     if($proyecto->id_actividad)
                     {
-                    $flat .= 'a';
+                      if((trim($proyecto->recurso_descripcion[$i]) != '') && ($proyecto->recurso_clasificador[$i] != '0') && ($proyecto->recurso_fuente[$i] != '0') && (trim($proyecto->recurso_unidad[$i]) != '')){  
+                    //$flat .= 'a';
+                    // var_dump($proyecto->recurso_descripcion[$i].'- ');
+                    
                     if(isset($proyecto->recurso_ids[$i]))
                     {
                         //var_dump($proyecto->recurso_ids[$i].','.$proyecto->recurso_act_ids[$i].','.$proyecto->recurso_clasificador[$i].','.$proyecto->recurso_descripcion[$i].','.$proyecto->recurso_unidad[$i].','.$proyecto->recurso_fuente[$i]);die;
@@ -1269,9 +1275,13 @@ class ProyectoController extends Controller
                         //$recurso->precio_total=($proyecto->recurso_precioun[$i] *  $proyecto->recurso_cantidad[$i]);
                         $recurso->save(); 
                     }
+                    
+                      }
+                    
                     }
                 }
-                //var_dump($flat);die;
+                
+                //die;
             }
             
             if(isset($proyecto->cerrar_recurso))
@@ -1285,12 +1295,12 @@ class ProyectoController extends Controller
                 return $this->redirect('datosgenerales?event='.$evento); 
              }
             
-            return $this->refresh();
+            //return $this->refresh();
         }
         
                         
-        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
-        {
+        /*if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {*/
             $proyecto = Proyecto::find()
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                         ->one();
@@ -1314,9 +1324,21 @@ class ProyectoController extends Controller
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->orderBy(['actividad.descripcion'=>SORT_ASC])
+                                ->all();
+                                
+            $clasificador = Maestros::find()
+                                ->where('id_padre = 32 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+            
+            $fuentes=Aportante::find()
+                                ->select('id, colaborador')
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy('tipo')
                                 ->all();
                         
-        }
+       // }
         
         
         $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]);
@@ -1329,7 +1351,7 @@ class ProyectoController extends Controller
         //var_dump($ver_monto_total);die;
         
         
-        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$evento,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_co_aporte'=>$ver_co_aporte]);
+        return $this->render('recursos',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$evento,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_co_aporte'=>$ver_co_aporte,'flat_ob_esp'=>$flat_ob_esp,'flat_ind'=>$flat_ind,'clasificador'=>$clasificador,'fuentes'=>$fuentes]);
     }
     
     
@@ -1410,6 +1432,8 @@ class ProyectoController extends Controller
     {
         $situacion = $_REQUEST["situation"];
         $evento = $_REQUEST["event"];
+        $flat_ob_esp = '';
+        $flat_ind = '';
         
         $this->layout='principal';
         $flatUpdate = 0;        
@@ -1431,6 +1455,8 @@ class ProyectoController extends Controller
             else
             {
                 
+                $flat_ob_esp = $proyecto->id_objetivo;
+                $flat_ind = $proyecto->id_indicador;
                 
                 for($i=0;$i<$countActividades;$i++)
                 {
@@ -1466,12 +1492,12 @@ class ProyectoController extends Controller
                 
             }
             
-            return $this->refresh();
+            //return $this->refresh($flat_ob_esp,$flat_ind);
         }
         
                         
-        if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
-        {
+        /*if(!$proyecto->load(Yii::$app->request->post()) && $existe > 0)
+        {*/
            $proyecto = Proyecto::find()
                         ->where('estado = 1 and id =:id_proyecto',[':id_proyecto'=>$session['proyecto_id']])
                         ->one();
@@ -1490,11 +1516,11 @@ class ProyectoController extends Controller
                                 ->all();
                     
                         
-        }
+        //}
         
         $ver_obj_ind = Yii::$app->runAction('proyecto/verificar_obj_ind', ['id'=>$proyecto->id]); //actionVerificar_obj_ind($proyecto->id);
         
-        return $this->render('actividad',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos,'evento'=>$evento,'proyecto'=>$proyecto,'ver_obj_ind'=>$ver_obj_ind]);
+        return $this->render('actividad',['indicadores'=>$indicadores,'objetivosespecificos'=>$objetivosespecificos,'evento'=>$evento,'proyecto'=>$proyecto,'ver_obj_ind'=>$ver_obj_ind,'flat_ob_esp'=>$flat_ob_esp,'flat_ind'=>$flat_ind]);
       
     }
     
@@ -1787,11 +1813,8 @@ class ProyectoController extends Controller
 		    <input type="hidden" value="'.$actividades2->id.'" id="proyecto-id_actividad_'.$i.'" name="Proyecto[id_actividad][]" />
 		    <input type="hidden" value="'.$actividades2->descripcion.'" id="proyecto-act_descripcion_'.$i.'" name="Proyecto[act_descripcion]" /> 
 		    <div class="col-md-1" >
-			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$i.'">
-			     <span style="color:black" class="glyphicon ';
-                             if($i == 0){ $html .='glyphicon-minus';}else{ $html .='glyphicon-plus';}
-                             
-                        $html .=      '"></span>
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse'.$i.'" aria-expanded="true">
+			     <span style="color:black" class="glyphicon glyphicon-minus"></span>
 			</a>
 			</div>
 		    <div class="col-xs-10 col-sm-10 col-md-9" >
@@ -1811,7 +1834,7 @@ class ProyectoController extends Controller
 	    </div>
 
                       </div>
-                      <div id="collapse'.$i.'" class="panel-collapse collapse '.($i == 0 ?'in':'').'">
+                      <div id="collapse'.$i.'" class="panel-collapse collapse in">
                         <div class="panel-body">
                             '.\app\widgets\recursos\RecursosWidget::widget(['actividad_id'=>$actividades2->id,'vigencia'=>$proyecto->vigencia,'id_proyecto'=>$proyecto->id,'evento'=>$evento,'correlativo'=>$i]).'
                         </div>
@@ -2135,7 +2158,7 @@ class ProyectoController extends Controller
                                             if($evento == 2){
 					    $ejecutado = '<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_ejecutado_'.$act.' required">
-						<input type="text" id="proyecto-actividades_ejecutado_'.$act.'" class="form-control" name="Proyecto[actividades_ejecutado][]" placeholder="" value="'.$actividad->ejecutado.'" Disabled>
+						<input type="text" maxlength="30" id="proyecto-actividades_ejecutado_'.$act.'" class="form-control text-center" name="Proyecto[actividades_ejecutado][]" placeholder="" value="'.$actividad->ejecutado.'" Disabled>
 					    </div>
 					    </td>';
                                             }
@@ -2145,7 +2168,7 @@ class ProyectoController extends Controller
                                             }
 
 			$html .= '<tr id="actividad_addr_1_'.$act.'">
-					<td>
+					<td style="text-align: center">
 					'.($act+1).'
 					<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_'.$act.'" value="'.$act.'" />
 					</td>
@@ -2163,17 +2186,17 @@ class ProyectoController extends Controller
                                         </td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_pesos_'.$act.' required">
-						<input type="text" id="proyecto-actividades_pesos_'.$act.'" class="form-control entero" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="'.$actividad->peso.'" />
+						<input type="text" maxlength="3" id="proyecto-actividades_pesos_'.$act.'" class="form-control entero text-center" name="Proyecto[actividades_pesos][]" placeholder="Peso" value="'.$actividad->peso.'" />
 					    </div>
 					</td>
 					<td class="col-xs-2">
 					    <div class="form-group field-proyecto-actividades_unidad_medidas_'.$act.' required">
-						<input type="text" id="proyecto-actividades_unidad_medidas_'.$act.'" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder="Unidad de Medida" value="'.$actividad->unidad_medida.'" />
+						<input type="text" maxlength="100" id="proyecto-actividades_unidad_medidas_'.$act.'" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder="Unidad de Medida" value="'.$actividad->unidad_medida.'" />
 					    </div>
 					</td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_metas_'.$act.' required">
-						<input type="text" id="proyecto-actividades_metas_'.$act.'" class="form-control entero" name="Proyecto[actividades_metas][]" placeholder="Cantidad Programada<?= $act ?>" value="'.$actividad->meta.'" />
+						<input type="text" maxlength="30" id="proyecto-actividades_metas_'.$act.'" class="form-control entero text-center" name="Proyecto[actividades_metas][]" placeholder="Cantidad Programada<?= $act ?>" value="'.$actividad->meta.'" />
 					    </div>
 					</td>'.$ejecutado.'
 					<!--<td>
@@ -2205,7 +2228,7 @@ class ProyectoController extends Controller
                                             if($evento == 2){
 					    $ejecutado = '<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_ejecutado_0 required">
-						<input type="text" id="proyecto-actividades_ejecutado_0" class="form-control" name="Proyecto[actividades_ejecutado][]" placeholder=""  Disabled>
+						<input type="text" maxlength="30" id="proyecto-actividades_ejecutado_0" class="form-control text-center" name="Proyecto[actividades_ejecutado][]" placeholder=""  Disabled>
 					    </div>
 					    </td>';
                                             }
@@ -2215,7 +2238,7 @@ class ProyectoController extends Controller
                                             }
             
          $html .='<tr id="actividad_addr_1_0">
-				    <td>
+				    <td style="text-align: center">
 					'.($act+1).'
 					<input type="hidden" name="Proyecto[actividades_numero][]" id="proyecto-actividades_numero_0" value="0" />
 					</td>
@@ -2233,17 +2256,17 @@ class ProyectoController extends Controller
                                         </td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_pesos_0 required">
-						<input type="text" id="proyecto-actividades_pesos_0" class="form-control entero" name="Proyecto[actividades_pesos][]" placeholder="" " />
+						<input type="text" maxlength="3" id="proyecto-actividades_pesos_0" class="form-control entero text-center" name="Proyecto[actividades_pesos][]" placeholder="" " />
 					    </div>
 					</td>
 					<td class="col-xs-2">
 					    <div class="form-group field-proyecto-actividades_unidad_medidas_0 required">
-						<input type="text" id="proyecto-actividades_unidad_medidas_0" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder=""  />
+						<input type="text" maxlength="100" id="proyecto-actividades_unidad_medidas_0" class="form-control" name="Proyecto[actividades_unidad_medidas][]" placeholder=""  />
 					    </div>
 					</td>
 					<td class="col-xs-1">
 					    <div class="form-group field-proyecto-actividades_metas_0 required">
-						<input type="text" id="proyecto-actividades_metas_0" class="form-control entero" name="Proyecto[actividades_metas][]" placeholder="" />
+						<input type="text" maxlength="30" id="proyecto-actividades_metas_0" class="form-control entero text-center" name="Proyecto[actividades_metas][]" placeholder="" />
 					    </div>
 					</td>'.$ejecutado.'
 					<!--<td>
@@ -2670,7 +2693,7 @@ and ap.tipo = 1*/
             
             if($total_recursos < $presupuesto_pnia->monetario)
             {
-                $mensaje = "<strong>¡Cuidado! <strong>Tiene aun un saldo disponible de ".(floatval($presupuesto_pnia->monetario) - floatval($total_recursos))." del presupuesto asignado por PNIA por favor completar los Recursos. <br/>";
+                $mensaje = "<strong>¡Cuidado! <strong>Tiene aun un saldo disponible de S/. ".(floatval($presupuesto_pnia->monetario) - floatval($total_recursos))." del presupuesto asignado por PNIA por favor completar los Recursos. <br/>";
                $w = 3; 
             }
             }
