@@ -68,7 +68,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'cantidad',
                 'format'=>'raw',
                 'value'=>function($data) {
-                   return '<label class="soles">'.round($data->cantidad,2).'</label>';
+                   return '<label class="soles">'.$data->cantidad.'</label>';
                 },
                 //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
