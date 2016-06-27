@@ -41,7 +41,7 @@ class RecursoProgramadoSearch extends RecursoProgramado
     public function search($params)
     {
         $query = RecursoProgramado::find()
-                        ->select('recurso_programado.anio, recurso_programado.mes, TRUNCATE(sum(recurso.precio_unit*recurso_programado.cantidad),2) as cantidad, min(recurso_programado.estado) as estado')
+                        ->select('recurso_programado.anio, recurso_programado.mes, sum(recurso.precio_unit*recurso_programado.cantidad) as cantidad, min(recurso_programado.estado) as estado')
                                 ->innerJoin('recurso','recurso.id=recurso_programado.id_recurso')
                                 ->innerJoin('aportante','aportante.id=recurso.fuente')
                                 ->innerJoin('actividad','actividad.id=recurso.actividad_id')
