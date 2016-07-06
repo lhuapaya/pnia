@@ -361,7 +361,7 @@ class RendicionController extends Controller
                         $detRendicion->razon_social=$model->razon_social[$i];
                         $detRendicion->save();
                         
-                        var_dump($model->clasificador_id[$i].'-'.$model->mes[$i].'-'.$model->anio[$i].'-'.$model->cantidad[$i].'-'.$model->precio_unit[$i].'-'.($model->cantidad[$i] * $model->precio_unit[$i]).'-'.$model->ruc[$i].'-'.$model->razon_social[$i]);die;
+                        //var_dump($model->clasificador_id[$i].'-'.$model->mes[$i].'-'.$model->anio[$i].'-'.$model->cantidad[$i].'-'.$model->precio_unit[$i].'-'.($model->cantidad[$i] * $model->precio_unit[$i]).'-'.$model->ruc[$i].'-'.$model->razon_social[$i]);die;
                         //var_dump([':id_recurso'=>$detRendicion->id_recurso,':anio'=>$detRendicion->anio,':mes'=>$detRendicion->mes]);die;
                         $programado = RecursoProgramado::find()
                                         ->where('recurso_programado.id_recurso = :id_recurso and recurso_programado.anio = :anio and recurso_programado.mes = :mes',[':id_recurso'=>$detRendicion->id_recurso,':anio'=>$detRendicion->anio,':mes'=>$detRendicion->mes])
