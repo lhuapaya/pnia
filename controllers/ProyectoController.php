@@ -87,6 +87,8 @@ class ProyectoController extends Controller
         
         $proyecto = new Proyecto();
         $responsable = new Responsable();
+        $flat_ob_esp = '';
+        $flat_ind = '';
         //$departamentos = new Ubigeo();
         $provincias = new Ubigeo();
         $distritos = new Ubigeo();
@@ -340,10 +342,11 @@ class ProyectoController extends Controller
         $ver_recursos = Yii::$app->runAction('proyecto/verificar_recursos', ['id'=>$proyecto->id]);
         $ver_peso_actividad = Yii::$app->runAction('proyecto/verificar_peso_actividades', ['id'=>$proyecto->id]);
         $ver_programado = Yii::$app->runAction('proyecto/verificar_programado', ['id'=>$proyecto->id]);
+        $ver_co_aporte = Yii::$app->runAction('proyecto/verificar_colaborador_aporte', ['id'=>$proyecto->id]);
 
          //'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_programado'=>$ver_programado   
 
-        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'actividades'=>$actividades,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_programado'=>$ver_programado,'requiere_aprobar'=>$requiere_aprobar]);
+        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'actividades'=>$actividades,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,'ver_programado'=>$ver_programado,'requiere_aprobar'=>$requiere_aprobar,'ver_co_aporte'=>$ver_co_aporte,'flat_ob_esp'=>$flat_ob_esp,'flat_ind'=>$flat_ind]);
       
         
         

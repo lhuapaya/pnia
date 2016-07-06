@@ -44,10 +44,11 @@ class DetalleRendicion extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_rendicion', 'id_clasificador', 'id_recurso', 'mes', 'anio', 'cantidad'], 'integer'],
-            [['precio_unit', 'total'], 'number'],
+            [['id_rendicion', 'id_clasificador', 'id_recurso', 'mes', 'anio'], 'integer'],
+            [['precio_unit', 'total', 'cantidad'], 'number'],
             [['clasificador_id','id_ren','respuesta_aprob','detalle_ids','observacion'],'safe'],
-            [['descripcion', 'razon_social'], 'string', 'max' => 200],
+            [['razon_social'], 'string', 'max' => 200],
+            [['descripcion'], 'string', 'max' => 3000],
             [['ruc'], 'string', 'max' => 20]
         ];
     }

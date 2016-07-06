@@ -751,20 +751,38 @@ use app\models\Maestros;
     </article>
     <article id="tab5">
         
+        <?php
+	$ver_act = json_decode($ver_actividad);
+	$ver_peso_act = json_decode($ver_peso_actividad);
+	$ver_co_apor = json_decode($ver_co_aporte);
+	//var_dump($ver_act->estado);die;
+	$denegado = 0;
+	if(($ver_obj_ind == 0) && ($ver_act->estado == 0) && ($ver_co_apor->estado == 0) ){
+	   $denegado = 1; 
+	    ?>
+	
         <div class="col-xs-12 col-sm-7 col-md-1" >
+	    <input type="hidden" value="<?= $proyecto->id?>" id="proyecto-id" name="Proyecto[id]" /> 
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Objetivo Especifico:</h5>
                 <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
-            <select class="form-control id_objetivo" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo2">
+            <select class="form-control id_objetivo" name="Proyecto[id_objetivo]"  id="proyecto-id_objetivo">
 		<?php
                         $array1 = [];
                         $i = 0;
                            foreach($objetivosespecificos as $objetivoespecifico)
                             {
+                                if($flat_ob_esp == '')
+				{
                                 $array1[$i] = $objetivoespecifico->id;
+				}
+				else
+				{
+				  $array1[$i]  = $flat_ob_esp;
+				}
                     ?>
-                               <option value="<?= $objetivoespecifico->id; ?>" > <?= $objetivoespecifico->descripcion ?></option>;
+                               <option value="<?= $objetivoespecifico->id; ?>" <?= ($objetivoespecifico->id == $flat_ob_esp)?'Selected':'' ?>> <?= $objetivoespecifico->descripcion ?></option>;
                     <?php  $i++; } ?>    
 		</select>    
         </div>
@@ -775,59 +793,146 @@ use app\models\Maestros;
 	</div>
         <div class="col-xs-12 col-sm-7 col-md-10" >
             <h5>Indicador:</h5>
-                <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
-            <select class="form-control id_indicador" name="Proyecto[id_indicador]" id="proyecto-id_indicador2">
+                
+            <select class="form-control id_indicador" name="Proyecto[id_indicador]" id="proyecto-id_indicador">
 		<?php
                         $array2 = [];
-                        $i = 0;
+                       // $i = 0;
                            foreach($indicadores as $indicadores2)
                             {
                                 
 				if($indicadores2->id_oe == $array1[0])
 				{
+				    if($flat_ind == '')
+				    {
+				    $array2[] = $indicadores2->id;
+				    }
+				    else
+				    {
+				      $array2[]  = $flat_ind;
+				    }
                     ?>
-                               <option value="<?= $indicadores2->id; ?>" > <?= $indicadores2->descripcion ?></option>;
-                    <?php  $array2[$i] = $indicadores2->id;
+                               <option value="<?= $indicadores2->id; ?>" <?= ($indicadores2->id == $flat_ind)?'Selected':'' ?>> <?= $indicadores2->descripcion ?></option>;
+                    <?php  //$array2[] = $indicadores2->id;
 		    
 				}
-				$i++;
+				//$i++;
 			    } ?>    
 		</select>    
         </div>
 	<div class="col-xs-12 col-sm-7 col-md-1" >
 	</div>
-	<div class="clearfix"></div>
+	<div class="clearfix"></div><br/><br/>
         
-        <div class="col-xs-12 col-sm-7 col-md-1" >
-	</div>
-        <div class="col-xs-12 col-sm-7 col-md-10" >
-	    <h5>Actividad:</h5>
-                <!--<label for="proyecto-objetivo_general">Señale Objeto General:</label>-->
-            <select class="form-control id_actividad" name="Proyecto[id_actividad]" id="proyecto-id_actividad2">
-		<?php
-                        $array = [];
-                        $i = 0;
-                           foreach($actividades as $actividades2)
-                            {
-                                
-				if($actividades2->id_ind == $array2[0])
-				{
-                    ?>
-                               <option value="<?= $actividades2->id; ?>" > <?= $actividades2->descripcion ?></option>;
-                    <?php
-			    $array[$i] = $actividades2->id;
-			    }
-			    $i++; } ?>    
-		</select>    
+	<div class="col-xs-12 col-sm-7 col-md-12"  id="form_act" >
+                <label>Actividades:</label>
+                <div class="panel-group" id="accordion">
+               <?php
+	       $array =[];
+               $i = 0;
+               if($actividades)
+               {
+		  /*$evento3 = 1;
+		  if($proyecto->situacion == 2)
+		  {
+		     $evento3 = 2;
+		  }*/
+		  
+                foreach($actividades as $actividades2)
+                {
+                    if($actividades2->id_ind == $array2[0])
+		    {
+			$array[] = $actividades2->id;
+			
+                ?>
+                  <div class="panel panel-primary">
+                      <div class="panel-heading" style="height: 45px;padding:5px">
+                        <div id="divactividad" >
+		<?php //if($objetivoespecifico) {?>
+                <div class="col-xs-12 col-sm-9 col-md-12" id="proyecto-div_id_<?= $i; ?>" >
+		    <input type="hidden" value="<?= $actividades2->id?>" id="proyecto-id_actividad_<?= $i; ?>" name="Proyecto[id_actividad][]" />
+		    <input type="hidden" value="<?= $actividades2->descripcion;?>" id="proyecto-act_descripcion_<?= $i; ?>" name="Proyecto[act_descripcion]" /> 
+		    <!--<div class="col-md-1" >
+			<?= ($i+1); ?>
+		    </div>-->
+		    <div class="col-md-1" >
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse<?= $i; ?>" aria-expanded="true">
+			     <span style="color:black" class="glyphicon glyphicon-minus"></span>
+			</a>
+			</div>
+		    <div class="col-xs-10 col-sm-10 col-md-9" >
+			<div class="form-group field-proyecto-objetivos_descripciones_<?= $i; ?> required">
+			    <label for="proyecto-obj_descripcion_<?= $i; ?>"><?= $actividades2->descripcion;?></label>
+			</div> 
+		    </div>
+		    <div class="col-xs-12 col-sm-9 col-md-2" >
+			<div class="form-group field-proyecto-objetivos_peso_<?= $i; ?> required">
+			    
+			</div>    
+		    </div>
+                    
+                    <br>
+                </div>
+		
+		<?php // } else {?>
+		
+		<?php //} ?>
+                <div class="clearfix"></div>
+	    </div>
+
+                      </div>
+                      <div id="collapse<?= $i; ?>" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <?= \app\widgets\recursos\RecursosWidget::widget(['actividad_id'=>$actividades2->id,'vigencia'=>$proyecto->vigencia,'id_proyecto'=>$proyecto->id,'evento'=>$evento,'correlativo'=>$i]); ?> 
+                        </div>
+                      </div>
+                  </div>
+		  
+                    
+                    
+                     
+                
+                <?php
+		
+		
+                $i++;
+		    }}
+		    
+		    
+		    ?>
+                
+                <!--<div class="col-xs-12 col-sm-7 col-md-12" id="proyecto-div_id_<?= $i; ?>" >
+		</div>
+		<div id="objetivo_row_1-" class="btn btn-default pull-left" value="1" ng-click="addRow()">Agregar</div>
+              -->
+              <?php }
+               else
+               {
+                //echo \app\widgets\objetivosespecificos\ObjetivosEspecificosWidget::widget(['objetivo_id'=>'','correlativo'=>$i]);    
+                //$i= 1;
+               }
+               ?> 
+            </div>
+            </div>
+            
+        <div class="clearfix"></div><br/>
+
+	<?php if($proyecto->situacion == 0) {?>
+	<div class="clearfix"><br/>
+	    <div class="col-xs-12 col-sm-7 col-md-12">
+	    <button type="submit" id="btn_rec_save" class="btn btn-primary pull-right">Guardar</button> 
+	    </div>
+	<div class="col-xs-12 col-sm-7 col-md-12 checkbox">
+            <label><input type="checkbox" name="Proyecto[cerrar_recurso]" id="proyecto-cerrar_recurso" ><strong>Doy por completo el registro de mi proyecto y Autorizo su revisión.</strong></label>
         </div>
-	<div class="col-xs-12 col-sm-7 col-md-1" >
-	</div>
-        <div class="clearfix"></div><br/><br/>
-	<div class="col-xs-12 col-sm-7 col-md-12" id="form1">
-        <?= \app\widgets\recursos\RecursosWidget::widget(['actividad_id'=>$array[0],'vigencia'=>$proyecto->vigencia,'id_proyecto'=>$proyecto->id,'evento'=>$evento]); ?> 
-        
-        
-        </div>
+	<?php } }else{   ?>
+	    <div class="alert alert-warning" id="warning">
+		<?= $ver_act->mensaje.$ver_peso_act->mensaje.$ver_co_apor->mensaje ?>
+		<!--<strong>¡Error!</strong> Verificar los Indicadores y Actividades para continuar.-->
+	    </div>
+	<?php } ?>
+	<div class="clearfix"></div><br/><br/><br/>
+
         
     </article>
  
