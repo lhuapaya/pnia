@@ -81,7 +81,7 @@
 				    <?php $ind++; ?>
 				<?php } ?>
 			    <?php }else{ ?>
-				<tr id='indicador_addr_0_0'>
+				<tr id='indicador_addr_<?= $correlativo; ?>_0'>
 				    <td>
 					<?= ($ind+1) ?>
 					<input type="hidden" name="Proyecto[indicadores_oe_ids][]" id="proyecto-indicadores_oe_ids_<?= $ind; ?>" value="<?= $objetivosind; ?>" />

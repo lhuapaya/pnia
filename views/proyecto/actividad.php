@@ -98,7 +98,7 @@ use yii\web\JsExpression;
 	<div class="clearfix"></div><br/><br/>
 	<?php }else{?>
 	    <div class="alert alert-warning" id="warning">
-		<strong>¡Error!</strong> Hay Objetivos sin Indicadores no puede continuar.
+		Por favor registrar los Indicadores antes de Ingresar a esta Opción.
 	    </div>
 	<?php } ?>
          <?php ActiveForm::end(); ?>

@@ -188,7 +188,7 @@ use app\models\Maestros;
                                                 <option value="0">--Programa--</option>
                     <?php
                     $prog = null;
-                    if ($proyecto->ubigeo) {
+                    //if ($proyecto->ubigeo) {
                         
                         foreach($programa as $programa2)
                         {
@@ -200,7 +200,7 @@ use app\models\Maestros;
                         }
                        
                         
-                    }
+                   // }
                     ?>
                     
                     </select>

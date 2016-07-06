@@ -427,6 +427,9 @@ $("#btn_obj_ind").click(function(event){
 	 
 	 rowCount= parseInt($('#indicadores_tabla_'+i+' > tbody >tr').length -1);
 	 //console.log(rowCount);
+	 if (rowCount != 0)
+	 {
+	 
 	 for (var e=0;e<rowCount;e++) {
 	    
 	  total = total +  parseInt($('#proyecto-indicadores_pesos_'+i+'_'+(valor[e].value)).val());
@@ -434,6 +437,8 @@ $("#btn_obj_ind").click(function(event){
 	 
 	 if (total != 100){
 	    resultado = resultado+"<strong>¡Cuidado!</strong> El peso de los Indicadores del Objetivo "+(i+1)+" no suman 100% <br/>";
+	 }
+	 
 	 }
 	 
 	 total = 0;
