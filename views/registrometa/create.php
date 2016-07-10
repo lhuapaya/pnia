@@ -16,6 +16,26 @@ $ejecutado = [];
 
 ?>
 <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
+
+<div class="modal fade" id="modalobs_" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Lista de Metas Ejecutadas</h4>
+            </div>
+            <div class="modal-body" id="lista_indact">
+                
+                
+            </div>
+            <div class="clearfix"></div><br/><br/>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="registro-meta-create">
 
     <br/><h2><?= Html::encode($this->title) ?></h2><br/><br/>
@@ -97,8 +117,20 @@ $ejecutado = [];
 
 <div class="col-xs-12 col-sm-7 col-md-2" >
     <div class="form-group field-registrometa-meta required">
+    <br/><label></label>
+    <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#modalobs_">
+          <span class="glyphicon glyphicon-th-list"></span> List <?= ($id_tipo == 1)?'Ind.':'Act.' ?>
+        </button>
+    </div>
+</div>
+<div class="clearfix"></div>
+<?php if($id_tipo == 1){ ?>
+        <div class="col-xs-12 col-sm-7 col-md-2" ></div>
+    <?php } ?>
+<div class="col-xs-12 col-sm-7 col-md-10 text-center" >
+    <div class="form-group field-registrometa-meta text-left">
     <label for="registrometa"></label><br/>
-<button type="button" id="btnagregar" class="btn btn-success">Agregar</button>
+<button type="button" id="btnagregar" class="btn btn-success ">Agregar</button>
     </div>
 </div>
 
@@ -147,12 +179,30 @@ $ejecutado = [];
   $refrescaractividad= Yii::$app->getUrlManager()->createUrl('proyecto/refrescaractividades');
   $verificar_obj_ind= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_obj_ind');
   $ver_meta= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_meta');
+  $cargar_lista= Yii::$app->getUrlManager()->createUrl('registrometa/cargar_lista');
+  
+  
 ?>
 <script>
 
 var tr = <?= $i ?>;
 var id_tipo = <?= $id_tipo ?>;
 
+$(document).ready(function(){ 
+
+if (id_tipo == 1)
+{
+  var valor = $("#registrometa-id_indicador").val();  
+}
+
+if (id_tipo == 2)
+{
+  var valor = $("#registrometa-id_actividad").val();  
+}
+
+cargarLista(valor);
+
+});
 $("#registrometa-id_objetivo").change(function(){
     
      var indicador = $("#registrometa-id_indicador");
@@ -175,7 +225,7 @@ $("#registrometa-id_objetivo").change(function(){
                         var id_indicador = indicador.val();
                         if (id_tipo == 2)
                         {
-                        
+                            
                         $.ajax({
 			    url: '<?= $obteneractividad ?>',
 			    type: 'GET',
@@ -186,6 +236,7 @@ $("#registrometa-id_objetivo").change(function(){
 				actividad.append(data);
                                 
                                 var id_actividad = actividad.val();
+                                cargarLista(id_actividad);
                                 
                                 $.ajax({
                                     url: '<?= $obtenermeta ?>',
@@ -201,6 +252,7 @@ $("#registrometa-id_objetivo").change(function(){
                         }
                         else
                         {
+                            cargarLista(id_indicador);
                            $.ajax({
 			    url: '<?= $obtenermeta ?>',
 			    type: 'GET',
@@ -242,7 +294,7 @@ $("#registrometa-id_objetivo").change(function(){
 				actividad.append(data);
                                 
                                 var id_actividad = actividad.val();
-                                
+                                cargarLista(id_actividad);
                                 $.ajax({
                                     url: '<?= $obtenermeta ?>',
                                     type: 'GET',
@@ -257,6 +309,7 @@ $("#registrometa-id_objetivo").change(function(){
                         }
                         else
                         {
+                            cargarLista(id_indicador);
                            $.ajax({
 			    url: '<?= $obtenermeta ?>',
 			    type: 'GET',
@@ -282,6 +335,7 @@ $("#registrometa-id_objetivo").change(function(){
         {
 
                                 var id_actividad = actividad.val();
+                                cargarLista(id_actividad);
                                 $.ajax({
                                     url: '<?= $obtenermeta ?>',
                                     type: 'GET',
@@ -464,6 +518,22 @@ $("#registrometa-id_objetivo").change(function(){
         {
         return true;
         }
-    });  
+    });
+ 
+function cargarLista(id)
+{
+    var popup = $("#lista_indact");
+    $.ajax({
+                    url: '<?= $cargar_lista ?>',
+                    type: 'GET',
+                    async: false,
+                    data: {tipo:id_tipo,id:id},
+                    success: function(data){
+                        
+                      popup.html(data);  
+
+                    }
+                });
+}
     
 </script>

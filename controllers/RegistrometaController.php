@@ -263,7 +263,8 @@ class RegistrometaController extends Controller
                                 ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
                                 ->orderBy(['objetivo_especifico.descripcion'=>SORT_ASC])
                                 ->all();   
-                
+              if($id_tipo == 1)
+            {  
               $indicadores = Proyecto::find()
                         ->select('indicador.id, indicador.descripcion, indicador.id_oe, indicador.meta, indicador.ejecutado')
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
@@ -272,9 +273,17 @@ class RegistrometaController extends Controller
                                 ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();
                 $actividades = null;
-            
+            }
             if($id_tipo == 2)
             {
+                $indicadores = Proyecto::find()
+                        ->select('indicador.id, indicador.descripcion, indicador.id_oe, indicador.meta, indicador.ejecutado')
+                                ->innerJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
+                                ->innerJoin('indicador','indicador.id_oe = objetivo_especifico.id')
+                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                                ->orderBy(['indicador.descripcion'=>SORT_ASC])
+                                ->all();
+                                
               $actividades = Proyecto::find()
                         ->select('actividad.id, actividad.descripcion, actividad.id_ind, actividad.meta, actividad.ejecutado')
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
@@ -351,5 +360,74 @@ class RegistrometaController extends Controller
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
+    }
+    
+    public function actionCargar_lista($tipo,$id)
+    {
+        $html = '';
+                        $query = RegistroMeta::find()
+                            ->select('registro_meta_detalle.cantidad, registro_meta.fecha, registro_meta.id')
+                            ->innerJoin('registro_meta_detalle','registro_meta_detalle.id_registrometa = registro_meta.id')
+                            ->where('registro_meta.estado =2 and registro_meta.id_tipo = :id_tipo and registro_meta_detalle.id_indact = :id_indact',[':id_tipo'=>$tipo,':id_indact'=>$id])
+                            ->all();
+        
+                        if($tipo == 1)
+                        {
+                            $query2 = Indicador::findOne($id);
+                        }
+                        
+                        if($tipo == 2)
+                        {
+                            $query2 = Actividad::findOne($id);   
+                        }
+            
+         $html .=   '<div class="clearfix"></div>
+                    <div class="col-xs-12 col-sm-7 col-md-12">
+                        <label>Nombre '.($tipo == 1?'Indicador':'Actividad').': <strong style="color:silver;">'.$query2->descripcion.'</strong></label>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 col-md-12">
+                        <label>Unidad de Medida: <strong style="color:silver;">'.$query2->unidad_medida.'</strong></label>
+                    </div>
+                    <div class="col-xs-12 col-sm-7 col-md-12">
+                        <label>Meta Global: <strong style="color:silver;">'.$query2->meta.'</strong></label>
+                    </div>
+                    <div class="clearfix"></div><br/>
+                    <div class="col-xs-12 col-sm-7 col-md-12 text-center">
+                    <h4>Metas Ejecutadas</h4>
+                    <div>
+                    <div class="clearfix">
+                    <div class="col-xs-12 col-sm-7 col-md-2"></div>
+                    <div class="col-xs-12 col-sm-7 col-md-8">
+                    <table class="table table-striped table-bordered">
+                    <thead>
+                            <tr>
+                                <th class="text-center">
+                                    #
+                                </th>
+                                <th class="text-center">
+                                 Nro de Registro
+                                </th>
+				<th class="text-center">
+                                    cantidad
+                                </th>
+                                <th class="text-center">
+                                    Fecha
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                    ';            
+                    $i = 1;
+                    foreach($query as $query1)
+                    {
+                      $html .='<tr><td>'.$i.'</td><td>'.$query1->id.'</td><td>'.$query1->cantidad.'</td><td>'.$query1->fecha.'</td></tr>';  
+                    }
+                    
+                    $html .='<tbody>
+                            </table>
+                            </div>
+                            <div class="col-xs-12 col-sm-7 col-md-2"></div>';
+        
+        return $html;
     }
 }
