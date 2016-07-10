@@ -40,6 +40,7 @@ class PrincipalAsset extends AssetBundle
                     'js/principal.js',
                     'js/jquery.formatCurrency-1.4.0.js',
                     'js/jquery.formatCurrency.es-PE.js',
+                    'js/jquery.table2excel.js',
         //'https://ajax.googleapis.com/ajax/libs/angularjs/1.4.9/angular.min.js',
           //          'https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js',
                     

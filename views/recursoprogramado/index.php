@@ -94,7 +94,7 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
     </div>
     <div class="col-xs-12 col-sm-7 col-md-2" ></div>
-
+    
 </div>
 
 <script>
@@ -103,4 +103,7 @@ $this->params['breadcrumbs'][] = $this->title;
     moneda_soles(".soles");
  });
 
+ 
+ 
+ 
 </script>

@@ -23,7 +23,7 @@ class ReportesSearch extends Usuarios
     {
         return [
             [['id', 'id_perfil', 'ejecutora', 'dependencia', 'estado'], 'integer'],
-            [['Name', 'username', 'password', 'img','titulo','presupuesto'], 'safe'],
+            [['Name', 'username', 'password', 'img','titulo','presupuesto','department','recurso_total'], 'safe'],
         ];
     }
 
@@ -48,24 +48,27 @@ class ReportesSearch extends Usuarios
         $query = Usuarios::find()
                         ->select('proyecto.titulo,
 	max(usuarios.username) as username,
-	count(DISTINCT objetivo_especifico.id) as Name ,
-	count(DISTINCT indicador.id) as password ,
-	count(DISTINCT actividad.id) as img,
-	count(DISTINCT recurso.id) as id_perfil,
-	(select maestros.descripcion from maestros where maestros.id = proyecto.id_dependencia_inia) as ejecutora,
-	(select maestros.descripcion from maestros where maestros.id = proyecto.id_unidad_ejecutora) as dependencia,
-	(select maestros.descripcion from maestros where maestros.id = proyecto.id_direccion_linea) as estado,
-	proyecto.presupuesto')
+	count(DISTINCT objetivo_especifico.id) as obj_esp ,
+	count(DISTINCT indicador.id) as indicador ,
+	count(DISTINCT actividad.id) as actividad,
+	count(DISTINCT recurso.id) as recurso,
+        ubigeo.department,
+	(select maestros.descripcion from maestros where maestros.id = proyecto.id_dependencia_inia) as operativa,
+	(select maestros.descripcion from maestros where maestros.id = proyecto.id_unidad_ejecutora) as ejecutora2,
+	(select maestros.descripcion from maestros where maestros.id = proyecto.id_direccion_linea) as linea,
+	proyecto.presupuesto, sum(recurso.precio_total) as recurso_total')
                                 ->innerJoin('proyecto','proyecto.user_propietario = usuarios.id')
                                 ->leftJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
                                 ->leftJoin('indicador','indicador.id_oe = objetivo_especifico.id')
                                 ->leftJoin('actividad','actividad.id_ind = indicador.id')
                                 ->leftJoin('recurso','recurso.actividad_id = actividad.id')
-                                ->groupBy(['proyecto.titulo']);
+                                ->leftJoin('ubigeo','ubigeo.district_id = proyecto.ubigeo')
+                                ->groupBy(['proyecto.titulo'])
+                                ->orderBy('username');
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 12],
+            'pagination' => ['pageSize' => 3],
         ]);
 
         $this->load($params);

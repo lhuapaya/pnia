@@ -32,12 +32,36 @@ class ReportesController extends Controller
      */
     public function actionIndex()
     {
+        $this->layout='principal';
         $searchModel = new ReportesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        
+        $proyectos = Usuarios::find()
+                        ->select('proyecto.titulo,
+	max(usuarios.username) as username,
+	count(DISTINCT objetivo_especifico.id) as obj_esp ,
+	count(DISTINCT indicador.id) as indicador ,
+	count(DISTINCT actividad.id) as actividad,
+	count(DISTINCT recurso.id) as recurso,
+        ubigeo.department,
+	(select maestros.descripcion from maestros where maestros.id = proyecto.id_dependencia_inia) as operativa,
+	(select maestros.descripcion from maestros where maestros.id = proyecto.id_unidad_ejecutora) as ejecutora2,
+	(select maestros.descripcion from maestros where maestros.id = proyecto.id_direccion_linea) as linea,
+	proyecto.presupuesto, sum(recurso.precio_total) as recurso_total')
+                                ->innerJoin('proyecto','proyecto.user_propietario = usuarios.id')
+                                ->leftJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
+                                ->leftJoin('indicador','indicador.id_oe = objetivo_especifico.id')
+                                ->leftJoin('actividad','actividad.id_ind = indicador.id')
+                                ->leftJoin('recurso','recurso.actividad_id = actividad.id')
+                                ->leftJoin('ubigeo','ubigeo.district_id = proyecto.ubigeo')
+                                ->groupBy(['proyecto.titulo'])
+                                ->orderBy('username')
+                                ->all();
 
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'proyectos' => $proyectos
         ]);
     }
 
