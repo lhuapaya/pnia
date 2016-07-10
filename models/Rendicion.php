@@ -24,6 +24,9 @@ class Rendicion extends \yii\db\ActiveRecord
      */
     public $cantidad;
     public $titulo;
+    public $mes;
+    public $total;
+    
     public static function tableName()
     {
         return 'rendicion';
@@ -36,7 +39,7 @@ class Rendicion extends \yii\db\ActiveRecord
     {
         return [
             [['id_user_obs','id_user', 'id_solicitud', 'estado'], 'integer'],
-            [['cantidad','titulo'], 'safe'],
+            [['cantidad','titulo','total','mes'], 'safe'],
             [['observacion'], 'string', 'max' => 7000],
             [['fecha','fecha_aprobacion'], 'string', 'max' => 20]
         ];

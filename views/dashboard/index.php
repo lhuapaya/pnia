@@ -120,10 +120,10 @@
                               
                               <div class="col-md-3 text-left">
                               <div class="clearfix">
-                                            <small class="pull-right">Avance <?= ($actividades2->ejecutado / $actividades2->meta)*100; ?>%</small>
+                                            <small class="pull-right">Avance <?= round(($actividades2->ejecutado / $actividades2->meta)*100,2); ?>%</small>
                                           </div>
                               <div class="progress xs">
-                                        <div class="progress-bar progress-bar-green" style="width: <?= ($actividades2->ejecutado / $actividades2->meta)*100 ?>%;"></div>
+                                        <div class="progress-bar progress-bar-green" style="width: <?= round(($actividades2->ejecutado / $actividades2->meta)*100,2); ?>%;"></div>
                               </div>
                                </div>
 			      <?php } ?>
@@ -149,10 +149,10 @@
 <div class="col-md-9 text-center" style="border-color: black; border-style: solid; border-width: 0px; background: #FAFAFA; ">
           <div class="clearfix"></div><br/>
           <div class="col-xs-12 col-sm-7 col-md-3" >
-             <h5>Obj. Especifico:</h5>       
+             <h5>Año:</h5>       
           </div>
           <div class="col-xs-12 col-sm-7 col-md-6" >
-            <select class="form-control" name="Proyecto[id_objetivo]" id="proyecto-id_objetivo">
+            <select class="form-control" name="Proyecto[id_anio]" id="proyecto-id_anio">
 		<?php
                         //$array1 = [];
                         //$i = 0;
@@ -179,20 +179,46 @@
           <HR width=100% align="center" size="2" style="border-style: solid" color="black">
           </div>
           <div class="clearfix"></div>
-          <div class="col-xs-12 col-sm-7 col-md-12" id="div-actividades" >
+          <div class="col-xs-12 col-sm-7 col-md-12" id="div-meses" >
           <?php
-                           foreach($actividades as $actividades2)
+                           foreach($rendido_anio as $rendido_anio2)
                             {
                                 
-				if($actividades2->id_ind == $array2[0])
-				{
+                                  switch($rendido_anio2->mes) {
+						    case 1 : $var_mes = "ENE";
+									    break;
+						    case 2 : $var_mes = "FEB";
+									    break;
+						    case 3 : $var_mes = "MAR";
+									    break;
+						    case 4 : $var_mes = "ABR";
+									    break;
+						    case 5 : $var_mes = "MAY";
+									    break;
+						    case 6 : $var_mes = "JUN";
+									    break;
+						    case 7 : $var_mes = "JUL";
+									    break;
+						    case 8 : $var_mes = "AGO";
+									    break;
+						    case 9 : $var_mes = "SEP";
+									    break;
+						    case 10 : $var_mes = "OCT";
+									    break;
+						    case 11 : $var_mes = "NOV";
+									    break;
+						    case 12 : $var_mes = "DIC";
+						    }      
+                                        
                     ?>
-                              <div class="col-xs-12 col-sm-7 col-md-12 text-left" >
-                              <label>- <?= $actividades2->descripcion ?></label>
+                              <div class="col-xs-12 col-sm-7 col-md-1 text-left" >
+                              <label><?= $var_mes ?>: </label>
+                              </div>
+                              <div class="col-xs-12 col-sm-7 col-md-5 text-left" >
+                              <label>S/. <?= $rendido_anio2->total ?> </label>
                               </div>
 		    
-			      <?php }
-			    } ?>  
+			      <?php }  ?>  
           
           </div>
 </div> 
@@ -210,7 +236,7 @@
     $obtenerindicadores = Yii::$app->getUrlManager()->createUrl('proyecto/obtenerindicadores');
     $obteneractividad = Yii::$app->getUrlManager()->createUrl('dashboard/obteneractividad');
     $obtener_total_act= Yii::$app->getUrlManager()->createUrl('dashboard/obtener_total_act');
-    //$refrescarrecurso = Yii::$app->getUrlManager()->createUrl('proyecto/refrescarrecursos');
+    $cargarRendidoMes = Yii::$app->getUrlManager()->createUrl('dashboard/rendido_mes');
     //$verf_presupuesto = Yii::$app->getUrlManager()->createUrl('proyecto/verificar_presupuesto');
     
 ?>
@@ -219,7 +245,6 @@
 var est = <?= $total_por_est ?> / 100;
 var ope = <?= $total_por_ope ?> / 100;
 var fin = <?= round($total_por_fin) ?> / 100;
-
 
 $('#estrategico').waterbubble({
 
@@ -245,7 +270,7 @@ $('#estrategico').waterbubble({
   wave: true,
 
   // custom text displayed inside the water bubble
-  txt: '<?= $total_por_est ?>%',
+  txt: '<?= round($total_por_est, 2); ?>%',
 
   // enable water fill animation
   animation: true
@@ -276,7 +301,7 @@ $('.operativo').waterbubble({
   wave: true,
 
   // custom text displayed inside the water bubble
-  txt: '<?= $total_por_ope ?>%',
+  txt: '<?= round($total_por_ope, 2); ?>%',
 
   // enable water fill animation
   animation: true
@@ -471,6 +496,31 @@ $("#proyecto-id_objetivo").change(function(){
         }
  });
  
+ 
+ $("#proyecto-id_anio").change(function(){
+    
+     var meses = $("#div-meses");
+     var anio = $(this);
+     
+     if($(this).val() != '0')
+        {
+        
+			
+			    $.ajax({
+			    url: '<?= $cargarRendidoMes ?>',
+			    type: 'GET',
+			    async: false,
+			    data: {anio:anio.val()},
+			    success: function(data){
+				//meses.find('option').remove();
+				meses.html(data);
+			    
+			    
+			    }
+			    });
+			
+        }
+ });
 
           
 </script>

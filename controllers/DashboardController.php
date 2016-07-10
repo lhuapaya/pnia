@@ -16,6 +16,7 @@ use app\models\Actividad;
 use app\models\RecursoProgramado;
 use app\models\Aportante;
 use app\models\DetalleRendicion;
+use app\models\Rendicion;
 class DashboardController extends Controller
 {
     
@@ -54,8 +55,9 @@ class DashboardController extends Controller
         $suma_recursop = new RecursoProgramado();
         
         $muestra_dash = 0;
+        $rendido_anio = null;
         
-      /* if(Yii::$app->user->identity->id_perfil == 2)
+       if(Yii::$app->user->identity->id_perfil == 2)
        {
         $proyecto = Proyecto::find()
                         ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
@@ -203,12 +205,19 @@ class DashboardController extends Controller
                         ->sum('detalle_rendicion.total');
             
             $total_por_fin = ($rendido /$aportante->total) * 100;
+            
+            $rendido_anio = Rendicion::find()
+                        ->select('detalle_rendicion.mes, sum(detalle_rendicion.total) as total')
+                        ->innerJoin('detalle_rendicion','detalle_rendicion.id_rendicion = rendicion.id')
+                        ->where('detalle_rendicion.anio = 1 and rendicion.estado = 2 and rendicion.id_user = :id_user',[":id_user"=>Yii::$app->user->identity->id])
+                        ->groupBy(['detalle_rendicion.mes'])
+                        ->all();
         }
         
-       }*/
+       }
                 
                     
-        return $this->render('index',["muestra_dash"=>$muestra_dash,"objetivos"=>$objetivos,"total_por_est"=>$total_por_est,"total_obj"=>$total_obj,"indicadores"=>$indicadores,"actividades"=>$actividades,"total_por_ope"=>$total_por_ope,"total_por_fin"=>$total_por_fin,"suma_recursop"=>$suma_recursop]);
+        return $this->render('index',["muestra_dash"=>$muestra_dash,"objetivos"=>$objetivos,"total_por_est"=>$total_por_est,"total_obj"=>$total_obj,"indicadores"=>$indicadores,"actividades"=>$actividades,"total_por_ope"=>$total_por_ope,"total_por_fin"=>$total_por_fin,"suma_recursop"=>$suma_recursop,'rendido_anio'=>$rendido_anio]);
     }
     
     
@@ -224,7 +233,14 @@ class DashboardController extends Controller
         foreach($actividades as $actividad)
             {
                                                 
-             $opcion1 .='<div class="col-xs-12 col-sm-7 col-md-12 text-left" ><label>'.$actividad->descripcion.'</label></div>';
+             $opcion1 .='<div class="col-xs-12 col-sm-7 col-md-9 text-left" ><label>'.$actividad->descripcion.'</label></div><div class="col-md-3 text-left">
+                              <div class="clearfix">
+                                            <small class="pull-right">Avance '.round(($actividad->ejecutado / $actividad->meta)*100,2).'%</small>
+                                          </div>
+                              <div class="progress xs">
+                                        <div class="progress-bar progress-bar-green" style="width: '.round(($actividad->ejecutado / $actividad->meta)*100,2).'%;"></div>
+                              </div>
+                               </div>';
                                                   
             }
         
@@ -246,6 +262,59 @@ class DashboardController extends Controller
             {$opcion1 = ($sumtotal_actividades->ejecutado * 100) / $sumtotal_actividades->meta;}
         
        echo $opcion1; 
+    }
+    
+    public function actionRendido_mes($anio)
+    {
+        $html = '';
+        
+        $rendido_anio = Rendicion::find()
+                        ->select('detalle_rendicion.mes, sum(detalle_rendicion.total) as total')
+                        ->innerJoin('detalle_rendicion','detalle_rendicion.id_rendicion = rendicion.id')
+                        ->where('detalle_rendicion.anio = :anio and rendicion.estado = 2 and rendicion.id_user = :id_user',["anio"=>$anio,":id_user"=>Yii::$app->user->identity->id])
+                        ->groupBy(['detalle_rendicion.mes'])
+                        ->all();
+        
+                        foreach($rendido_anio as $rendido_anio2)
+                            {
+                                
+                                  switch($rendido_anio2->mes) {
+						    case 1 : $var_mes = "ENE";
+									    break;
+						    case 2 : $var_mes = "FEB";
+									    break;
+						    case 3 : $var_mes = "MAR";
+									    break;
+						    case 4 : $var_mes = "ABR";
+									    break;
+						    case 5 : $var_mes = "MAY";
+									    break;
+						    case 6 : $var_mes = "JUN";
+									    break;
+						    case 7 : $var_mes = "JUL";
+									    break;
+						    case 8 : $var_mes = "AGO";
+									    break;
+						    case 9 : $var_mes = "SEP";
+									    break;
+						    case 10 : $var_mes = "OCT";
+									    break;
+						    case 11 : $var_mes = "NOV";
+									    break;
+						    case 12 : $var_mes = "DIC";
+						    }      
+                                        
+                            $html .= '<div class="col-xs-12 col-sm-7 col-md-1 text-left" >
+                              <label>'.$var_mes.': </label>
+                              </div>
+                              <div class="col-xs-12 col-sm-7 col-md-5 text-left" >
+                              <label>S/. '.$rendido_anio2->total.'</label>
+                              </div><div class="clearfix"></div>';
+		    
+		 }
+                 
+                 $html .="<br/><br/>";
+        return $html;
     }
 
 }
