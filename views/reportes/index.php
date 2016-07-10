@@ -1,8 +1,9 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\grid\GridView;
-
+use app\models\Maestros;
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ReportesSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -98,6 +99,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'operativa',
                 'format'=>'raw',
                 'value'=>'operativa',
+                //'filter' => Html::activeDropDownList($searchModel, 'operativa', ArrayHelper::map(Maestros::find()->select('id, descripcion')->where('id_padre in (select id from maestros where id_padre = 25) and estado = 1')->asArray()->all(), 'id', 'descripcion'),['class'=>'form-control','prompt' => 'Unidad Operativa']),
                 //'contentOptions'=>['style'=>'width: 420px; font-size: x-small;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 
@@ -124,7 +126,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Aporte PNIA',
                 'attribute' => 'presupuesto',
                 'format'=>'raw',
-                'value'=>'presupuesto',
+                'value'=>function($data) {
+                   return "S/. ".$data->presupuesto;
+                    
+                    },
                 //'contentOptions'=>['style'=>'width: 420px; font-size: x-small;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 
@@ -133,7 +138,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Total Recurso',
                 'attribute' => 'recurso_total',
                 'format'=>'raw',
-                'value'=>'recurso_total',
+                'value'=>function($data) {
+                    if($data->recurso_total == null)
+                    {
+                        return "S/. 0.00";
+                    }
+                    else{
+                   return "S/. ".$data->recurso_total;
+                    }
+                    },
                 //'contentOptions'=>['style'=>'width: 420px; font-size: x-small;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 
@@ -174,8 +187,8 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td><?= $proyecto->operativa ?></td>
                     <td><?= $proyecto->ejecutora2 ?></td>
                     <td><?= $proyecto->linea ?></td>
-                    <td><?= $proyecto->presupuesto ?></td>
-                    <td><?= $proyecto->recurso_total ?></td>
+                    <td><?= "S/. ".$proyecto->presupuesto ?></td>
+                    <td><?= "S/. ".$proyecto->recurso_total ?></td>
                 </tr> 
         <?php  }
         ?>

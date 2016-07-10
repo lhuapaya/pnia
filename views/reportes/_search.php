@@ -19,11 +19,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'Name') ?>
 
-    <?= $form->field($model, 'username') ?>
+    <?php // $form->field($model, 'username') ?>
 
     <?= $form->field($model, 'password') ?>
 
     <?= $form->field($model, 'id_perfil') ?>
+    <?= $form->field($model, 'operativa') ?>
 
     <?php // echo $form->field($model, 'ejecutora') ?>
 

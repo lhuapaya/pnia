@@ -68,7 +68,7 @@ class ReportesSearch extends Usuarios
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
-            'pagination' => ['pageSize' => 3],
+            'pagination' => ['pageSize' => 5],
         ]);
 
         $this->load($params);
@@ -85,11 +85,13 @@ class ReportesSearch extends Usuarios
             'ejecutora' => $this->ejecutora,
             'dependencia' => $this->dependencia,
             'estado' => $this->estado,
+            'operativa' => $this->operativa,
         ]);
 
         $query->andFilterWhere(['like', 'Name', $this->Name])
             ->andFilterWhere(['like', 'username', $this->username])
             ->andFilterWhere(['like', 'password', $this->password])
+            ->andFilterWhere(['like', 'operativa', $this->operativa])
             ->andFilterWhere(['like', 'img', $this->img]);
 
         return $dataProvider;
