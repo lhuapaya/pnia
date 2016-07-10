@@ -27,6 +27,9 @@ class RegistroMeta extends \yii\db\ActiveRecord
     public $des_indact;
     public $cantidad;
     public $tipo;
+    public $titulo;
+    public $respuesta_aprob;
+    public $id_meta;
     
     public static function tableName()
     {
@@ -40,8 +43,8 @@ class RegistroMeta extends \yii\db\ActiveRecord
     {
         return [
             [['id_tipo', 'id_user', 'id_user_obs', 'estado'], 'integer'],
-            [['id_indact','des_indact', 'cantidad','tipo'], 'safe'],
-            [['fecha'], 'string', 'max' => 20],
+            [['id_indact','des_indact', 'cantidad','tipo','titulo','respuesta_aprob','id_meta'], 'safe'],
+            [['fecha','fecha_aprobacion'], 'string', 'max' => 20],
             [['observacion'], 'string', 'max' => 7000]
         ];
     }

@@ -13,11 +13,13 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="registro-meta-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+    <?php 
+    if(Yii::$app->user->identity->id_perfil == 2) 
+        { ?>
     <p>
         <?= Html::a(Yii::t('app', 'Registrar Meta'), ['accion'], ['class' => 'btn btn-success','id'=>'registrar_meta']) ?>
     </p>
+    <?php } ?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -48,6 +50,16 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'text-center'],
                 
             ],
+            [
+                'label'=>'Fecha de Aprobación',
+                'attribute' => 'fecha_aprobacion',
+                'format'=>'raw',
+                'value'=>'fecha_aprobacion',
+                'contentOptions'=>['class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                
+            ],
+            
             // 'id_user',
             // 'id_user_obs',
             // 'observacion',
@@ -56,8 +68,8 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'estado',
                 'format'=>'raw',
                 'value'=>function($data) {
-                   if($data->estado == 2 ){return "<span style='color:red;'><strong>Rechazado</strong><span>"; }
-                    if($data->estado == 1 ){return "<span style='color:green;'><strong>Aprobado</strong><span>"; }
+                   if($data->estado == 3 ){return "<span style='color:red;'><strong>Rechazado</strong><span>"; }
+                    if($data->estado == 2 ){return "<span style='color:green;'><strong>Aprobado</strong><span>"; }
                     if($data->estado == 0 ){return "<span style='color:blue;'><strong>Registrado</strong><span>"; }
                     
                     },
@@ -105,7 +117,7 @@ $this->params['breadcrumbs'][] = $this->title;
         if (valor1 > 0) {
            
            $.notify({
-                message: "<strong>No es posible esta Acci�n: </strong>Tiene un Registro de Cambio Pendiente." 
+                message: "<strong>No es posible esta Acción: </strong>Tiene un Registro de Cambio Pendiente." 
             },{
                 type: 'danger',
                 offset: 20,

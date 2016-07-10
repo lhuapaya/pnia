@@ -37,8 +37,24 @@ class RegistrometaController extends Controller
     public function actionIndex()
     {
         $this->layout='principal';
+        
+        if(!empty($_REQUEST["id"]))
+        {
+            $id=$_REQUEST["id"];
+            
+
+        }
+        else
+        {
+            $id = 'no';
+        }
+        
+        if($id){$user = $id;}
+        
+        $id = 0;
+        
         $searchModel = new RegistroMetaSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id,$user);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -56,10 +72,108 @@ class RegistrometaController extends Controller
          $this->layout='principal';
          
          
+         $model = new RegistroMeta();
+         
+        if ($model->load(Yii::$app->request->post()))
+        {
+            $hoy = getdate();
+            
+            $registroM = RegistroMeta::findOne($model->id_meta);
+            $registroMetaDet = RegistroMetaDetalle::find()->where('id_registrometa = :id_registrometa',[':id_registrometa'=>$model->id_meta])->all();
+            
+           if($model->respuesta_aprob == 0)
+                {
+                    
+                    foreach($registroMetaDet as $registroMetaDet2)
+                    {
+                        
+                        if($registroM->id_tipo == 1)
+                        {
+                            $indicador = Indicador::findOne($registroMetaDet2->id_indact);
+                            $indicador->ejecutado = ($indicador->ejecutado - $registroMetaDet2->cantidad);
+                            $indicador->estado = 0;
+                            $indicador->update(); 
+                        }
+                        
+                        if($registroM->id_tipo == 2)
+                        {
+                            $actividad = Actividad::findOne($registroMetaDet2->id_indact);
+                            $actividad->ejecutado = ($actividad->ejecutado - $registroMetaDet2->cantidad);
+                            $actividad->estado = 0;
+                            $actividad->update();   
+                        }
+                          
+                    }
+                    
+                    
+                    
+                    $registroMeta = RegistroMeta::findOne($model->id_meta);
+                    $registroMeta->observacion = $model->observacion;
+                    $registroMeta->estado = 3;
+                    $registroMeta->fecha_aprobacion = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                    $registroMeta->id_user_obs = Yii::$app->user->identity->id;
+                    $registroMeta->update();
+                    
+                    //DetalleSolicitud::updateAll(['estado' => 3], 'id_solicitud = :id_solicitud',[':id_solicitud'=>(int)$model->id_sol]);
+
+                    
+                }
+                
+                if($model->respuesta_aprob == 1)
+                {
+                    if(Yii::$app->user->identity->id_perfil == 5)
+                    {
+                        
+                        $registroMeta = RegistroMeta::findOne($model->id_meta);
+                        $registroMeta->estado = 2;
+                        $registroMeta->fecha_aprobacion = $hoy['year'].'-'.$hoy['mon'].'-'.$hoy['mday'];
+                        $registroMeta->id_user_obs = Yii::$app->user->identity->id;
+                        $registroMeta->update();
+                        
+                    }
+                    
+                    foreach($registroMetaDet as $registroMetaDet2)
+                    {
+                        
+                        if($registroM->id_tipo == 1)
+                        {
+                            $indicador = Indicador::findOne($registroMetaDet2->id_indact);
+                            if($indicador->ejecutado == $indicador->meta)
+                            {
+                                $indicador->estado = 1;
+                                $indicador->update();   
+                            }
+                            
+                        }
+                        
+                        if($registroM->id_tipo == 2)
+                        {
+                            $actividad = Actividad::findOne($registroMetaDet2->id_indact);
+                            
+                            if($actividad->ejecutado == $actividad->meta)
+                            {
+                                $actividad->estado = 1;
+                                $actividad->update();   
+                            }   
+                        }
+                          
+                    }
+                    
+                }
+                
+              
+            
+            return $this->redirect('proyecto');
+            
+            
+        }
+        else
+        {
+         
          $registroMeta = RegistroMeta::findOne($id);
          $registroMetaDet = RegistroMetaDetalle::find()->where('id_registrometa = :id_registrometa',[':id_registrometa'=>$id])->all();
          
-         
+        }
         return $this->render('view', [
             'registroMeta' => $registroMeta,'registroMetaDet'=>$registroMetaDet
         ]);
@@ -154,7 +268,7 @@ class RegistrometaController extends Controller
                         ->select('indicador.id, indicador.descripcion, indicador.id_oe, indicador.meta, indicador.ejecutado')
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
                                 ->innerJoin('indicador','indicador.id_oe = objetivo_especifico.id')
-                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario and indicador.estado = 0',[':user_propietario'=>Yii::$app->user->identity->id])
                                 ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();
                 $actividades = null;
@@ -166,7 +280,7 @@ class RegistrometaController extends Controller
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
                                 ->innerJoin('indicador','indicador.id_oe = objetivo_especifico.id')
                                 ->innerJoin('actividad','actividad.id_ind = indicador.id')
-                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario',[':user_propietario'=>Yii::$app->user->identity->id])
+                                ->where('proyecto.estado = 1 and proyecto.user_propietario=:user_propietario and actividad.estado = 0',[':user_propietario'=>Yii::$app->user->identity->id])
                                 ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();  
             }
@@ -194,6 +308,20 @@ class RegistrometaController extends Controller
                 'model' => $model,
             ]);
         }
+    }
+    
+    public function actionProyecto()
+    {
+        $this->layout='principal';
+        $id = 1;
+        $user = '';
+        $searchModel = new RegistroMetaSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,$id,$user);
+
+        return $this->render('proyecto', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
     }
 
     /**

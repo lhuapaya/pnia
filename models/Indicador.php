@@ -34,7 +34,7 @@ class Indicador extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['id_oe', 'peso', 'programado','ejecutado','meta'], 'integer'],
+            [['id_oe', 'peso', 'programado','ejecutado','meta','estado'], 'integer'],
             [['descripcion'], 'string', 'max' => 500],
             [['unidad_medida'], 'string', 'max' => 200]
             //[['meta'], 'string', 'max' => 5000]

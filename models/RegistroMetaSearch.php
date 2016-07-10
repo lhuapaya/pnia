@@ -19,7 +19,7 @@ class RegistroMetaSearch extends RegistroMeta
     {
         return [
             [['id', 'id_tipo', 'id_user', 'id_user_obs', 'estado'], 'integer'],
-            [['fecha', 'observacion'], 'safe'],
+            [['fecha', 'observacion','titulo','cantidad'], 'safe'],
         ];
     }
 
@@ -39,9 +39,33 @@ class RegistroMetaSearch extends RegistroMeta
      *
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params,$id,$user)
     {
-        $query = RegistroMeta::find();
+        
+        
+        
+        if(Yii::$app->user->identity->id_perfil == 2)
+        {
+            $query = RegistroMeta::find();
+        }
+        else
+        {
+            if($id == 1)
+            {
+                $query = RegistroMeta::find()
+                        ->select('registro_meta.id_user as id, proyecto.titulo as titulo ,count(registro_meta.estado) as cantidad')
+                                ->innerJoin('proyecto','proyecto.user_propietario=registro_meta.id_user')
+                                ->where('proyecto.estado = 1 and registro_meta.estado = 0 and proyecto.id_unidad_ejecutora =:id_unidad_ejecutora',[":id_unidad_ejecutora"=>Yii::$app->user->identity->ejecutora])
+                                ->groupBy(['proyecto.id']);
+                                
+                
+            }
+            else
+            {
+                $query = RegistroMeta::find()->where('estado = 0 and id_user and :id_user',[':id_user'=>$user]);
+            }
+            
+        }
 
         $dataProvider = new ActiveDataProvider([
             'query' => $query,
