@@ -94,7 +94,8 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <script>
     
-$("#nuevo_desembolso").click(function() {
+$("#nuevo_desembolso").click(function()
+    {
     var valor = null;
         $.ajax({
                     url: '<?= $desembolsos_pendientes ?>',

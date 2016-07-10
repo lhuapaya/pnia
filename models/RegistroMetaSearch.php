@@ -18,7 +18,7 @@ class RegistroMetaSearch extends RegistroMeta
     public function rules()
     {
         return [
-            [['id', 'tipo_meta', 'id_tipo', 'cantidad', 'id_user', 'id_user_obs', 'estado'], 'integer'],
+            [['id', 'id_tipo', 'id_user', 'id_user_obs', 'estado'], 'integer'],
             [['fecha', 'observacion'], 'safe'],
         ];
     }
@@ -57,9 +57,7 @@ class RegistroMetaSearch extends RegistroMeta
 
         $query->andFilterWhere([
             'id' => $this->id,
-            'tipo_meta' => $this->tipo_meta,
             'id_tipo' => $this->id_tipo,
-            'cantidad' => $this->cantidad,
             'id_user' => $this->id_user,
             'id_user_obs' => $this->id_user_obs,
             'estado' => $this->estado,

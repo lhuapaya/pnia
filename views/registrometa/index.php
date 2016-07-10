@@ -16,27 +16,113 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a(Yii::t('app', 'Create Registro Meta'), ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a(Yii::t('app', 'Registrar Meta'), ['accion'], ['class' => 'btn btn-success','id'=>'registrar_meta']) ?>
     </p>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
+        //'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'id',
-            'tipo_meta',
-            'id_tipo',
-            'cantidad',
-            'fecha',
+            //'id',
+            [
+                'label'=>'Tipo',
+                'attribute' => 'id_tipo',
+                'format'=>'raw',
+                'value'=>function($data) {
+                   if($data->id_tipo == 2 ){return "<span><strong>Actividad</strong><span>"; }
+                    if($data->id_tipo == 1 ){return "<span><strong>Indicador</strong><span>"; }
+                    
+                    },
+                //'contentOptions'=>['style'=>'width: 420px; font-size: x-small;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                
+            ],
+            [
+                'label'=>'Fecha',
+                'attribute' => 'fecha',
+                'format'=>'raw',
+                'value'=>'fecha',
+                'contentOptions'=>['class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                
+            ],
             // 'id_user',
             // 'id_user_obs',
             // 'observacion',
-            // 'estado',
+             [
+                'label'=>'Estado',
+                'attribute' => 'estado',
+                'format'=>'raw',
+                'value'=>function($data) {
+                   if($data->estado == 2 ){return "<span style='color:red;'><strong>Rechazado</strong><span>"; }
+                    if($data->estado == 1 ){return "<span style='color:green;'><strong>Aprobado</strong><span>"; }
+                    if($data->estado == 0 ){return "<span style='color:blue;'><strong>Registrado</strong><span>"; }
+                    
+                    },
+                'contentOptions'=>['class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                
+            ],
 
-            ['class' => 'yii\grid\ActionColumn'],
+            ['class' => 'yii\grid\ActionColumn',
+             'template' => '{view}',
+             'buttons' => [
+                'view' => function ($url, $model) {
+                    return Html::a('<span class="fa fa-search">Ver</span>', $url, [
+                                'title' => Yii::t('app', 'Ver Desembolso'),
+                                'class'=>'btn btn-primary btn-xs ver',
+                                
+                    ]);
+                }
+              ]
+             ],
         ],
     ]); ?>
 
 </div>
+<?php
+
+    $verificar_pendientes= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_registros_pendientes');
+?>
+<script>
+    
+    $("#registrar_meta").click(function() {
+       //alert("llego");
+       var valor1 = 0;
+       var valor2 = null; 
+        $.ajax({
+                    url: '<?= $verificar_pendientes ?>',
+                    type: 'GET',
+                    async: false,
+                    //data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                      valor1 = data;
+                    }
+                });
+        
+        if (valor1 > 0) {
+           
+           $.notify({
+                message: "<strong>No es posible esta Acción: </strong>Tiene un Registro de Cambio Pendiente." 
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+           
+           return false;
+        }
+        
+        return true;
+        
+    });
+    
+    
+</script>

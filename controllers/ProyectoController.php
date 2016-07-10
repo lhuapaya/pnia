@@ -2343,6 +2343,62 @@ class ProyectoController extends Controller
        echo $opcion1; 
     }
     
+    public function actionObtenermeta($tipo,$id)
+    {
+        $opcion1 = 0;
+        
+        if($tipo == 1)
+        {
+            $ejecutado=Indicador::find()
+                                ->select('meta,ejecutado')
+                                ->where('id=:id',[':id'=>$id])
+                                ->one();
+        }
+        
+        if($tipo == 2)
+        {
+            $ejecutado=Actividad::find()
+                                ->select('meta,ejecutado')
+                                ->where('id=:id',[':id'=>$id])
+                                ->one();
+        }
+        
+        $opcion1 = ($ejecutado->meta - $ejecutado->ejecutado);
+        
+       echo $opcion1; 
+    }
+    
+    public function actionVerificar_meta($tipo,$id,$cantidad)
+    {
+        $opcion1 = 0;
+        $resultado = 0;
+        
+        if($tipo == 1)
+        {
+            $ejecutado=Indicador::find()
+                                ->select('meta,ejecutado')
+                                ->where('id=:id',[':id'=>$id])
+                                ->one();
+        }
+        
+        if($tipo == 2)
+        {
+            $ejecutado=Actividad::find()
+                                ->select('meta,ejecutado')
+                                ->where('id=:id',[':id'=>$id])
+                                ->one();
+        }
+        
+        $opcion1 = ($ejecutado->meta - $ejecutado->ejecutado);
+        
+        if($cantidad > $opcion1)
+        {
+            $resultado = 1;
+        }
+        
+       echo $resultado; 
+    }
+    
     public function actionValorproyecto($proyecto, $accion)
     {
         
