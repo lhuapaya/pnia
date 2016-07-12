@@ -1753,9 +1753,11 @@ class ProyectoController extends Controller
         $re = 0;
         $session = Yii::$app->session;
         
+
         $proyecto = Proyecto::find()
-                        ->where('estado = 1 and id =:id',[':id'=>$id_proyecto])
+                        ->where('id =:id',[':id'=>$id_proyecto])
                         ->one();
+
         
         $actividades=Actividad::find()
                                 ->where('id_ind=:id_ind',[':id_ind'=>$id])

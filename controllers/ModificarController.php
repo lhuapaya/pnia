@@ -207,6 +207,8 @@ class ModificarController extends Controller
                         
         if(!$proyecto->load(Yii::$app->request->post()))
         {
+            $user_aprueba = [];
+            $estado_aprueba = [];
            $proyecto = Proyecto::find()
                         ->where(' id =:id',[':id'=>$id])
                         ->one();
@@ -311,8 +313,10 @@ class ModificarController extends Controller
                             ->all();
         
             $nivel = '';
+            
             foreach($nivelAp as $nivelAp2)
             {
+                
                 $AprobCount = Aprobaciones::find()
                                 ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
                                 ->count();
@@ -334,7 +338,100 @@ class ModificarController extends Controller
                     $nivel = $nivelAp2->id_perfil;
                     break;
                 }
+                
+                
+                
+                
             }
+            
+            
+            foreach($nivelAp as $nivelAp2)
+            {
+                
+                $AprobCount = Aprobaciones::find()
+                                ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
+                                ->count();
+                
+                
+                if($AprobCount > 0)
+                {
+                    $aprob = Aprobaciones::find()
+                                ->where('id_proyecto = :id_proyecto and id_nivelaprobacion =:id_nivelaprobacion',[':id_proyecto'=>$proyecto->id,':id_nivelaprobacion'=>$nivelAp2->id])
+                                ->one();
+                    if($aprob)
+                    {
+                        if(($nivelAp2->id_perfil == 5)||($nivelAp2->id_perfil == 3))
+                        {
+                            if($nivelAp2->id_perfil == 5)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and ejecutora = :ejecutora',[':id_perfil'=>$nivelAp2->id_perfil,':ejecutora'=>$proyecto->id_unidad_ejecutora])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            }
+                            
+                            if($nivelAp2->id_perfil == 3)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and dependencia = :dependencia',[':id_perfil'=>$nivelAp2->id_perfil,':dependencia'=>$proyecto->id_dependencia_inia])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            }
+                        }
+                        else
+                        {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil',[':id_perfil'=>$nivelAp2->id_perfil])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            
+                        }
+                        
+                        if($aprob->estado == 0)
+                        {
+                           $estado_aprueba[] = "OBSERVADO"; 
+                        }
+                        else
+                        {
+                          $estado_aprueba[] = "APROBADO";  
+                        }
+                        
+                    }
+                    
+                   $aprob = null;
+                }
+                else
+                {
+                    
+                        if(($nivelAp2->id_perfil == 5)||($nivelAp2->id_perfil == 3))
+                        {
+                            if($nivelAp2->id_perfil == 5)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and ejecutora = :ejecutora',[':id_perfil'=>$nivelAp2->id_perfil,':ejecutora'=>$proyecto->id_unidad_ejecutora])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            $estado_aprueba[] = "PENDIENTE";
+                            }
+                            
+                            if($nivelAp2->id_perfil == 3)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and dependencia = :dependencia',[':id_perfil'=>$nivelAp2->id_perfil,':dependencia'=>$proyecto->id_dependencia_inia])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            $estado_aprueba[] = "PENDIENTE";
+                            }
+                        }
+                        else
+                        {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil',[':id_perfil'=>$nivelAp2->id_perfil])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            $estado_aprueba[] = "PENDIENTE";
+                            
+                        }
+                        
+                    
+                    
+                }
+                
+                
+            }
+            
+            
+            
+            
+            
             
             $usuario = Usuarios::findOne(Yii::$app->user->identity->id);
             $requiere_aprobar = 0;
@@ -390,7 +487,7 @@ class ModificarController extends Controller
                         ->one();
         
         
-        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>2,'actividades'=>$actividades,'flow_obs'=>$flow_obs,'requiere_aprobar'=>$requiere_aprobar,'observaciones'=>$observaciones]);
+        return $this->render('view',['proyecto'=>$proyecto,'responsable'=>$responsable,'departamentos'=>$departamentos,'provincias'=>$provincias,'distritos'=>$distritos,'tipoInv'=>$tipoInv,'AccionT'=>$AccionT,'programa'=>$programa,'cultivo'=>$cultivo,'aportante3'=>$aportante3,'aportante12'=>$aportante12,'aportante'=>$aportante,'proyecto_id'=>$proyecto->id,'desembolsos'=>$desembolsos,'nro_desembolso'=>$nro_desembolso,'meses'=>$meses,'objetivos'=>$objetivosespecificos,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>2,'actividades'=>$actividades,'flow_obs'=>$flow_obs,'requiere_aprobar'=>$requiere_aprobar,'observaciones'=>$observaciones,'user_aprueba'=>$user_aprueba,'estado_aprueba'=>$estado_aprueba]);
       
         
     }
@@ -1105,6 +1202,8 @@ class ModificarController extends Controller
         $proyecto = new Proyecto();
         $session = Yii::$app->session;
         $flat = '';
+        $flat_ob_esp = '';
+        $flat_ind = '';
         
         $flowEstado = FlowChange::find()
                         ->where('id_nuevo_proyecto = :id_nuevo_proyecto and estado = 0',[':id_nuevo_proyecto'=>$id])
@@ -1218,6 +1317,17 @@ class ModificarController extends Controller
             $observaciones = Observaciones::find()
                                         ->where('id_proyecto = :id_proyecto',[':id_proyecto'=>$proyecto->id])
                                         ->count();
+            
+            $clasificador = Maestros::find()
+                                ->where('id_padre = 32 and estado = 1')
+                                ->orderBy('orden')
+                                ->all();
+            
+            $fuentes=Aportante::find()
+                                ->select('id, colaborador')
+                                ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy('tipo')
+                                ->all();
                         
         }
         
@@ -1227,10 +1337,11 @@ class ModificarController extends Controller
         $ver_monto_total = Yii::$app->runAction('proyecto/verificar_presupuesto', ['id'=>$proyecto->id]);
         $ver_recursos = Yii::$app->runAction('proyecto/verificar_recursos', ['id'=>$proyecto->id]);
         $ver_peso_actividad = Yii::$app->runAction('proyecto/verificar_peso_actividades', ['id'=>$proyecto->id]);
+        $ver_co_aporte = Yii::$app->runAction('proyecto/verificar_colaborador_aporte', ['id'=>$proyecto->id]);
         //var_dump($ver_monto_total);die;
         
         
-        return $this->render('modificarrec',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,"observaciones"=>$observaciones]);
+        return $this->render('modificarrec',['proyecto'=>$proyecto,'actividades'=>$actividades,'objetivosespecificos'=>$objetivosespecificos,'indicadores'=>$indicadores,'evento'=>$event,'ver_obj_ind'=>$ver_obj_ind,'ver_actividad'=>$ver_actividad,'ver_monto_total'=>$ver_monto_total,'ver_recursos'=>$ver_recursos,'ver_peso_actividad'=>$ver_peso_actividad,"observaciones"=>$observaciones,'ver_co_aporte'=>$ver_co_aporte,'flat_ob_esp'=>$flat_ob_esp,'flat_ind'=>$flat_ind,'clasificador'=>$clasificador,'fuentes'=>$fuentes]);
     }
     
     public function actionModificarobs($id,$event)

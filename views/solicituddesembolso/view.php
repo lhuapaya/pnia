@@ -151,7 +151,46 @@ $this->params['breadcrumbs'][] = $this->title;
                 </div>  
         </div>
         <div class="col-xs-12 col-sm-7 col-md-2" ></div>
-    <?php } ?> 
+    <?php } ?>
+    
+    
+    <?php
+                if(Yii::$app->user->identity->id_perfil == 2)
+                {
+                    ?>
+                <div class="clearfix"></div><br/><br/>
+                
+                <div class="col-xs-12 col-sm-7 col-md-3" ></div>
+                <div class="col-xs-12 col-sm-7 col-md-6" >
+                        <table class="table  " border=1 name="DetalleRendicion[detalle_tabla]" id="detalle_tabla" border="0">
+                        <thead>
+                            <tr class="info">
+                                <th class="text-center" >
+                                    #
+                                </th>
+                                <th class="text-center" >
+                                    Usuario Aprobador
+                                </th>
+                                <th class="text-center">
+                                    Estado
+                                </th>
+                        </thead>
+                        <tbody>
+                            <?php for($i=0;$i < count($user_aprueba);$i++){ ?>
+                            <tr class="text-center">
+                                <td><?= ($i+1) ?></td>
+                                <td><?= $user_aprueba[$i] ?></td>
+                                <td><?= $estado_aprueba[$i] ?></td>
+                            </tr>
+                            <?php }?>
+                        </tbody>
+                        </table>
+                </div>
+                <div class="col-xs-12 col-sm-7 col-md-3" ></div>
+                
+                <?php } ?>
+    
+    
     <div class="clearfix"></div>
     <div class="col-xs-12 col-sm-7 col-md-2" ></div>
     <div class="col-xs-12 col-sm-7 col-md-8 col-centered" >

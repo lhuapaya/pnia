@@ -151,6 +151,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
     $verificar_pendientes= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_registros_pendientes');
     $verificar_desembolso= Yii::$app->getUrlManager()->createUrl('proyecto/verificar_desembolsos_pendientes');
+    $verificar_ejecutados= Yii::$app->getUrlManager()->createUrl('registrometa/verificar_metas');
 ?>
 
 
@@ -159,7 +160,8 @@ $this->params['breadcrumbs'][] = $this->title;
   $("#nuevo_cambio").click(function() {
        //alert("llego");
        var valor1 = 0;
-       var valor2 = null; 
+       var valor2 = null;
+       var valor3 = null;
         $.ajax({
                     url: '<?= $verificar_pendientes ?>',
                     type: 'GET',
@@ -206,6 +208,39 @@ $this->params['breadcrumbs'][] = $this->title;
            
            $.notify({
                 message: "<strong>No es posible esta Acción: </strong>Tiene Desembolsos Pendientes." 
+            },{
+                type: 'danger',
+                offset: 20,
+                spacing: 10,
+                z_index: 1031,
+                placement: {
+                    from: 'top',
+                    align: 'right'
+                },
+            });
+           
+           return false;
+        }
+        
+        
+        
+        $.ajax({
+                    url: '<?= $verificar_ejecutados ?>',
+                    type: 'GET',
+                    async: false,
+                    //data: {unidadejecutora:unidad.val()},
+                    success: function(data){
+                        
+                      valor3 = data;
+                      
+                    }
+                });
+        
+        
+        if (valor3 > 0) {
+           
+           $.notify({
+                message: "<strong>No es posible esta Acción: </strong>Tiene Registro de Metas en Proceso." 
             },{
                 type: 'danger',
                 offset: 20,

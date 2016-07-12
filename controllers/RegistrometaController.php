@@ -6,6 +6,7 @@ use Yii;
 use app\models\RegistroMeta;
 use app\models\Indicador;
 use app\models\Actividad;
+use app\models\Usuarios;
 use app\models\RegistroMetaDetalle;
 use app\models\Proyecto;
 use app\models\RegistroMetaSearch;
@@ -173,9 +174,34 @@ class RegistrometaController extends Controller
          $registroMeta = RegistroMeta::findOne($id);
          $registroMetaDet = RegistroMetaDetalle::find()->where('id_registrometa = :id_registrometa',[':id_registrometa'=>$id])->all();
          
+         $proyecto = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>$registroMeta->id_user])
+                        ->one();
+             if($registroMeta->id_user_obs == null)
+             {
+               $user_ap = Usuarios::find()->where('estado = 1 and ejecutora = :ejecutora',[':ejecutora'=>$proyecto->id_unidad_ejecutora])->one();
+               $user_aprueba = $user_ap->Name;
+               $estado_aprueba = "PENDIENTE";
+             }
+             else
+             {
+                $user_ap = Usuarios::findOne($registroMeta->id_user_obs);
+                $user_aprueba = $user_ap->Name;
+                if($registroMeta->observacion != null)
+                {
+                   $estado_aprueba = "RECHAZADO"; 
+                }
+                else
+                {
+                    $estado_aprueba = "APROBADO";
+                }
+                
+             }
+         
+         
         }
         return $this->render('view', [
-            'registroMeta' => $registroMeta,'registroMetaDet'=>$registroMetaDet
+            'registroMeta' => $registroMeta,'registroMetaDet'=>$registroMetaDet,'user_aprueba'=>$user_aprueba,'estado_aprueba'=>$estado_aprueba
         ]);
     }
     
@@ -429,5 +455,21 @@ class RegistrometaController extends Controller
                             <div class="col-xs-12 col-sm-7 col-md-2"></div>';
         
         return $html;
+    }
+    
+    
+    public function actionVerificar_metas()
+    {
+         $this->layout='principal';
+         
+         $model = new RegistroMeta();
+         
+        if ($model->load(Yii::$app->request->post()))
+        {
+            return $this->redirect(['create', 'id_tipo' => $model->id_tipo]);
+        }
+        else{
+        return $this->render('accion', []);
+        }
     }
 }

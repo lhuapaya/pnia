@@ -11,6 +11,8 @@ use app\models\RendicionSearch;
 use app\models\DetalleRendicion;
 use app\models\RecursoProgramado;
 use yii\web\Controller;
+use app\models\Proyecto;
+use app\models\Usuarios;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 
@@ -232,9 +234,33 @@ class RendicionController extends Controller
                                 ->all();
                                 
                                // var_dump($clasificadores);die;
+            $proyecto = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>$rendicion->id_user])
+                        ->one();
+             if($rendicion->id_user_obs == null)
+             {
+               $user_ap = Usuarios::find()->where('estado = 1 and ejecutora = :ejecutora',[':ejecutora'=>$proyecto->id_unidad_ejecutora])->one();
+               $user_aprueba = $user_ap->Name;
+               $estado_aprueba = "PENDIENTE";
+             }
+             else
+             {
+                $user_ap = Usuarios::findOne($rendicion->id_user_obs);
+                $user_aprueba = $user_ap->Name;
+                if($rendicion->observacion != null)
+                {
+                   $estado_aprueba = "RECHAZADO"; 
+                }
+                else
+                {
+                    $estado_aprueba = "APROBADO";
+                }
+                
+             }
+            
         }
         
-        return $this->render('view',['clasificadores'=>$clasificadores,'detRendicion'=>$detRendicion,'clasif'=>$clasif,'rendicion'=>$rendicion]);
+        return $this->render('view',['clasificadores'=>$clasificadores,'detRendicion'=>$detRendicion,'clasif'=>$clasif,'rendicion'=>$rendicion,'user_aprueba'=>$user_aprueba,'estado_aprueba'=>$estado_aprueba]);
     }
 
     /**

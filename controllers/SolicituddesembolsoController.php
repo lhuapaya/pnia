@@ -11,6 +11,7 @@ use app\models\RecursoProgramado;
 use app\models\AprobacionDesembolso;
 use app\models\Aprobaciones;
 use app\models\Saldo;
+use app\models\Usuarios;
 use app\models\SolicitudDesembolsoSearch;
 use app\models\DetalleSolicitudSearch;
 use yii\web\Controller;
@@ -184,7 +185,16 @@ class SolicituddesembolsoController extends Controller
         }
         else
         {
+            $user_aprueba = [];
+            $estado_aprueba = [];
+                
             $solicitud = SolicitudDesembolso::findOne((int)$id);
+            
+            $proyecto = Proyecto::find()
+                        ->where('estado = 1 and user_propietario =:user_propietario',[':user_propietario'=>$solicitud->id_user])
+                        ->one();
+                        
+            
         
             $nivelAp = NivelAprobacion::find()
                             ->where('id_actividad = :id_actividad',[':id_actividad'=>83])
@@ -192,7 +202,7 @@ class SolicituddesembolsoController extends Controller
                             ->all();
             $nivel = '';
             foreach($nivelAp as $nivelAp2)
-            {
+            {                
                 $AprobCount = AprobacionDesembolso::find()
                                 ->where('id_solicitud = :id_solicitud and id_nivelaprobacion =:id_nivelaprobacion',[':id_solicitud'=>(int)$id,':id_nivelaprobacion'=>$nivelAp2->id])
                                 ->count();
@@ -214,6 +224,95 @@ class SolicituddesembolsoController extends Controller
                     $nivel = $nivelAp2->id_perfil;
                     break;
                 }
+                
+                
+                
+                
+                
+            }
+            
+            
+            
+            
+            foreach($nivelAp as $nivelAp2)
+            {
+                $aprobaciones = AprobacionDesembolso::find()->where('id_solicitud = :id_solicitud and id_nivelaprobacion =:id_nivelaprobacion',[':id_solicitud'=>$solicitud->id,':id_nivelaprobacion'=>$nivelAp2->id])->count();
+                
+                
+                
+                if($aprobaciones > 0)
+                {
+                    $aprob = AprobacionDesembolso::find()->where('id_solicitud = :id_solicitud and id_nivelaprobacion =:id_nivelaprobacion',[':id_solicitud'=>$solicitud->id,':id_nivelaprobacion'=>$nivelAp2->id])->one();
+                    
+                    if($aprob)
+                    {
+                        if(($nivelAp2->id_perfil == 5)||($nivelAp2->id_perfil == 3))
+                        {
+                            if($nivelAp2->id_perfil == 5)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and ejecutora = :ejecutora',[':id_perfil'=>$nivelAp2->id_perfil,':ejecutora'=>$proyecto->id_unidad_ejecutora])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            }
+                            
+                            if($nivelAp2->id_perfil == 3)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and dependencia = :dependencia',[':id_perfil'=>$nivelAp2->id_perfil,':dependencia'=>$proyecto->id_dependencia_inia])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            }
+                        }
+                        else
+                        {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil',[':id_perfil'=>$nivelAp2->id_perfil])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            
+                        }
+                        
+                        if($aprob->estado == 0)
+                        {
+                           $estado_aprueba[] = "RECHAZADO"; 
+                        }
+                        else
+                        {
+                          $estado_aprueba[] = "APROBADO";  
+                        }
+                        
+                    }
+                    
+                   $aprob = null;
+                }
+                else
+                {
+                        if(($nivelAp2->id_perfil == 5)||($nivelAp2->id_perfil == 3))
+                        {
+                            if($nivelAp2->id_perfil == 5)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and ejecutora = :ejecutora',[':id_perfil'=>$nivelAp2->id_perfil,':ejecutora'=>$proyecto->id_unidad_ejecutora])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            $estado_aprueba[] = "PENDIENTE";
+                            }
+                            
+                            if($nivelAp2->id_perfil == 3)
+                            {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil and dependencia = :dependencia',[':id_perfil'=>$nivelAp2->id_perfil,':dependencia'=>$proyecto->id_dependencia_inia])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            $estado_aprueba[] = "PENDIENTE";
+                            }
+                        }
+                        else
+                        {
+                            $user_ap = Usuarios::find()->where('estado = 1 and id_perfil = :id_perfil',[':id_perfil'=>$nivelAp2->id_perfil])->one();
+                            $user_aprueba[] = $user_ap->Name;
+                            $estado_aprueba[] = "PENDIENTE";
+                            
+                        }
+                        
+                    
+                    
+                }
+                
+                
+                
+                
             }
             
             $requiere_aprobar = 0;
@@ -221,13 +320,17 @@ class SolicituddesembolsoController extends Controller
             {
                $requiere_aprobar = 1; 
             }
+            
+            
         }
         return $this->render('view', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'id'=>$id,
             'solicitud'=>$solicitud,
-            'requiere_aprobar'=>$requiere_aprobar
+            'requiere_aprobar'=>$requiere_aprobar,
+            'user_aprueba'=>$user_aprueba,
+            'estado_aprueba'=>$estado_aprueba
         ]);
     
         /*return $this->render('view', [
