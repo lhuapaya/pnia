@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Aprobaciones;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProyectoSearch */
@@ -25,7 +26,15 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            //'id',
+            [
+                //'label'=>'Estado',
+                'attribute' => 'id',
+                'format'=>'raw',
+                'value'=>'id',
+                'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
             'titulo',
             'vigencia',
            // 'ubigeo',
@@ -61,9 +70,56 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'situacion',
                 'format'=>'raw',
                 'value'=>function($data) {
+                    
+                    
+                    if($data->situacion == 0 )
+                    {
+                        if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 5; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 6)
+                    { $nivelApro = 1; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:red;'><strong>Incompleto</strong><span>";  
+                    }
+                    
+                        
+                    }
+                    
                     if($data->situacion == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
-                    if($data->situacion == 1 ){return "<span style='color:orange;'><strong>Pendiente</strong><span>"; }
-                    if($data->situacion == 0 ){return "<span style='color:red;'><strong>Incompleto</strong><span>"; }
+                
+                    if($data->situacion == 1 ){
+                    if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 5; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 6)
+                    { $nivelApro = 1; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:orange;'><strong>Pendiente</strong><span>";   
+                    }
+                    
+                     
+                    
+                    }
+                    
+                    
+                    
                 /*return  '<select id="accion_'.$data->id.'" class="form-control" onchange="ValorProyecto('.$data->id.')">
                             <option value=0>--Selec. Opción--</option>
                             <option value=4>Datos Generales</option>
@@ -153,7 +209,7 @@ $ValorProyecto= Yii::$app->getUrlManager()->createUrl('proyecto/valorproyecto');
         if (situacion == 0)
         {
             $.notify({
-                message: "El registro se encuentra Inconcluso."
+                message: "El registro se encuentra Inconcluso u Observado"
                 },{
                 type: 'danger',
                 z_index: 1000000,

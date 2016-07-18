@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\AprobacionDesembolso;
 
 
 /* @var $this yii\web\View */
@@ -51,17 +52,69 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
                 
             ],
-            'total',
-            'total_pendiente',
+            [
+                //'label'=>'Total',
+                'attribute' => 'total',
+                'format'=>'raw',
+                'value'=>function($data) {
+                    return 'S/. '.$data->total;
+                    
+                },
+                //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
+            [
+                //'label'=>'Total',
+                'attribute' => 'total',
+                'format'=>'raw',
+                'value'=>function($data) {
+                    return 'S/. '.$data->total_pendiente;
+                    
+                },
+                //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                //'width'=>'60px',
+            ],
             [
                 'label'=>'Estado',
                 'attribute' => 'estado',
                 'format'=>'raw',
                 'value'=>function($data) {
+                    $nivelApro = 0;
                     if($data->estado == 3 ){return "<span style='color:red;'><strong>Rechazado</strong><span>"; }
                     if($data->estado == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
                     if($data->estado == 1 ){return "<span style='color:orange;'><strong>Por Rendir</strong><span>"; }
-                    if($data->estado == 0 ){return "<span style='color:blue;'><strong>Solicitado</strong><span>"; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 2)
+                    {
+                        if($data->estado == 0 ){return "<span style='color:blue;'><strong>Solicitado</strong><span>"; }
+                    }
+                    
+                    if($data->estado == 0 )
+                    {
+                        if(Yii::$app->user->identity->id_perfil == 5)
+                    { $nivelApro = 3; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 6)
+                    { $nivelApro = 4; }
+                    
+                    $aprobacion = AprobacionDesembolso::find()->where('estado = 1 and id_solicitud = :id_solicitud and id_nivelaprobacion = :id_nivelaprobacion',[':id_solicitud'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Por Rendir</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:blue;'><strong>Solicitado</strong><span>";  
+                    }
+                    
+                        
+                    }
+ 
+                    
+                    
                 
                     
                 },

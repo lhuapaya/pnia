@@ -34,6 +34,8 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
     public $operativa;
     public $linea;
     public $ejecutora2;
+    public $vigencia;
+    public $experimentos;
     
     public static function tableName()
     {
@@ -49,7 +51,7 @@ class Usuarios extends \yii\db\ActiveRecord implements IdentityInterface
             //[['id'], 'required'],
             [['id','id_perfil','estado','ejecutora','dependencia'], 'integer'],
 	    [['descripcion','titulo','id_perfil2','nuevo_proyecto','presupuesto','department','recurso_total',
-	      'obj_esp','indicador','actividad','recurso','operativa','linea','ejecutora2'], 'safe'],
+	      'experimentos','vigencia','obj_esp','indicador','actividad','recurso','operativa','linea','ejecutora2'], 'safe'],
             [['Name', 'username', 'password','img'], 'string', 'max' => 50]
         ];
     }

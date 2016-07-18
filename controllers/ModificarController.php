@@ -820,7 +820,8 @@ class ModificarController extends Controller
         {
             if(isset($aportante->aporte_nomonetario))
             {
-                $countAportantess=count(array_filter($aportante->aporte_nomonetario));           
+                $countAportantess=count(array_filter($aportante->aporte_nomonetario));
+                //var_dump($countAportantess);die;
                 for($i=0;$i<$countAportantess;$i++)
                 {  
                     if(!empty($aportante->aportante_ids[$i]))
@@ -1176,6 +1177,7 @@ class ModificarController extends Controller
                         
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('gestion = 0 and id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
                                 ->all();
                                 
             $indicadores=Indicador::find()
@@ -1183,6 +1185,7 @@ class ModificarController extends Controller
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();
                     
             $observaciones = Observaciones::find()
@@ -1297,6 +1300,7 @@ class ModificarController extends Controller
             //var_dump($proyecto);die;
             $objetivosespecificos=ObjetivoEspecifico::find()
                                 ->where('id_proyecto=:id_proyecto',[':id_proyecto'=>$proyecto->id])
+                                ->orderBy(['descripcion'=>SORT_ASC])
                                 ->all();
                                 
             $indicadores=Indicador::find()
@@ -1304,6 +1308,7 @@ class ModificarController extends Controller
                                 ->innerJoin('objetivo_especifico','objetivo_especifico.id=indicador.id_oe')
                                 ->innerJoin('proyecto','proyecto.id=objetivo_especifico.id_proyecto')
                                 ->where('proyecto.id=:proyecto_id',[':proyecto_id'=>$proyecto->id])
+                                ->orderBy(['indicador.descripcion'=>SORT_ASC])
                                 ->all();
                         
            $actividades=Actividad::find()

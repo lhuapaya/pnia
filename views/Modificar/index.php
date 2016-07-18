@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use app\models\Aprobaciones;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ModificarSearch */
@@ -95,11 +96,212 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'situacion',
                 'format'=>'raw',
                 'value'=>function($data) {
+                    $nivelApro = 0;
                     
-                    if($data->situacion == 1 ){return "<span style='color:red;'><strong>Pendiente</strong><span>"; }
-                    if($data->situacion == 0 ){return "<span style='color:Orange;'><strong>Incompleto</strong><span>"; }
-                    if($data->situacion == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
                     if($data->situacion == 3 ){return "<span style='color:blue;'><strong>Anulado</strong><span>"; }
+                    if($data->situacion == 2 ){return "<span style='color:green;'><strong>Completo</strong><span>"; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 2)
+                    {
+                        if($data->situacion == 1 ){return "<span style='color:red;'><strong>Pendiente</strong><span>"; }
+                        if($data->situacion == 0 ){return "<span style='color:Orange;'><strong>Incompleto</strong><span>"; }  
+                    }
+                    
+                    if($data->modificacion == 1 )
+                    {
+                      if($data->situacion == 0 )
+                    {
+                        if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 2; }
+                    
+                    /*if(Yii::$app->user->identity->id_perfil == 6)
+                    { $nivelApro = 1; }*/
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:Orange;'><strong>Incompleto</strong><span>";  
+                    }
+                    
+                        
+                    }
+                    
+                    if($data->situacion == 1 )
+                    {
+                    if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 2; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:red;'><strong>Pendiente</strong><span>";   
+                    }
+                    
+                     
+                    
+                    }
+                    
+                    }
+                    
+                    if($data->modificacion == 3 )
+                    {
+                      if($data->situacion == 0 )
+                    {
+                        if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 6; }
+                    
+                    /*if(Yii::$app->user->identity->id_perfil == 6)
+                    { $nivelApro = 1; }*/
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:Orange;'><strong>Incompleto</strong><span>";  
+                    }
+                    
+                        
+                    }
+                    
+                    if($data->situacion == 1 )
+                    {
+                    if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 6; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:red;'><strong>Pendiente</strong><span>";   
+                    }
+                    
+                     
+                    
+                    }
+                    
+                    }
+                    
+                    
+                    
+                    
+                    if($data->modificacion == 4 )
+                    {
+                      if($data->situacion == 0 )
+                    {
+                        if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 10; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 4)
+                    { $nivelApro = 11; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:Orange;'><strong>Incompleto</strong><span>";  
+                    }
+                    
+                        
+                    }
+                    
+                    if($data->situacion == 1 )
+                    {
+                    if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 10; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 4)
+                    { $nivelApro = 11; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:red;'><strong>Pendiente</strong><span>";   
+                    }
+                    
+                     
+                    
+                    }
+                    
+                    }
+                    
+                    
+                    
+                    if($data->modificacion == 5 )
+                    {
+                      if($data->situacion == 0 )
+                    {
+                        if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 8; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 4)
+                    { $nivelApro = 9; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:Orange;'><strong>Incompleto</strong><span>";  
+                    }
+                    
+                        
+                    }
+                    
+                    if($data->situacion == 1 )
+                    {
+                    if(Yii::$app->user->identity->id_perfil == 3)
+                    { $nivelApro = 8; }
+                    
+                    if(Yii::$app->user->identity->id_perfil == 4)
+                    { $nivelApro = 9; }
+                    
+                    $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
+                    
+                    if($aprobacion)
+                    {
+                      return "<span style='color:green;'><strong>Completo</strong><span>";   
+                    }
+                    else
+                    {
+                     return "<span style='color:red;'><strong>Pendiente</strong><span>";   
+                    }
+                    
+                     
+                    
+                    }
+                    
+                    }
+                    
                 /*return  '<select id="accion_'.$data->id.'" class="form-control" onchange="ValorProyecto('.$data->id.')">
                             <option value=0>--Selec. Opción--</option>
                             <option value=4>Datos Generales</option>

@@ -364,8 +364,8 @@ function sumavertical()
             monetario =  $("#aportante-aporte_monetario_"+i).val();
             no_monetario = no_monetario.replace("S/. ","");
             monetario = monetario.replace("S/. ","");
-            no_monetario = no_monetario.replace(",","");
-            monetario = monetario.replace(",","");
+            no_monetario = getNum(no_monetario.replace(",",""));
+            monetario = getNum(monetario.replace(",",""));
             
             //alert(getNum(parseFloat(monetario)));break;
             

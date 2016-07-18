@@ -99,12 +99,12 @@ use yii\web\JsExpression;
 				    </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante121->monetario; ?>"  />
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante121->monetario; ?>"  disabled/>
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-aportante-aporte_nomonetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante121->no_monetario; ?>"/>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante121->no_monetario; ?>" disabled/>
 					</div>
 				    </td>
                                     <td>
@@ -117,7 +117,7 @@ use yii\web\JsExpression;
 					</div>
 				    </td>
                                     <td>
-                                        <input type="hidden" name="Aportante[aportante_ids][]" id="aportante-aportante_ids_<?= $co; ?>" class="aportante_ids" value="<?= $aportante121->id; ?>" />    
+                                        <input type="hidden" name="Aportante[aportante_ids][]" id="aportante-aportante_ids_<?= $co; ?>"  value="<?= $aportante121->id; ?>" />    
 
 				    </td>
 				</tr>
@@ -202,12 +202,12 @@ use yii\web\JsExpression;
 				    </td>
 				    <td>
 					<div class="form-group field-aportante-aporte_monetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante2->monetario; ?>"  required>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_monetario_<?= $co; ?>" class="form-control decimal aportante_monetario" name="Aportante[aporte_monetario][]" placeholder="" value="<?= $aportante2->monetario; ?>"  >
 					</div>
 				    </td>
                                     <td>
 					<div class="form-group field-aportante-aporte_nomonetario_<?= $co; ?> required">
-					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante2->no_monetario; ?>" required>
+					    <input onkeyup="sumatotal(<?= $co; ?>)" type="text" id="aportante-aporte_nomonetario_<?= $co; ?>" class="form-control decimal aportante_nomonetario" name="Aportante[aporte_nomonetario][]" placeholder=""  value="<?= $aportante2->no_monetario; ?>" >
 					</div>
 				    </td>
                                     <td>
@@ -378,8 +378,11 @@ var evento = <?= $evento; ?>;
   });
   
     var valor = '';
-    $('#form1').find('input, textarea, select').prop('disabled', true);
-   // $('.aportante_ids').prop('disabled', false);
+     $('#form1').find('input, textarea, select').prop('disabled', true);
+    $('.aportante_ids').prop('disabled', false);
+    $('.aportante_nomonetario').prop('disabled', false);
+    $('.aportante_monetario').prop('disabled', false);
+    
     $('#aportante-cerrar_modificacion').prop('disabled', false);
     $('#aportante-observacion').prop('disabled', false);
     var esnull =''
@@ -392,7 +395,7 @@ var evento = <?= $evento; ?>;
             
             $(this).find('td:eq(1)').children().children('input').prop('disabled', false);
             $(this).find('td:eq(2)').children().children('input').prop('disabled', false);
-	    $(this).find('td:eq(4)').children('input').prop('disabled', false);
+	    //	$(this).find('td:eq(4)').children('input').prop('disabled', false);
         }
     });
     $('#aportante-id').prop('disabled', false);
@@ -408,6 +411,38 @@ var evento = <?= $evento; ?>;
     //$('#aportante_tabla').find('input, textarea, select').prop('disabled', true);
     
     //$('button').hide();
+    
+    
+    var count = $('input[name=\'Aportante[aporte_total][]\']').length;
+ 
+ for (var i =0;i<count;i++) {
+    
+    var total = $("#aportante-aporte_total_"+i);
+    if (total.val() == '') {
+        total.val(parseFloat(0).toFixed(2));
+    }
+
+    
+    
+    moneda_soles("#aportante-aporte_total_"+i);
+    
+ }
+ 
+    var totalmonetario =  $("#aportante-totalmonetario");
+    var totalnomonetario =  $("#aportante-totalnomonetario");
+    var totaltotal =  $("#aportante-totaltotal");
+    
+    var tmonetario = totalmonetario.val();
+    var tnomonetario = totalnomonetario.val();
+    var ttotal = totaltotal.val();
+
+    totalmonetario.val(parseFloat(tmonetario).toFixed(2));
+    totalnomonetario.val(parseFloat(tnomonetario).toFixed(2));
+    totaltotal.val(parseFloat(ttotal).toFixed(2));
+    
+        moneda_soles("#aportante-totalmonetario");
+        moneda_soles("#aportante-totalnomonetario");
+        moneda_soles("#aportante-totaltotal");
 
  
  });
@@ -417,9 +452,10 @@ function sumatotal(posicion)
     var monetario = $("#aportante-aporte_monetario_"+posicion);
     var no_monetario =  $("#aportante-aporte_nomonetario_"+posicion);
     var total =  $("#aportante-aporte_total_"+posicion);
+    
      var _total = parseFloat(getNum(monetario.val()))+parseFloat(getNum(no_monetario.val()));
      total.val(_total.toFixed(2));
-     
+     moneda_soles("#aportante-aporte_total_"+posicion);
      sumavertical();
     
 }
@@ -441,8 +477,8 @@ function sumavertical()
             monetario =  $("#aportante-aporte_monetario_"+i).val();
             no_monetario = no_monetario.replace("S/. ","");
             monetario = monetario.replace("S/. ","");
-            no_monetario = no_monetario.replace(",","");
-            monetario = monetario.replace(",","");
+            no_monetario = getNum(no_monetario.replace(",",""));
+            monetario = getNum(monetario.replace(",",""));
             
             //alert(getNum(parseFloat(monetario)));break;
             
@@ -460,7 +496,6 @@ function sumavertical()
         moneda_soles("#aportante-totaltotal");
         
 }
-
 
    // var co = <?= $co ?>;
  

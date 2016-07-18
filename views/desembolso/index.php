@@ -69,7 +69,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'cantidad',
                 'format'=>'raw',
                 'value'=>function($data) {
-                    return $data->cantidad.'<input type="hidden" value="'.$data->cantidad.'" id="proyecto-id" name="Proyecto[cantidad][]" />';
+                    return 'S/. '.$data->cantidad.'<input type="hidden" value="'.$data->cantidad.'" id="proyecto-id" name="Proyecto[cantidad][]" />';
                 
                     
                 },

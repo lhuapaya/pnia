@@ -46,7 +46,7 @@ class RegistroMetaSearch extends RegistroMeta
         
         if(Yii::$app->user->identity->id_perfil == 2)
         {
-            $query = RegistroMeta::find();
+            $query = RegistroMeta::find()->where('id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id]);
         }
         else
         {
@@ -62,7 +62,7 @@ class RegistroMetaSearch extends RegistroMeta
             }
             else
             {
-                $query = RegistroMeta::find()->where('estado = 0 and id_user and :id_user',[':id_user'=>$user]);
+                $query = RegistroMeta::find()->where('estado = 0 and id_user = :id_user',[':id_user'=>$user]);
             }
             
         }

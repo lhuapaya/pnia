@@ -185,7 +185,7 @@ class Proyecto extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
+            'id' => 'Código',
             'titulo' => 'Nombre',
             'vigencia' => 'Vigencia (Meses)',
             'ubigeo' => 'Ubigeo',

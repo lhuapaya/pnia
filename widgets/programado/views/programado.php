@@ -132,10 +132,10 @@
                             ?>        
                                   <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="<?= $cantidad[($i-1)]; ?>"  <?php if($evento == 2){ if($estado[($i-1)] > 0){ echo 'Disabled';}} ?>>
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $mes[($i-1)] ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $anio[($i-1)] ?>" />
-                                                <input type="hidden" id="proyecto-programado_id_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control" name="Proyecto[programado_id][]" placeholder="" value="<?= $id[($i-1)] ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="<?= $cantidad[($i-1)]; ?>"  <?php if($evento == 2){ if($estado[($i-1)] > 0){ echo 'Disabled';}} ?>>
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $mes[($i-1)] ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $anio[($i-1)] ?>" />
+                                                <input type="hidden" id="proyecto-programado_id_<?= $correlativo ?>_<?= $re ?>_<?= $i; ?>" class="form-control" name="Programado[programado_id][]" placeholder="" value="<?= $id[($i-1)] ?>" />
 					    </div>
                                     </td>  
                             <?php
@@ -211,9 +211,9 @@
 					
 					  <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $e; ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $i; ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $e; ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
 					    </td>
 					  
@@ -226,9 +226,9 @@
 					{ ?>
 					  <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $e; ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $i; ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $e; ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
 					    </td>
 					
@@ -247,9 +247,9 @@
 					{ ?>
 					  <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $e; ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $i; ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $e; ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
 					    </td>   
 				    <?php }
@@ -261,9 +261,9 @@
 					{ ?>
 					  <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $e; ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $i; ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $e; ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
 					    </td>
 					
@@ -281,9 +281,9 @@
 					{ ?>
 					  <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $e; ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $i; ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $e; ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
 					    </td>   
 				    <?php }
@@ -295,9 +295,9 @@
 					{ ?>
 					  <td>
 					    <div class="form-group field-proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?> required">
-						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Proyecto[programado_cantidad][]" placeholder="" value="0" />
-                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_mes][]" placeholder="" value="<?= $e; ?>" />
-						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Proyecto[programado_anio][]" placeholder="" value="<?= $i; ?>" />
+						<input type="text" id="proyecto-programado_cantidad_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control decimal" name="Programado[programado_cantidad][]" placeholder="" value="0" />
+                                                <input type="hidden" id="proyecto-programado_mes_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_mes][]" placeholder="" value="<?= $e; ?>" />
+						<input type="hidden" id="proyecto-programado_anio_<?= $correlativo ?>_<?= $re ?>_<?= $e; ?>" class="form-control" name="Programado[programado_anio][]" placeholder="" value="<?= $i; ?>" />
 					    </div>
 					    </td>
 					

@@ -45,10 +45,10 @@ class SolicitudDesembolsoSearch extends SolicitudDesembolso
         if(Yii::$app->user->identity->id_perfil == 2)
         {
             if($valor == 1){
-        $query = SolicitudDesembolso::find();}
+        $query = SolicitudDesembolso::find()->where('id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id]);}
         
         if($valor == 2){
-        $query = SolicitudDesembolso::find()->where('estado = 1'); }
+        $query = SolicitudDesembolso::find()->where('estado = 1 and id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id]); }
         }
         else
         {

@@ -47,6 +47,7 @@
 				    <tr id='recurso_addr_<?= $correlativo; ?>_<?= $re ?>'>
 					<td>
 					<?= ($re+1) ?>
+					
                                         <input type="hidden" name="Proyecto[recurso_act_ids][]" id="proyecto-recurso_act_ids_<?= $re; ?>" value="<?= $actividad_id; ?>" />
 					<input type="hidden" name="Proyecto[recurso_numero][]" id="proyecto-recurso_numero_<?= $re; ?>" value="<?= $re; ?>" />
 					</td>
@@ -513,7 +514,7 @@ function grabarrecurso(ntabla,rei,i,meses) {
     {
 	mes[ii] = $("#proyecto-programado_mes_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	anio[ii] = $("#proyecto-programado_anio_"+ntabla+"_"+rei+"_"+(ii+1)).val();
-	cantidad[ii] = $("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val();
+	cantidad[ii] = getNum($("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val());
 	
 	suma_cantidad += $("#proyecto-programado_cantidad_"+ntabla+"_"+rei+"_"+(ii+1)).val();
 	

@@ -10,6 +10,7 @@ use app\models\Usuarios;
 
 $this->title = Yii::t('app', 'Solicitud de Desembolso');
 $this->params['breadcrumbs'][] = $this->title;
+
 ?>
 <div class="recurso-programado-index text-center">
     <?php $form = ActiveForm::begin(['options' => ['class' => '', ]]); ?>
@@ -25,6 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         //'filterModel' => $searchModel,
+        'showFooter'=>TRUE,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn',
              'options' => ['style' => 'width:50px;']],
@@ -64,6 +66,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     
                 },
+                'footer'=>"<strong>Total Desembolso:</strong>",
                 //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 //'width'=>'60px',
@@ -72,11 +75,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Monto (S/.)',
                 'attribute' => 'monto',
                 'format'=>'raw',
-                'value'=>function($data) {
-                    return $data->monto.'<input type="hidden" value="'.$data->monto.'" id="recursoprogramado-id" name="RecursoProgramado[cantidad2][]" />';
+                'value'=>function($data){
+                    return 'S/. '.$data->monto.'<input type="hidden" value="'.$data->monto.'" id="recursoprogramado-id" name="RecursoProgramado[cantidad2][]" />';
                 
                     
                 },
+                'footer'=>'<strong>S/. '.$total.'</strong>',
                 //'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 //'width'=>'60px',

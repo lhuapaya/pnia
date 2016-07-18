@@ -95,6 +95,15 @@ $this->params['breadcrumbs'][] = $this->title;
                 
             ],
             [
+                'label'=>'Vigencia(meses)',
+                'attribute' => 'vigencia',
+                'format'=>'raw',
+                'value'=>'vigencia',
+                //'contentOptions'=>['style'=>'width: 420px; font-size: x-small;','class'=>'text-center'], 
+                'headerOptions'=>['class'=>'text-center'],
+                
+            ],
+            [
                 'label'=>'U. Operativa',
                 'attribute' => 'operativa',
                 'format'=>'raw',
@@ -122,6 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'headerOptions'=>['class'=>'text-center'],
                 
             ],
+           //'experimentos',
             [
                 'label'=>'Aporte PNIA',
                 'attribute' => 'presupuesto',
@@ -166,6 +176,7 @@ $this->params['breadcrumbs'][] = $this->title;
         <th>Actividad</th>
         <th>Recurso</th>
         <th>Region</th>
+        <th>Vigencia(Meses)</th>
         <th>Unidad Operativa</th>
         <th>Unidad Ejecutora</th>
         <th>Direccion Linea</th>
@@ -184,6 +195,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     <td><?= $proyecto->actividad ?></td>
                     <td><?= $proyecto->recurso ?></td>
                     <td><?= $proyecto->department ?></td>
+                    <td><?= $proyecto->vigencia ?></td>
                     <td><?= $proyecto->operativa ?></td>
                     <td><?= $proyecto->ejecutora2 ?></td>
                     <td><?= $proyecto->linea ?></td>

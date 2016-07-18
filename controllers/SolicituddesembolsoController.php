@@ -63,6 +63,9 @@ class SolicituddesembolsoController extends Controller
         $searchModel = new DetalleSolicitudSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams, $id);
         
+        $total = DetalleSolicitud::find()
+                    ->where('id_solicitud =:id_solicitud',[':id_solicitud'=>$id])->sum('monto');
+                    
         $model = new SolicitudDesembolso();
         
         if($model->load(Yii::$app->request->post()) )
@@ -327,6 +330,7 @@ class SolicituddesembolsoController extends Controller
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
             'id'=>$id,
+            'total'=>$total,
             'solicitud'=>$solicitud,
             'requiere_aprobar'=>$requiere_aprobar,
             'user_aprueba'=>$user_aprueba,

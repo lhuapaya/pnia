@@ -20,6 +20,13 @@ use Yii;
  */
 class Recurso extends \yii\db\ActiveRecord
 {
+    public $recurso_ids;
+    public $id_objetivo;
+    public $id_indicador;
+    public $cerrar_recurso;
+    public $proyecto_id;
+    public $recurso_numero;
+    public $id_actividad;
     /**
      * @inheritdoc
      */
@@ -36,6 +43,7 @@ class Recurso extends \yii\db\ActiveRecord
         return [
             [['estado','actividad_id', 'clasificador_id'], 'integer'],
             [['ejecutado','precio_unit', 'precio_total', 'cantidad'], 'number'],
+            [['id_actividad','recurso_ids','id_objetivo', 'id_indicador', 'cerrar_recurso','proyecto_id','recurso_numero'], 'safe'],
             [['detalle'], 'string', 'max' => 3000],
             [['unidad_medida'], 'string', 'max' => 100]
         ];

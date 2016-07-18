@@ -44,16 +44,19 @@ class ReportesController extends Controller
 	count(DISTINCT actividad.id) as actividad,
 	count(DISTINCT recurso.id) as recurso,
         ubigeo.department,
+        proyecto.vigencia,
 	(select maestros.descripcion from maestros where maestros.id = proyecto.id_dependencia_inia) as operativa,
 	(select maestros.descripcion from maestros where maestros.id = proyecto.id_unidad_ejecutora) as ejecutora2,
 	(select maestros.descripcion from maestros where maestros.id = proyecto.id_direccion_linea) as linea,
-	proyecto.presupuesto, sum(recurso.precio_total) as recurso_total')
+        (select aportante.monetario from aportante where aportante.id_proyecto = proyecto.id and aportante.tipo = 1) as presupuesto,
+	sum(recurso.precio_total) as recurso_total')
                                 ->innerJoin('proyecto','proyecto.user_propietario = usuarios.id')
                                 ->leftJoin('objetivo_especifico','objetivo_especifico.id_proyecto = proyecto.id')
                                 ->leftJoin('indicador','indicador.id_oe = objetivo_especifico.id')
                                 ->leftJoin('actividad','actividad.id_ind = indicador.id')
                                 ->leftJoin('recurso','recurso.actividad_id = actividad.id')
                                 ->leftJoin('ubigeo','ubigeo.district_id = proyecto.ubigeo')
+                                ->where('proyecto.estado = 1')
                                 ->groupBy(['proyecto.titulo'])
                                 ->orderBy('username')
                                 ->all();

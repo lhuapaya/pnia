@@ -43,7 +43,7 @@ class RendicionSearch extends Rendicion
     {
         if(Yii::$app->user->identity->id_perfil == 2)
         {
-        $query = Rendicion::find()->where('id_user and :id_user',[':id_user'=>Yii::$app->user->identity->id]);
+        $query = Rendicion::find()->where('id_user = :id_user',[':id_user'=>Yii::$app->user->identity->id]);
         }
         else
         {
@@ -59,7 +59,7 @@ class RendicionSearch extends Rendicion
             }
             else
             {
-                $query = Rendicion::find()->where('estado = 0 and id_user and :id_user',[':id_user'=>$user]);
+                $query = Rendicion::find()->where('estado = 0 and id_user = :id_user',[':id_user'=>$user]);
             }
             
         }
