@@ -3,6 +3,7 @@
 use yii\helpers\Html;
 use yii\grid\GridView;
 use app\models\Aprobaciones;
+use app\models\Usuarios;
 
 /* @var $this yii\web\View */
 /* @var $searchModel app\models\ProyectoSearch */
@@ -30,7 +31,13 @@ $this->params['breadcrumbs'][] = $this->title;
                 //'label'=>'Estado',
                 'attribute' => 'id',
                 'format'=>'raw',
-                'value'=>'id',
+                'value'=>function($data){
+                    
+                    $usuario = Usuarios::findOne($data->user_propietario);
+                    
+                    return $usuario->username;
+                        
+                    },
                 'contentOptions'=>['style'=>'width: 120px;','class'=>'text-center'], 
                 'headerOptions'=>['class'=>'text-center'],
                 //'width'=>'60px',
@@ -70,14 +77,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute' => 'situacion',
                 'format'=>'raw',
                 'value'=>function($data) {
-                    
+                    $nivelApro = 0;
                     
                     if($data->situacion == 0 )
                     {
                         if(Yii::$app->user->identity->id_perfil == 3)
                     { $nivelApro = 5; }
                     
-                    if(Yii::$app->user->identity->id_perfil == 6)
+                    if(Yii::$app->user->identity->id_perfil == 4)
                     { $nivelApro = 1; }
                     
                     $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
@@ -100,7 +107,7 @@ $this->params['breadcrumbs'][] = $this->title;
                     if(Yii::$app->user->identity->id_perfil == 3)
                     { $nivelApro = 5; }
                     
-                    if(Yii::$app->user->identity->id_perfil == 6)
+                    if(Yii::$app->user->identity->id_perfil == 4)
                     { $nivelApro = 1; }
                     
                     $aprobacion = Aprobaciones::find()->where('estado = 1 and id_proyecto = :id_proyecto and id_nivelaprobacion = :id_nivelaprobacion',[':id_proyecto'=>$data->id,':id_nivelaprobacion'=>$nivelApro])->one();
